@@ -166,16 +166,16 @@
 
   <script>
     const SUPABASE_URL = 'https://rxlzgppwvwyduilocrmo.supabase.co'
-    const SUPABASE_KEY = 'sb_publishable_HSt_wuJZd5D415dbpDjDJw_KN_cgap_' // ← Publishable key로 교체
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+    const SUPABASE_KEY = 'YOUR_PUBLISHABLE_KEY' // ← Publishable key로 교체
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
     let partner = null
 
     async function init() {
-      const { data: { session } } = await supabase.auth.getSession()
+      const { data: { session } } = await sb.auth.getSession()
       if (!session) { window.location.href = '/partner-login.html'; return }
 
-      const { data } = await supabase.from('partners').select('*').eq('id', session.user.id).single()
+      const { data } = await sb.from('partners').select('*').eq('id', session.user.id).single()
       if (!data) { window.location.href = '/partner-login.html'; return }
       partner = data
 
@@ -192,12 +192,12 @@
     }
 
     async function loadVisits() {
-      const { count } = await supabase.from('visits').select('*', { count: 'exact', head: true }).eq('ref_code', partner.ref_code)
+      const { count } = await sb.from('visits').select('*', { count: 'exact', head: true }).eq('ref_code', partner.ref_code)
       document.getElementById('visitCount').textContent = (count || 0).toLocaleString()
     }
 
     async function loadSales() {
-      const { data } = await supabase.from('sales').select('*').eq('ref_code', partner.ref_code).order('created_at', { ascending: false })
+      const { data } = await sb.from('sales').select('*').eq('ref_code', partner.ref_code).order('created_at', { ascending: false })
       const confirmed = (data || []).filter(s => s.status === 'confirmed').length
       document.getElementById('saleCount').textContent = confirmed
 
@@ -216,7 +216,7 @@
     }
 
     async function loadWithdrawals() {
-      const { data } = await supabase.from('withdrawals').select('*').eq('ref_code', partner.ref_code).order('created_at', { ascending: false })
+      const { data } = await sb.from('withdrawals').select('*').eq('ref_code', partner.ref_code).order('created_at', { ascending: false })
       if (!data || data.length === 0) {
         document.getElementById('withdrawalTable').innerHTML = '<div class="empty">출금 신청 내역이 없습니다</div>'
         return
@@ -249,7 +249,7 @@
       if (amount > partner.points) return showMsg('출금 가능 포인트가 부족합니다.', 'error')
       if (amount % 200000 !== 0) return showMsg('20만원 단위로 신청해주세요.', 'error')
 
-      const { error } = await supabase.from('withdrawals').insert({
+      const { error } = await sb.from('withdrawals').insert({
         partner_id: partner.id,
         ref_code: partner.ref_code,
         amount,
@@ -264,7 +264,7 @@
     }
 
     async function logout() {
-      await supabase.auth.signOut()
+      await sb.auth.signOut()
       window.location.href = '/partner-login.html'
     }
 
