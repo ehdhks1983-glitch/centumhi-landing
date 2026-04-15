@@ -73,8 +73,8 @@
 
   <script>
     const SUPABASE_URL = 'https://rxlzgppwvwyduilocrmo.supabase.co'
-    const SUPABASE_KEY = 'sb_publishable_HSt_wuJZd5D415dbpDjDJw_KN_cgap_' // ← Publishable key로 교체
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+    const SUPABASE_KEY = 'YOUR_PUBLISHABLE_KEY' // ← Publishable key로 교체
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
     function showMsg(text, type) {
       const el = document.getElementById('msg')
@@ -90,7 +90,7 @@
       btn.disabled = true; btn.textContent = '로그인 중...'
 
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+        const { data, error } = await sb.auth.signInWithPassword({ email, password })
         if (error) throw error
         showMsg('✅ 로그인 성공! 대시보드로 이동합니다...', 'success')
         setTimeout(() => { window.location.href = '/partner-dashboard.html' }, 1000)
