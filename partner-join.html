@@ -154,8 +154,8 @@
 
   <script>
     const SUPABASE_URL = 'https://rxlzgppwvwyduilocrmo.supabase.co'
-    const SUPABASE_KEY = 'sb_publishable_HSt_wuJZd5D415dbpDjDJw_KN_cgap_' // ← API Keys에서 복사한 Publishable key로 교체
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+    const SUPABASE_KEY = 'YOUR_PUBLISHABLE_KEY' // ← API Keys에서 복사한 Publishable key로 교체
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
     function generateRefCode(name) {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
@@ -193,11 +193,11 @@
       btn.disabled = true; btn.textContent = '신청 중...'
 
       try {
-        const { data: authData, error: authError } = await supabase.auth.signUp({ email, password })
+        const { data: authData, error: authError } = await sb.auth.signUp({ email, password })
         if (authError) throw authError
 
         const refCode = generateRefCode(name)
-        const { error: partnerError } = await supabase.from('partners').insert({
+        const { error: partnerError } = await sb.from('partners').insert({
           id: authData.user.id,
           name, email, phone,
           bank_name: bankName,
