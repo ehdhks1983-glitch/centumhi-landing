@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>파트너 로그인 | 센텀하이</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, 'Segoe UI', sans-serif;
+      background: #0a0a0a; color: #fff;
+      min-height: 100vh; display: flex;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .container { width: 100%; max-width: 400px; }
+    .logo { text-align: center; margin-bottom: 32px; }
+    .logo h1 { font-size: 26px; font-weight: 800; color: #22c55e; }
+    .logo p { color: #666; margin-top: 4px; font-size: 14px; }
+    .card { background: #141414; border: 1px solid #222; border-radius: 16px; padding: 32px; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 13px; color: #999; margin-bottom: 6px; }
+    input {
+      width: 100%; padding: 12px 14px;
+      background: #0a0a0a; border: 1px solid #2a2a2a;
+      border-radius: 8px; color: #fff; font-size: 15px;
+      outline: none; transition: border-color 0.2s;
+    }
+    input:focus { border-color: #22c55e; }
+    button {
+      width: 100%; padding: 14px; background: #22c55e;
+      color: #000; border: none; border-radius: 8px;
+      font-size: 16px; font-weight: 700; cursor: pointer;
+      margin-top: 8px; transition: background 0.2s;
+    }
+    button:hover { background: #16a34a; }
+    button:disabled { background: #1e1e1e; color: #444; cursor: not-allowed; }
+    .msg {
+      text-align: center; padding: 12px; border-radius: 8px;
+      margin-top: 14px; font-size: 14px; display: none;
+    }
+    .msg.error { background: #1a0505; color: #f87171; border: 1px solid #450a0a; }
+    .msg.success { background: #052e16; color: #4ade80; border: 1px solid #14532d; }
+    .join-link { text-align: center; margin-top: 20px; color: #555; font-size: 14px; }
+    .join-link a { color: #22c55e; text-decoration: none; }
+    .admin-link { text-align: center; margin-top: 12px; }
+    .admin-link a { color: #444; font-size: 12px; text-decoration: none; }
+    .admin-link a:hover { color: #666; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <h1>센텀하이</h1>
+      <p>파트너 로그인</p>
+    </div>
+    <div class="card">
+      <div class="form-group">
+        <label>이메일</label>
+        <input type="email" id="email" placeholder="example@email.com" />
+      </div>
+      <div class="form-group">
+        <label>비밀번호</label>
+        <input type="password" id="password" placeholder="••••••••"
+          onkeydown="if(event.key==='Enter') login()" />
+      </div>
+      <button id="loginBtn" onclick="login()">로그인</button>
+      <div class="msg" id="msg"></div>
+    </div>
+    <div class="join-link">아직 파트너가 아니신가요? <a href="/partner-join.html">신청하기</a></div>
+    <div class="admin-link"><a href="/partner-admin.html">관리자</a></div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://rxlzgppwvwyduilocrmo.supabase.co'
+    const SUPABASE_KEY = 'YOUR_PUBLISHABLE_KEY' // ← Publishable key로 교체
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    function showMsg(text, type) {
+      const el = document.getElementById('msg')
+      el.textContent = text; el.className = 'msg ' + type; el.style.display = 'block'
+    }
+
+    async function login() {
+      const email = document.getElementById('email').value.trim()
+      const password = document.getElementById('password').value
+      if (!email || !password) return showMsg('이메일과 비밀번호를 입력해주세요.', 'error')
+
+      const btn = document.getElementById('loginBtn')
+      btn.disabled = true; btn.textContent = '로그인 중...'
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+        if (error) throw error
+        showMsg('✅ 로그인 성공! 대시보드로 이동합니다...', 'success')
+        setTimeout(() => { window.location.href = '/partner-dashboard.html' }, 1000)
+      } catch (err) {
+        showMsg('이메일 또는 비밀번호가 올바르지 않습니다.', 'error')
+        btn.disabled = false; btn.textContent = '로그인'
+      }
+    }
+  </script>
+</body>
+</html>

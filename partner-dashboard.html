@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>파트너 대시보드 | 센텀하이</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
+    .header {
+      background: #141414; border-bottom: 1px solid #1e1e1e;
+      padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .header h1 { font-size: 18px; font-weight: 700; color: #22c55e; }
+    .header .user { font-size: 13px; color: #666; }
+    .logout-btn {
+      padding: 6px 14px; background: transparent; border: 1px solid #333;
+      border-radius: 6px; color: #888; font-size: 13px; cursor: pointer;
+    }
+    .logout-btn:hover { border-color: #555; color: #fff; }
+    .main { max-width: 800px; margin: 0 auto; padding: 28px 20px; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+    .stat-card {
+      background: #141414; border: 1px solid #1e1e1e;
+      border-radius: 12px; padding: 20px;
+    }
+    .stat-card .label { font-size: 12px; color: #555; margin-bottom: 8px; }
+    .stat-card .value { font-size: 26px; font-weight: 800; color: #fff; }
+    .stat-card .value.green { color: #22c55e; }
+    .stat-card .sub { font-size: 12px; color: #555; margin-top: 4px; }
+    .section { background: #141414; border: 1px solid #1e1e1e; border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+    .section h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #ccc; }
+    .ref-box {
+      background: #0a0a0a; border: 1px solid #22c55e40;
+      border-radius: 8px; padding: 14px 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .ref-box .link { font-size: 14px; color: #22c55e; word-break: break-all; flex: 1; }
+    .copy-btn {
+      padding: 8px 16px; background: #22c55e; color: #000;
+      border: none; border-radius: 6px; font-size: 13px; font-weight: 700;
+      cursor: pointer; white-space: nowrap; transition: background 0.2s;
+    }
+    .copy-btn:hover { background: #16a34a; }
+    .copy-btn.copied { background: #166534; color: #4ade80; }
+    .how-to { margin-top: 14px; }
+    .how-to p { font-size: 13px; color: #666; line-height: 1.8; }
+    .how-to span { color: #22c55e; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { text-align: left; padding: 10px 12px; color: #555; font-size: 12px; border-bottom: 1px solid #1e1e1e; }
+    td { padding: 12px 12px; border-bottom: 1px solid #141414; color: #ccc; }
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px;
+    }
+    .badge.pending { background: #1a1000; color: #fbbf24; border: 1px solid #451a03; }
+    .badge.confirmed { background: #052e16; color: #4ade80; border: 1px solid #14532d; }
+    .badge.paid { background: #1e1b4b; color: #818cf8; border: 1px solid #312e81; }
+    .withdraw-section { }
+    .points-display { font-size: 36px; font-weight: 800; color: #22c55e; margin-bottom: 6px; }
+    .points-sub { font-size: 13px; color: #555; margin-bottom: 20px; }
+    .withdraw-form { display: grid; gap: 14px; }
+    .withdraw-form input {
+      padding: 11px 14px; background: #0a0a0a; border: 1px solid #2a2a2a;
+      border-radius: 8px; color: #fff; font-size: 15px; outline: none; width: 100%;
+      transition: border-color 0.2s;
+    }
+    .withdraw-form input:focus { border-color: #22c55e; }
+    .withdraw-form label { font-size: 13px; color: #666; margin-bottom: 6px; display: block; }
+    .withdraw-btn {
+      padding: 12px 24px; background: #22c55e; color: #000;
+      border: none; border-radius: 8px; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .withdraw-btn:hover { background: #16a34a; }
+    .withdraw-btn:disabled { background: #1e1e1e; color: #444; cursor: not-allowed; }
+    .msg { padding: 10px; border-radius: 6px; font-size: 13px; display: none; margin-top: 10px; }
+    .msg.error { background: #1a0505; color: #f87171; }
+    .msg.success { background: #052e16; color: #4ade80; }
+    .empty { text-align: center; color: #444; padding: 30px; font-size: 14px; }
+    @media (max-width: 600px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stats .stat-card:last-child { grid-column: 1/-1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>센텀하이 파트너</h1>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="user" id="userName">로딩 중...</span>
+      <button class="logout-btn" onclick="logout()">로그아웃</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- 통계 -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="label">총 방문수</div>
+        <div class="value" id="visitCount">-</div>
+        <div class="sub">내 링크 클릭 횟수</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">확정 판매</div>
+        <div class="value green" id="saleCount">-</div>
+        <div class="sub">건수</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">출금 가능 포인트</div>
+        <div class="value green" id="points">-</div>
+        <div class="sub">원</div>
+      </div>
+    </div>
+
+    <!-- 내 추천 링크 -->
+    <div class="section">
+      <h2>🔗 내 추천 링크</h2>
+      <div class="ref-box">
+        <div class="link" id="refLink">로딩 중...</div>
+        <button class="copy-btn" id="copyBtn" onclick="copyLink()">복사</button>
+      </div>
+      <div class="how-to">
+        <p>
+          <span>① 이 링크를 자영업자 지인에게 공유</span><br>
+          지인이 링크로 접속하면 자동으로 내 코드가 기록됩니다<br>
+          <span>② 구매 발생 시 자동 적립</span><br>
+          관리자가 입금 확인 후 포인트가 적립됩니다<br>
+          <span>③ 아래에서 출금 신청</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- 판매 내역 -->
+    <div class="section">
+      <h2>📋 판매 내역</h2>
+      <div id="salesTable">
+        <div class="empty">판매 내역을 불러오는 중...</div>
+      </div>
+    </div>
+
+    <!-- 출금 신청 -->
+    <div class="section">
+      <h2>💸 출금 신청</h2>
+      <div class="points-display" id="pointsDisplay">-</div>
+      <div class="points-sub">원 출금 가능</div>
+      <div class="withdraw-form">
+        <div>
+          <label>출금 금액 (최소 20만원)</label>
+          <input type="number" id="withdrawAmount" placeholder="200000" min="200000" step="200000" />
+        </div>
+        <div style="font-size:13px;color:#555;" id="accountInfo">계좌 정보 불러오는 중...</div>
+        <button class="withdraw-btn" onclick="requestWithdraw()">출금 신청</button>
+        <div class="msg" id="withdrawMsg"></div>
+      </div>
+    </div>
+
+    <!-- 출금 내역 -->
+    <div class="section">
+      <h2>🏦 출금 신청 내역</h2>
+      <div id="withdrawalTable">
+        <div class="empty">내역을 불러오는 중...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://rxlzgppwvwyduilocrmo.supabase.co'
+    const SUPABASE_KEY = 'YOUR_PUBLISHABLE_KEY' // ← Publishable key로 교체
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    let partner = null
+
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) { window.location.href = '/partner-login.html'; return }
+
+      const { data } = await supabase.from('partners').select('*').eq('id', session.user.id).single()
+      if (!data) { window.location.href = '/partner-login.html'; return }
+      partner = data
+
+      document.getElementById('userName').textContent = partner.name + ' 님'
+      document.getElementById('refLink').textContent = 'https://centumhi.co.kr?ref=' + partner.ref_code
+      document.getElementById('points').textContent = partner.points.toLocaleString()
+      document.getElementById('pointsDisplay').textContent = partner.points.toLocaleString()
+      document.getElementById('accountInfo').textContent =
+        `정산 계좌: ${partner.bank_name} ${partner.bank_account} (${partner.bank_holder})`
+
+      await loadVisits()
+      await loadSales()
+      await loadWithdrawals()
+    }
+
+    async function loadVisits() {
+      const { count } = await supabase.from('visits').select('*', { count: 'exact', head: true }).eq('ref_code', partner.ref_code)
+      document.getElementById('visitCount').textContent = (count || 0).toLocaleString()
+    }
+
+    async function loadSales() {
+      const { data } = await supabase.from('sales').select('*').eq('ref_code', partner.ref_code).order('created_at', { ascending: false })
+      const confirmed = (data || []).filter(s => s.status === 'confirmed').length
+      document.getElementById('saleCount').textContent = confirmed
+
+      if (!data || data.length === 0) {
+        document.getElementById('salesTable').innerHTML = '<div class="empty">아직 판매 내역이 없습니다<br>링크를 공유해보세요!</div>'
+        return
+      }
+      let html = '<table><thead><tr><th>날짜</th><th>고객명</th><th>수수료</th><th>상태</th></tr></thead><tbody>'
+      for (const s of data) {
+        const date = new Date(s.created_at).toLocaleDateString('ko-KR')
+        const statusMap = { pending: '확인중', confirmed: '확정', paid: '지급완료' }
+        html += `<tr><td>${date}</td><td>${s.customer_name || '-'}</td><td>${s.commission.toLocaleString()}원</td><td><span class="badge ${s.status}">${statusMap[s.status] || s.status}</span></td></tr>`
+      }
+      html += '</tbody></table>'
+      document.getElementById('salesTable').innerHTML = html
+    }
+
+    async function loadWithdrawals() {
+      const { data } = await supabase.from('withdrawals').select('*').eq('ref_code', partner.ref_code).order('created_at', { ascending: false })
+      if (!data || data.length === 0) {
+        document.getElementById('withdrawalTable').innerHTML = '<div class="empty">출금 신청 내역이 없습니다</div>'
+        return
+      }
+      let html = '<table><thead><tr><th>신청일</th><th>금액</th><th>상태</th></tr></thead><tbody>'
+      for (const w of data) {
+        const date = new Date(w.created_at).toLocaleDateString('ko-KR')
+        const statusMap = { pending: '처리중', processed: '지급완료' }
+        const cls = w.status === 'processed' ? 'paid' : 'pending'
+        html += `<tr><td>${date}</td><td>${w.amount.toLocaleString()}원</td><td><span class="badge ${cls}">${statusMap[w.status] || w.status}</span></td></tr>`
+      }
+      html += '</tbody></table>'
+      document.getElementById('withdrawalTable').innerHTML = html
+    }
+
+    async function copyLink() {
+      const link = 'https://centumhi.co.kr?ref=' + partner.ref_code
+      await navigator.clipboard.writeText(link)
+      const btn = document.getElementById('copyBtn')
+      btn.textContent = '복사됨!'; btn.className = 'copy-btn copied'
+      setTimeout(() => { btn.textContent = '복사'; btn.className = 'copy-btn' }, 2000)
+    }
+
+    async function requestWithdraw() {
+      const amount = parseInt(document.getElementById('withdrawAmount').value)
+      const msg = document.getElementById('withdrawMsg')
+      const showMsg = (text, type) => { msg.textContent = text; msg.className = 'msg ' + type; msg.style.display = 'block' }
+
+      if (!amount || amount < 200000) return showMsg('최소 20만원부터 출금 신청 가능합니다.', 'error')
+      if (amount > partner.points) return showMsg('출금 가능 포인트가 부족합니다.', 'error')
+      if (amount % 200000 !== 0) return showMsg('20만원 단위로 신청해주세요.', 'error')
+
+      const { error } = await supabase.from('withdrawals').insert({
+        partner_id: partner.id,
+        ref_code: partner.ref_code,
+        amount,
+        bank_name: partner.bank_name,
+        bank_account: partner.bank_account,
+        bank_holder: partner.bank_holder
+      })
+
+      if (error) return showMsg('오류: ' + error.message, 'error')
+      showMsg('✅ 출금 신청이 접수되었습니다. 영업일 2~3일 내 처리됩니다.', 'success')
+      await loadWithdrawals()
+    }
+
+    async function logout() {
+      await supabase.auth.signOut()
+      window.location.href = '/partner-login.html'
+    }
+
+    init()
+  </script>
+</body>
+</html>

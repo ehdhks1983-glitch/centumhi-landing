@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 | 센텀하이</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
+    .login-screen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 20px;
+    }
+    .login-box { background: #141414; border: 1px solid #222; border-radius: 16px; padding: 32px; width: 100%; max-width: 360px; }
+    .login-box h2 { font-size: 18px; margin-bottom: 20px; color: #ccc; }
+    input {
+      width: 100%; padding: 11px 14px; background: #0a0a0a;
+      border: 1px solid #2a2a2a; border-radius: 8px; color: #fff;
+      font-size: 15px; outline: none; margin-bottom: 12px;
+    }
+    input:focus { border-color: #22c55e; }
+    .btn {
+      padding: 11px 20px; border: none; border-radius: 8px;
+      font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary { background: #22c55e; color: #000; }
+    .btn-primary:hover { background: #16a34a; }
+    .btn-primary:disabled { background: #1e1e1e; color: #444; cursor: not-allowed; }
+    .btn-sm { padding: 6px 14px; font-size: 13px; }
+    .btn-confirm { background: #22c55e; color: #000; }
+    .btn-paid { background: #6366f1; color: #fff; }
+    .btn-danger { background: #dc2626; color: #fff; }
+    .header {
+      background: #141414; border-bottom: 1px solid #1e1e1e;
+      padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .header h1 { font-size: 16px; font-weight: 700; color: #22c55e; }
+    .header .logout { color: #555; font-size: 13px; cursor: pointer; }
+    .header .logout:hover { color: #888; }
+    .main { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat { background: #141414; border: 1px solid #1e1e1e; border-radius: 10px; padding: 16px; }
+    .stat .label { font-size: 11px; color: #555; margin-bottom: 6px; }
+    .stat .value { font-size: 22px; font-weight: 800; }
+    .stat .value.green { color: #22c55e; }
+    .stat .value.yellow { color: #fbbf24; }
+    .section { background: #141414; border: 1px solid #1e1e1e; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+    .section h2 { font-size: 14px; font-weight: 600; color: #888; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; padding: 8px 10px; color: #444; border-bottom: 1px solid #1e1e1e; font-size: 11px; text-transform: uppercase; }
+    td { padding: 10px 10px; border-bottom: 1px solid #141414; color: #bbb; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
+    .badge.pending { background: #1a1000; color: #fbbf24; border: 1px solid #451a03; }
+    .badge.confirmed { background: #052e16; color: #4ade80; border: 1px solid #14532d; }
+    .badge.processed { background: #1e1b4b; color: #818cf8; border: 1px solid #312e81; }
+    .add-sale-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
+    .add-sale-form input, .add-sale-form select {
+      padding: 9px 12px; background: #0a0a0a; border: 1px solid #2a2a2a;
+      border-radius: 8px; color: #fff; font-size: 14px; outline: none; width: 100%; margin-bottom: 0;
+    }
+    .add-sale-form label { font-size: 11px; color: #555; margin-bottom: 4px; display: block; }
+    select option { background: #1a1a1a; }
+    .msg { padding: 10px; border-radius: 6px; font-size: 13px; display: none; margin-top: 10px; }
+    .msg.error { background: #1a0505; color: #f87171; }
+    .msg.success { background: #052e16; color: #4ade80; }
+    .empty { text-align: center; color: #333; padding: 24px; font-size: 13px; }
+    #adminPanel { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- 로그인 화면 -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <h2>🔐 관리자 로그인</h2>
+      <input type="password" id="adminPw" placeholder="관리자 비밀번호"
+        onkeydown="if(event.key==='Enter') adminLogin()" />
+      <button class="btn btn-primary" style="width:100%" onclick="adminLogin()">로그인</button>
+      <div class="msg" id="loginMsg"></div>
+    </div>
+  </div>
+
+  <!-- 관리자 패널 -->
+  <div id="adminPanel">
+    <div class="header">
+      <h1>센텀하이 관리자</h1>
+      <span class="logout" onclick="adminLogout()">로그아웃</span>
+    </div>
+    <div class="main">
+
+      <!-- 통계 -->
+      <div class="stats">
+        <div class="stat"><div class="label">총 파트너</div><div class="value" id="totalPartners">-</div></div>
+        <div class="stat"><div class="label">대기중 판매</div><div class="value yellow" id="pendingSales">-</div></div>
+        <div class="stat"><div class="label">확정 판매</div><div class="value green" id="confirmedSales">-</div></div>
+        <div class="stat"><div class="label">대기중 출금</div><div class="value yellow" id="pendingWithdrawals">-</div></div>
+      </div>
+
+      <!-- 판매 등록 -->
+      <div class="section">
+        <h2>➕ 판매 등록 (입금 확인 시 여기서 등록)</h2>
+        <div class="add-sale-form">
+          <div>
+            <label>파트너 ref코드</label>
+            <input type="text" id="saleRef" placeholder="ex: CH1234" />
+          </div>
+          <div>
+            <label>고객명</label>
+            <input type="text" id="saleCustomer" placeholder="홍길동" />
+          </div>
+          <div>
+            <label>메모</label>
+            <input type="text" id="saleMemo" placeholder="추가 메모" />
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button class="btn btn-primary btn-sm" onclick="addSale()" style="width:100%;padding:9px 16px">등록</button>
+          </div>
+        </div>
+        <div class="msg" id="saleMsg"></div>
+      </div>
+
+      <!-- 판매 목록 -->
+      <div class="section">
+        <h2>📋 판매 내역 전체</h2>
+        <div id="salesList"><div class="empty">불러오는 중...</div></div>
+      </div>
+
+      <!-- 출금 신청 목록 -->
+      <div class="section">
+        <h2>💸 출금 신청 목록</h2>
+        <div id="withdrawalList"><div class="empty">불러오는 중...</div></div>
+      </div>
+
+      <!-- 파트너 목록 -->
+      <div class="section">
+        <h2>👥 파트너 목록</h2>
+        <div id="partnerList"><div class="empty">불러오는 중...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ 아래 두 값을 교체하세요
+    const SUPABASE_URL = 'https://rxlzgppwvwyduilocrmo.supabase.co'
+    const SUPABASE_KEY = 'YOUR_SECRET_KEY' // ← Secret key로 교체 (관리자 전용 페이지)
+    const ADMIN_PASSWORD = 'YOUR_ADMIN_PASSWORD' // ← 관리자 비밀번호 설정 (예: centumhi2026!)
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    function adminLogin() {
+      const pw = document.getElementById('adminPw').value
+      const msg = document.getElementById('loginMsg')
+      if (pw === ADMIN_PASSWORD) {
+        sessionStorage.setItem('admin_auth', '1')
+        document.getElementById('loginScreen').style.display = 'none'
+        document.getElementById('adminPanel').style.display = 'block'
+        loadAll()
+      } else {
+        msg.textContent = '비밀번호가 올바르지 않습니다.'
+        msg.className = 'msg error'; msg.style.display = 'block'
+      }
+    }
+
+    function adminLogout() {
+      sessionStorage.removeItem('admin_auth')
+      document.getElementById('loginScreen').style.display = 'flex'
+      document.getElementById('adminPanel').style.display = 'none'
+    }
+
+    async function loadAll() {
+      await Promise.all([loadStats(), loadSales(), loadWithdrawals(), loadPartners()])
+    }
+
+    async function loadStats() {
+      const [{ count: tp }, { count: ps }, { count: cs }, { count: pw }] = await Promise.all([
+        supabase.from('partners').select('*', { count: 'exact', head: true }),
+        supabase.from('sales').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('sales').select('*', { count: 'exact', head: true }).eq('status', 'confirmed'),
+        supabase.from('withdrawals').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+      ])
+      document.getElementById('totalPartners').textContent = tp || 0
+      document.getElementById('pendingSales').textContent = ps || 0
+      document.getElementById('confirmedSales').textContent = cs || 0
+      document.getElementById('pendingWithdrawals').textContent = pw || 0
+    }
+
+    async function loadSales() {
+      const { data } = await supabase.from('sales').select('*').order('created_at', { ascending: false })
+      if (!data || data.length === 0) {
+        document.getElementById('salesList').innerHTML = '<div class="empty">판매 내역 없음</div>'; return
+      }
+      let html = '<table><thead><tr><th>날짜</th><th>파트너코드</th><th>고객명</th><th>수수료</th><th>상태</th><th>액션</th></tr></thead><tbody>'
+      for (const s of data) {
+        const date = new Date(s.created_at).toLocaleDateString('ko-KR')
+        const statusMap = { pending: '대기중', confirmed: '확정', paid: '지급완료' }
+        html += `<tr>
+          <td>${date}</td>
+          <td><code style="color:#22c55e">${s.ref_code}</code></td>
+          <td>${s.customer_name || '-'}</td>
+          <td>${s.commission.toLocaleString()}원</td>
+          <td><span class="badge ${s.status}">${statusMap[s.status]}</span></td>
+          <td>
+            ${s.status === 'pending' ? `<button class="btn btn-confirm btn-sm" onclick="confirmSale('${s.id}','${s.ref_code}',${s.commission})">확정</button>` : ''}
+          </td>
+        </tr>`
+      }
+      html += '</tbody></table>'
+      document.getElementById('salesList').innerHTML = html
+    }
+
+    async function loadWithdrawals() {
+      const { data } = await supabase.from('withdrawals').select('*').order('created_at', { ascending: false })
+      if (!data || data.length === 0) {
+        document.getElementById('withdrawalList').innerHTML = '<div class="empty">출금 신청 없음</div>'; return
+      }
+      let html = '<table><thead><tr><th>날짜</th><th>파트너코드</th><th>금액</th><th>계좌</th><th>상태</th><th>액션</th></tr></thead><tbody>'
+      for (const w of data) {
+        const date = new Date(w.created_at).toLocaleDateString('ko-KR')
+        html += `<tr>
+          <td>${date}</td>
+          <td><code style="color:#22c55e">${w.ref_code}</code></td>
+          <td>${w.amount.toLocaleString()}원</td>
+          <td style="font-size:12px">${w.bank_name} ${w.bank_account} (${w.bank_holder})</td>
+          <td><span class="badge ${w.status === 'processed' ? 'processed' : 'pending'}">${w.status === 'processed' ? '완료' : '대기중'}</span></td>
+          <td>
+            ${w.status === 'pending' ? `<button class="btn btn-paid btn-sm" onclick="processWithdrawal('${w.id}','${w.ref_code}',${w.amount})">지급완료</button>` : ''}
+          </td>
+        </tr>`
+      }
+      html += '</tbody></table>'
+      document.getElementById('withdrawalList').innerHTML = html
+    }
+
+    async function loadPartners() {
+      const { data } = await supabase.from('partners').select('*').order('created_at', { ascending: false })
+      if (!data || data.length === 0) {
+        document.getElementById('partnerList').innerHTML = '<div class="empty">파트너 없음</div>'; return
+      }
+      let html = '<table><thead><tr><th>가입일</th><th>이름</th><th>이메일</th><th>연락처</th><th>추천코드</th><th>포인트</th><th>총누적</th></tr></thead><tbody>'
+      for (const p of data) {
+        const date = new Date(p.created_at).toLocaleDateString('ko-KR')
+        html += `<tr>
+          <td>${date}</td>
+          <td>${p.name}</td>
+          <td style="font-size:12px">${p.email}</td>
+          <td>${p.phone}</td>
+          <td><code style="color:#22c55e">${p.ref_code}</code></td>
+          <td style="color:#22c55e">${p.points.toLocaleString()}원</td>
+          <td>${p.total_earned.toLocaleString()}원</td>
+        </tr>`
+      }
+      html += '</tbody></table>'
+      document.getElementById('partnerList').innerHTML = html
+    }
+
+    async function addSale() {
+      const refCode = document.getElementById('saleRef').value.trim().toUpperCase()
+      const customer = document.getElementById('saleCustomer').value.trim()
+      const memo = document.getElementById('saleMemo').value.trim()
+      const msg = document.getElementById('saleMsg')
+      const showMsg = (t, type) => { msg.textContent = t; msg.className = 'msg ' + type; msg.style.display = 'block' }
+
+      if (!refCode || !customer) return showMsg('추천코드와 고객명을 입력해주세요.', 'error')
+
+      // 파트너 존재 확인
+      const { data: partnerData } = await supabase.from('partners').select('id').eq('ref_code', refCode).single()
+      if (!partnerData) return showMsg(`추천코드 ${refCode}에 해당하는 파트너가 없습니다.`, 'error')
+
+      // 판매 등록 (바로 confirmed)
+      const { error } = await supabase.from('sales').insert({
+        ref_code: refCode, customer_name: customer, memo,
+        status: 'confirmed', commission: 200000, amount: 1790000
+      })
+      if (error) return showMsg('오류: ' + error.message, 'error')
+
+      // 포인트 적립
+      const { data: partner } = await supabase.from('partners').select('points, total_earned').eq('ref_code', refCode).single()
+      await supabase.from('partners').update({
+        points: (partner.points || 0) + 200000,
+        total_earned: (partner.total_earned || 0) + 200000
+      }).eq('ref_code', refCode)
+
+      showMsg(`✅ ${customer} 판매 등록 완료! ${refCode} 파트너에게 20만원 포인트 적립`, 'success')
+      document.getElementById('saleRef').value = ''
+      document.getElementById('saleCustomer').value = ''
+      document.getElementById('saleMemo').value = ''
+      await loadAll()
+    }
+
+    async function confirmSale(saleId, refCode, commission) {
+      if (!confirm('이 판매를 확정하고 파트너에게 포인트를 적립할까요?')) return
+      await supabase.from('sales').update({ status: 'confirmed' }).eq('id', saleId)
+      const { data: partner } = await supabase.from('partners').select('points, total_earned').eq('ref_code', refCode).single()
+      await supabase.from('partners').update({
+        points: (partner.points || 0) + commission,
+        total_earned: (partner.total_earned || 0) + commission
+      }).eq('ref_code', refCode)
+      alert('✅ 확정 완료! 파트너 포인트 적립됨')
+      await loadAll()
+    }
+
+    async function processWithdrawal(withdrawalId, refCode, amount) {
+      if (!confirm(`${amount.toLocaleString()}원을 실제로 계좌이체 했나요?\n확인하면 '지급완료'로 변경됩니다.`)) return
+      await supabase.from('withdrawals').update({ status: 'processed' }).eq('id', withdrawalId)
+      const { data: partner } = await supabase.from('partners').select('points').eq('ref_code', refCode).single()
+      await supabase.from('partners').update({ points: Math.max(0, (partner.points || 0) - amount) }).eq('ref_code', refCode)
+      alert('✅ 출금 처리 완료!')
+      await loadAll()
+    }
+
+    // 자동 로그인 유지
+    if (sessionStorage.getItem('admin_auth') === '1') {
+      document.getElementById('loginScreen').style.display = 'none'
+      document.getElementById('adminPanel').style.display = 'block'
+      loadAll()
+    }
+  </script>
+</body>
+</html>
