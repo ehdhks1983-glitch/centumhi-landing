@@ -7,7 +7,6 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{font-family:-apple-system,'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;background:#0a0a0f;color:#f1f0ff;line-height:1.6;overflow-x:hidden;word-break:keep-all;}
-:root{--kakao:https://open.kakao.com/o/gCFBLaqi}
 .nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,10,15,0.97);backdrop-filter:blur(12px);border-bottom:1px solid #2a2a40;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:52px;}
 .nav-brand{font-size:1rem;font-weight:900;background:linear-gradient(135deg,#f59e0b,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;}
 .nav-cta{background:linear-gradient(135deg,#f59e0b,#fb923c);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;}
@@ -33,10 +32,6 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Malgun Gothic','맑은 고
 .kpi-item+.kpi-item{border-left:1px solid #2a2a40;}
 .kpi-num{font-size:clamp(1rem,4vw,1.6rem);font-weight:900;background:linear-gradient(135deg,#f59e0b,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2;}
 .kpi-label{font-size:clamp(0.6rem,2vw,0.72rem);color:#8b8aa8;margin-top:3px;line-height:1.3;}
-.media-placeholder{background:#16162a;border:2px dashed #2a2a40;border-radius:14px;padding:36px 20px;text-align:center;margin-top:28px;}
-.media-placeholder .icon{font-size:2rem;margin-bottom:10px;}
-.media-placeholder p{font-size:0.82rem;color:#8b8aa8;}
-.media-placeholder .sub{font-size:0.7rem;color:#4a4a60;margin-top:5px;}
 .pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;}
 @media(max-width:480px){.pain-grid{grid-template-columns:1fr;}}
 .pain-card{background:#1a1a28;border:1px solid #2a2a40;border-left:4px solid #ef4444;border-radius:12px;padding:18px;}
@@ -58,7 +53,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo','Malgun Gothic','맑은 고
 input[type=range]{width:100%;accent-color:#f59e0b;cursor:pointer;}
 .calc-result{background:#0a0a0f;border:2px solid #f59e0b;border-radius:14px;padding:20px;text-align:center;}
 .calc-result-label{font-size:0.75rem;color:#8b8aa8;margin-bottom:5px;}
-.calc-total{font-size:clamp(1.6rem,7vw,2.2rem);font-weight:900;background:linear-gradient(135deg,#f59e0b,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;word-break:break-all;}
+.calc-total{font-size:clamp(1.6rem,7vw,2.2rem);font-weight:900;background:linear-gradient(135deg,#f59e0b,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;}
 .calc-breakdown{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:10px;}
 .calc-bk{background:#16162a;border-radius:8px;padding:6px 12px;font-size:0.75rem;}
 .calc-bk-label{color:#8b8aa8;font-size:0.68rem;}
@@ -179,9 +174,9 @@ footer a{text-decoration:none;}
   <div class="container">
     <div style="border-radius:14px;overflow:hidden;background:#000;aspect-ratio:16/9;">
       <iframe
-        src="https://www.youtube.com/embed/eR_esluejKo?autoplay=1&mute=1&loop=1&playlist=eR_esluejKo&controls=0&modestbranding=1&rel=0"
+        src="https://www.youtube.com/embed/eR_esluejKo?autoplay=1&mute=1&loop=1&playlist=eR_esluejKo&modestbranding=1&rel=0&playsinline=1"
         style="width:100%;height:100%;border:none;"
-        allow="autoplay; fullscreen"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
       </iframe>
     </div>
@@ -261,12 +256,12 @@ footer a{text-decoration:none;}
       <div class="feat-card"><div class="feat-icon">🛍️</div><h3>쇼핑커넥트 연동</h3><p>포스팅마다 상품·서비스를 자동 연결해 추가 수익을 만듭니다.</p><span class="feat-tag">추가 수익 창출</span></div>
       <div class="feat-card"><div class="feat-icon">🏪</div><h3>우리가게 홍보 자동화</h3><p>플레이스·스마트스토어를 자동 노출. 광고비 없이 유입을 만듭니다.</p><span class="feat-tag">광고비 ZERO</span></div>
     </div>
-    <!-- 영상 2 — 메인 소개 -->
+    <!-- 영상 2 — 기능 소개 (YouTube 자동재생으로 변경) -->
     <div style="margin-top:28px;border-radius:14px;overflow:hidden;background:#000;aspect-ratio:16/9;">
-      <iframe 
-        src="https://drive.google.com/file/d/1iHtfbCsHZIuvC04Pik8821NdjWCiQ2Xz/preview"
+      <iframe
+        src="https://www.youtube.com/embed/OhLpvgYg-Ac?autoplay=1&mute=1&loop=1&playlist=OhLpvgYg-Ac&modestbranding=1&rel=0&playsinline=1"
         style="width:100%;height:100%;border:none;"
-        allow="autoplay"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
       </iframe>
     </div>
