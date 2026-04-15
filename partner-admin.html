@@ -145,10 +145,10 @@
   <script>
     // ⚠️ 아래 두 값을 교체하세요
     const SUPABASE_URL = 'https://rxlzgppwvwyduilocrmo.supabase.co'
-    const SUPABASE_KEY = 'sb_secret_aSNJxoc169vtA69wTuISSA_HQ3XLMFY' // ← Secret key로 교체 (관리자 전용 페이지)
-    const ADMIN_PASSWORD = 'love0821aa@' // ← 관리자 비밀번호 설정 (예: centumhi2026!)
+    const SUPABASE_KEY = 'YOUR_SECRET_KEY' // ← Secret key로 교체 (관리자 전용 페이지)
+    const ADMIN_PASSWORD = 'YOUR_ADMIN_PASSWORD' // ← 관리자 비밀번호 설정 (예: centumhi2026!)
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
     function adminLogin() {
       const pw = document.getElementById('adminPw').value
@@ -176,10 +176,10 @@
 
     async function loadStats() {
       const [{ count: tp }, { count: ps }, { count: cs }, { count: pw }] = await Promise.all([
-        supabase.from('partners').select('*', { count: 'exact', head: true }),
-        supabase.from('sales').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('sales').select('*', { count: 'exact', head: true }).eq('status', 'confirmed'),
-        supabase.from('withdrawals').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+        sb.from('partners').select('*', { count: 'exact', head: true }),
+        sb.from('sales').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+        sb.from('sales').select('*', { count: 'exact', head: true }).eq('status', 'confirmed'),
+        sb.from('withdrawals').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
       ])
       document.getElementById('totalPartners').textContent = tp || 0
       document.getElementById('pendingSales').textContent = ps || 0
@@ -188,7 +188,7 @@
     }
 
     async function loadSales() {
-      const { data } = await supabase.from('sales').select('*').order('created_at', { ascending: false })
+      const { data } = await sb.from('sales').select('*').order('created_at', { ascending: false })
       if (!data || data.length === 0) {
         document.getElementById('salesList').innerHTML = '<div class="empty">판매 내역 없음</div>'; return
       }
@@ -212,7 +212,7 @@
     }
 
     async function loadWithdrawals() {
-      const { data } = await supabase.from('withdrawals').select('*').order('created_at', { ascending: false })
+      const { data } = await sb.from('withdrawals').select('*').order('created_at', { ascending: false })
       if (!data || data.length === 0) {
         document.getElementById('withdrawalList').innerHTML = '<div class="empty">출금 신청 없음</div>'; return
       }
@@ -235,7 +235,7 @@
     }
 
     async function loadPartners() {
-      const { data } = await supabase.from('partners').select('*').order('created_at', { ascending: false })
+      const { data } = await sb.from('partners').select('*').order('created_at', { ascending: false })
       if (!data || data.length === 0) {
         document.getElementById('partnerList').innerHTML = '<div class="empty">파트너 없음</div>'; return
       }
@@ -266,19 +266,19 @@
       if (!refCode || !customer) return showMsg('추천코드와 고객명을 입력해주세요.', 'error')
 
       // 파트너 존재 확인
-      const { data: partnerData } = await supabase.from('partners').select('id').eq('ref_code', refCode).single()
+      const { data: partnerData } = await sb.from('partners').select('id').eq('ref_code', refCode).single()
       if (!partnerData) return showMsg(`추천코드 ${refCode}에 해당하는 파트너가 없습니다.`, 'error')
 
       // 판매 등록 (바로 confirmed)
-      const { error } = await supabase.from('sales').insert({
+      const { error } = await sb.from('sales').insert({
         ref_code: refCode, customer_name: customer, memo,
         status: 'confirmed', commission: 200000, amount: 1790000
       })
       if (error) return showMsg('오류: ' + error.message, 'error')
 
       // 포인트 적립
-      const { data: partner } = await supabase.from('partners').select('points, total_earned').eq('ref_code', refCode).single()
-      await supabase.from('partners').update({
+      const { data: partner } = await sb.from('partners').select('points, total_earned').eq('ref_code', refCode).single()
+      await sb.from('partners').update({
         points: (partner.points || 0) + 200000,
         total_earned: (partner.total_earned || 0) + 200000
       }).eq('ref_code', refCode)
@@ -292,9 +292,9 @@
 
     async function confirmSale(saleId, refCode, commission) {
       if (!confirm('이 판매를 확정하고 파트너에게 포인트를 적립할까요?')) return
-      await supabase.from('sales').update({ status: 'confirmed' }).eq('id', saleId)
-      const { data: partner } = await supabase.from('partners').select('points, total_earned').eq('ref_code', refCode).single()
-      await supabase.from('partners').update({
+      await sb.from('sales').update({ status: 'confirmed' }).eq('id', saleId)
+      const { data: partner } = await sb.from('partners').select('points, total_earned').eq('ref_code', refCode).single()
+      await sb.from('partners').update({
         points: (partner.points || 0) + commission,
         total_earned: (partner.total_earned || 0) + commission
       }).eq('ref_code', refCode)
@@ -304,9 +304,9 @@
 
     async function processWithdrawal(withdrawalId, refCode, amount) {
       if (!confirm(`${amount.toLocaleString()}원을 실제로 계좌이체 했나요?\n확인하면 '지급완료'로 변경됩니다.`)) return
-      await supabase.from('withdrawals').update({ status: 'processed' }).eq('id', withdrawalId)
-      const { data: partner } = await supabase.from('partners').select('points').eq('ref_code', refCode).single()
-      await supabase.from('partners').update({ points: Math.max(0, (partner.points || 0) - amount) }).eq('ref_code', refCode)
+      await sb.from('withdrawals').update({ status: 'processed' }).eq('id', withdrawalId)
+      const { data: partner } = await sb.from('partners').select('points').eq('ref_code', refCode).single()
+      await sb.from('partners').update({ points: Math.max(0, (partner.points || 0) - amount) }).eq('ref_code', refCode)
       alert('✅ 출금 처리 완료!')
       await loadAll()
     }
