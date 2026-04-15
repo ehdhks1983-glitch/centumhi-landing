@@ -201,9 +201,9 @@
           <td><code style="color:#22c55e">${s.ref_code}</code></td>
           <td>${s.customer_name || '-'}</td>
           <td>${s.commission.toLocaleString()}원</td>
-          <td><span class="badge ${s.status}">${statusMap[s.status]}</span></td>
+          <td><span class="badge ${s.status === 'confirmed' ? 'confirmed' : s.status === 'paid' ? 'processed' : 'pending'}">${statusMap[s.status] || s.status}</span></td>
           <td>
-            ${s.status === 'pending' ? `<button class="btn btn-confirm btn-sm" onclick="confirmSale('${s.id}','${s.ref_code}',${s.commission})">확정</button>` : ''}
+            ${s.status === 'pending' ? `<button class="btn btn-confirm btn-sm" onclick="confirmSale('${s.id}','${s.ref_code}',${s.commission})">확정</button>` : '<span style="color:#333;font-size:12px">-</span>'}
           </td>
         </tr>`
       }
