@@ -283,7 +283,7 @@
       })
       if (error) return showMsg('오류: ' + error.message, 'error')
 
-      showMsg(`✅ ${customer} 판매 등록 완료! ${refCode} 파트너에게 20만원 포인트 적립`, 'success')
+      showMsg(`✅ ${customer} 판매 등록 완료! 확정 버튼을 눌러 포인트를 적립하세요.`, 'success')
       document.getElementById('saleRef').value = ''
       document.getElementById('saleCustomer').value = ''
       document.getElementById('saleMemo').value = ''
@@ -331,8 +331,7 @@
     }
 
     async function deletePartner(partnerId, refCode, name) {
-      if (!confirm(name + ' 님을 탈퇴 처리할까요?
-관련 판매/출금 내역도 모두 삭제됩니다.')) return
+      if (!confirm(name + ' 님을 탈퇴 처리할까요?\n관련 판매/출금 내역도 모두 삭제됩니다.')) return
       try {
         await sb.from('withdrawals').delete().eq('ref_code', refCode)
         await sb.from('sales').delete().eq('ref_code', refCode)
@@ -347,9 +346,7 @@
     }
 
     async function resetAllData() {
-      if (!confirm('⚠️ 모든 판매/출금/방문 데이터를 초기화할까요?
-파트너 계정은 유지됩니다.
-이 작업은 되돌릴 수 없습니다!')) return
+      if (!confirm('⚠️ 모든 판매/출금/방문 데이터를 초기화할까요?\n파트너 계정은 유지됩니다.\n이 작업은 되돌릴 수 없습니다!')) return
       if (!confirm('정말로 초기화하시겠습니까? 마지막 확인입니다.')) return
       try {
         await sb.from('withdrawals').delete().neq('id', '00000000-0000-0000-0000-000000000000')
