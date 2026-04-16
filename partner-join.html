@@ -123,6 +123,11 @@
         <input type="tel" id="phone" placeholder="010-0000-0000" />
       </div>
 
+      <div class="form-group">
+        <label>총판 추천코드 (총판에게 소개받은 경우만 입력)</label>
+        <input type="text" id="parentRefCode" placeholder="총판 코드 없으면 비워두세요" style="text-transform:uppercase" />
+      </div>
+
       <div class="section-title">정산 계좌 (수익 지급용)</div>
       <div class="form-group">
         <label>은행</label>
@@ -186,9 +191,17 @@
       const bankName = document.getElementById('bankName').value
       const bankAccount = document.getElementById('bankAccount').value.trim()
       const bankHolder = document.getElementById('bankHolder').value.trim()
+      const parentRefCode = document.getElementById('parentRefCode').value.trim().toUpperCase()
 
       if (!name || !email || !password || !phone) return showMsg('기본 정보를 모두 입력해주세요.', 'error')
       if (password.length < 8) return showMsg('비밀번호는 8자 이상이어야 합니다.', 'error')
+
+      // 총판 코드 유효성 확인
+      if (parentRefCode) {
+        const { data: parentData } = await sb.from('partners').select('role').eq('ref_code', parentRefCode).single()
+        if (!parentData) return showMsg('총판 코드가 존재하지 않습니다. 다시 확인해주세요.', 'error')
+        if (parentData.role !== 'distributor') return showMsg('유효한 총판 코드가 아닙니다.', 'error')
+      }
 
       const btn = document.getElementById('submitBtn')
       btn.disabled = true; btn.textContent = '신청 중...'
@@ -205,7 +218,9 @@
           bank_account: bankAccount,
           bank_holder: bankHolder,
           ref_code: refCode,
-          password_hash: 'supabase_auth'
+          password_hash: 'supabase_auth',
+          role: 'partner',
+          parent_ref_code: parentRefCode || null
         })
         if (partnerError) throw partnerError
 
