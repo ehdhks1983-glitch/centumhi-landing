@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>관리자 | 센텀하이</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
@@ -75,6 +76,23 @@
     }
     .tab-btn.active { background: #22c55e; color: #000; border-color: #22c55e; }
     .tab-btn.active.yellow { background: #fbbf24; border-color: #fbbf24; }
+    .notice-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .notice-form input, .notice-form textarea, .notice-form select {
+      padding: 10px 14px; background: #0a0a0a; border: 1px solid #2a2a2a;
+      border-radius: 8px; color: #fff; font-size: 14px; outline: none; width: 100%; margin-bottom: 0;
+    }
+    .notice-form textarea { min-height: 80px; resize: vertical; }
+    .notice-form input:focus, .notice-form textarea:focus { border-color: #22c55e; }
+    .notice-item { border-bottom: 1px solid #1e1e1e; padding: 14px 0; }
+    .notice-item:last-child { border-bottom: none; }
+    .notice-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 8px; }
+    .notice-tag.notice { background: #1e1b4b; color: #818cf8; }
+    .notice-tag.important { background: #1a0505; color: #f87171; }
+    .notice-tag.update { background: #052e16; color: #4ade80; }
+    .notice-title { font-size: 14px; color: #ccc; font-weight: 600; }
+    .notice-content { font-size: 13px; color: #666; margin-top: 6px; line-height: 1.6; }
+    .notice-date { font-size: 11px; color: #333; margin-top: 6px; }
+    .chart-wrap { position: relative; height: 220px; }
   </style>
 </head>
 <body>
@@ -149,6 +167,32 @@
         <div id="withdrawalList"><div class="empty">불러오는 중...</div></div>
       </div>
 
+      <!-- 수익 그래프 -->
+      <div class="section">
+        <h2>📊 월별 판매 현황</h2>
+        <div class="chart-wrap">
+          <canvas id="salesChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 공지사항 관리 -->
+      <div class="section">
+        <h2>📢 공지사항 관리</h2>
+        <div class="notice-form">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:10px">
+            <input type="text" id="noticeTitle" placeholder="공지 제목" />
+            <select id="noticeType" style="width:100px">
+              <option value="notice">공지</option>
+              <option value="important">중요</option>
+              <option value="update">업데이트</option>
+            </select>
+          </div>
+          <textarea id="noticeContent" placeholder="공지 내용을 입력하세요"></textarea>
+          <button class="btn btn-primary" style="width:120px" onclick="addNotice()">공지 등록</button>
+        </div>
+        <div id="noticeAdminList"><div class="empty">공지사항 없음</div></div>
+      </div>
+
       <!-- 파트너 목록 -->
       <div class="section">
         <h2>👥 파트너 목록</h2>
@@ -186,7 +230,7 @@
     }
 
     async function loadAll() {
-      await Promise.all([loadStats(), loadSales(), loadWithdrawals(), loadPartners()])
+      await Promise.all([loadStats(), loadSales(), loadWithdrawals(), loadPartners(), loadSalesChart(), loadNoticesAdmin()])
     }
 
     async function loadStats() {
@@ -458,6 +502,92 @@
       } catch(err) {
         alert('오류: ' + err.message)
       }
+    }
+
+    // ── 수익 그래프 ──
+    let salesChartInstance = null
+
+    async function loadSalesChart() {
+      const { data } = await sb.from('sales').select('created_at, commission').eq('status', 'confirmed')
+      const monthly = {}
+      for (const s of data || []) {
+        const ym = s.created_at.substring(0, 7)
+        monthly[ym] = (monthly[ym] || 0) + s.commission
+      }
+      const labels = Object.keys(monthly).sort().slice(-6)
+      const values = labels.map(l => (monthly[l] || 0) / 10000)
+
+      if (salesChartInstance) salesChartInstance.destroy()
+      const ctx = document.getElementById('salesChart').getContext('2d')
+      salesChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels.map(l => l.replace('-', '년 ') + '월'),
+          datasets: [{
+            label: '확정 수수료 (만원)',
+            data: values,
+            backgroundColor: '#22c55e44',
+            borderColor: '#22c55e',
+            borderWidth: 2,
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#888', font: { size: 12 } } } },
+          scales: {
+            x: { ticks: { color: '#555' }, grid: { color: '#1e1e1e' } },
+            y: { ticks: { color: '#555', callback: v => v + '만' }, grid: { color: '#1e1e1e' } }
+          }
+        }
+      })
+    }
+
+    // ── 공지사항 ──
+    async function addNotice() {
+      const title = document.getElementById('noticeTitle').value.trim()
+      const content = document.getElementById('noticeContent').value.trim()
+      const type = document.getElementById('noticeType').value
+      if (!title || !content) return alert('제목과 내용을 입력해주세요.')
+
+      const { error } = await sb.from('notices').insert({ title, content, type })
+      if (error) return alert('오류: ' + error.message)
+
+      document.getElementById('noticeTitle').value = ''
+      document.getElementById('noticeContent').value = ''
+      alert('✅ 공지사항이 등록됐습니다!')
+      await loadNoticesAdmin()
+    }
+
+    async function deleteNotice(id) {
+      if (!confirm('이 공지사항을 삭제할까요?')) return
+      await sb.from('notices').delete().eq('id', id)
+      await loadNoticesAdmin()
+    }
+
+    async function loadNoticesAdmin() {
+      const { data } = await sb.from('notices').select('*').order('created_at', { ascending: false })
+      if (!data || data.length === 0) {
+        document.getElementById('noticeAdminList').innerHTML = '<div class="empty">등록된 공지사항이 없습니다</div>'
+        return
+      }
+      const typeLabel = { notice: '공지', important: '중요', update: '업데이트' }
+      let html = ''
+      for (const n of data) {
+        const date = new Date(n.created_at).toLocaleDateString('ko-KR')
+        html += `<div class="notice-item">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <span class="notice-tag ${n.type}">${typeLabel[n.type] || n.type}</span>
+              <span class="notice-title">${n.title}</span>
+            </div>
+            <button class="btn btn-danger btn-sm" style="font-size:11px" onclick="deleteNotice('${n.id}')">삭제</button>
+          </div>
+          <div class="notice-content">${n.content}</div>
+          <div class="notice-date">${date}</div>
+        </div>`
+      }
+      document.getElementById('noticeAdminList').innerHTML = html
     }
 
     // 자동 로그인 유지
