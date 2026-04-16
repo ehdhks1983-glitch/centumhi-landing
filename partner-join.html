@@ -175,6 +175,7 @@
       el.textContent = text
       el.className = 'msg ' + type
       el.style.display = 'block'
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
 
     async function register() {
