@@ -67,6 +67,14 @@
     .msg.success { background: #052e16; color: #4ade80; }
     .empty { text-align: center; color: #333; padding: 24px; font-size: 13px; }
     #adminPanel { display: none; }
+    .tab-bar { display: flex; gap: 4px; margin-bottom: 16px; }
+    .tab-btn {
+      padding: 7px 18px; border-radius: 6px; font-size: 13px; font-weight: 600;
+      cursor: pointer; border: 1px solid #2a2a2a; background: #0a0a0a; color: #555;
+      transition: all 0.2s;
+    }
+    .tab-btn.active { background: #22c55e; color: #000; border-color: #22c55e; }
+    .tab-btn.active.yellow { background: #fbbf24; border-color: #fbbf24; }
   </style>
 </head>
 <body>
@@ -134,6 +142,10 @@
       <!-- 출금 신청 목록 -->
       <div class="section">
         <h2>💸 출금 신청 목록</h2>
+        <div class="tab-bar">
+          <button class="tab-btn active yellow" id="tabPending" onclick="switchWithdrawalTab('pending')">대기중 <span id="pendingCount"></span></button>
+          <button class="tab-btn" id="tabDone" onclick="switchWithdrawalTab('done')">완료 <span id="doneCount"></span></button>
+        </div>
         <div id="withdrawalList"><div class="empty">불러오는 중...</div></div>
       </div>
 
@@ -214,13 +226,32 @@
       document.getElementById('salesList').innerHTML = html
     }
 
-    async function loadWithdrawals() {
-      const { data } = await sb.from('withdrawals').select('*').order('created_at', { ascending: false })
-      if (!data || data.length === 0) {
-        document.getElementById('withdrawalList').innerHTML = '<div class="empty">출금 신청 없음</div>'; return
+    let currentWithdrawalTab = 'pending'
+    let allWithdrawals = []
+
+    function switchWithdrawalTab(tab) {
+      currentWithdrawalTab = tab
+      document.getElementById('tabPending').className = 'tab-btn' + (tab === 'pending' ? ' active yellow' : '')
+      document.getElementById('tabDone').className = 'tab-btn' + (tab === 'done' ? ' active' : '')
+      renderWithdrawals()
+    }
+
+    function renderWithdrawals() {
+      const filtered = allWithdrawals.filter(w =>
+        currentWithdrawalTab === 'pending' ? w.status === 'pending' : w.status === 'processed'
+      )
+      const pendingCount = allWithdrawals.filter(w => w.status === 'pending').length
+      const doneCount = allWithdrawals.filter(w => w.status === 'processed').length
+      document.getElementById('pendingCount').textContent = pendingCount > 0 ? `(${pendingCount})` : ''
+      document.getElementById('doneCount').textContent = doneCount > 0 ? `(${doneCount})` : ''
+
+      if (filtered.length === 0) {
+        document.getElementById('withdrawalList').innerHTML =
+          `<div class="empty">${currentWithdrawalTab === 'pending' ? '대기중인 출금 신청이 없습니다' : '완료된 출금 내역이 없습니다'}</div>`
+        return
       }
       let html = '<table><thead><tr><th>날짜</th><th>파트너코드</th><th>금액</th><th>계좌</th><th>상태</th><th>액션</th></tr></thead><tbody>'
-      for (const w of data) {
+      for (const w of filtered) {
         const date = new Date(w.created_at).toLocaleDateString('ko-KR')
         html += `<tr>
           <td>${date}</td>
@@ -229,12 +260,18 @@
           <td style="font-size:12px">${w.bank_name} ${w.bank_account} (${w.bank_holder})</td>
           <td><span class="badge ${w.status === 'processed' ? 'processed' : 'pending'}">${w.status === 'processed' ? '완료' : '대기중'}</span></td>
           <td>
-            ${w.status === 'pending' ? `<button class="btn btn-paid btn-sm" onclick="processWithdrawal('${w.id}','${w.ref_code}',${w.amount})">지급완료</button>` : ''}
+            ${w.status === 'pending' ? `<button class="btn btn-paid btn-sm" onclick="processWithdrawal('${w.id}','${w.ref_code}',${w.amount})">지급완료</button>` : '-'}
           </td>
         </tr>`
       }
       html += '</tbody></table>'
       document.getElementById('withdrawalList').innerHTML = html
+    }
+
+    async function loadWithdrawals() {
+      const { data } = await sb.from('withdrawals').select('*').order('created_at', { ascending: false })
+      allWithdrawals = data || []
+      renderWithdrawals()
     }
 
     async function loadPartners() {
