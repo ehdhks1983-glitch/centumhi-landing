@@ -241,6 +241,7 @@
         document.getElementById('accountInfo').textContent =
           `정산 계좌: ${partner.bank_name || '-'} ${partner.bank_account || '-'} (${partner.bank_holder || '-'})`
 
+        await loadNotices()
         await loadVisits()
         await loadSales()
         await loadWithdrawals()
