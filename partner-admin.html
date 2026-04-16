@@ -203,7 +203,7 @@
           <td>${date}</td>
           <td><code style="color:#22c55e">${s.ref_code}</code></td>
           <td>${s.customer_name || '-'}</td>
-          <td>${s.commission.toLocaleString()}원</td>
+          <td style="color:${s.commission >= 300000 ? '#fbbf24' : '#22c55e'}">${s.commission.toLocaleString()}원${s.parent_ref_code ? ` <span style="font-size:10px;color:#888">(총판:${(s.parent_commission||0).toLocaleString()})</span>` : ''}</td>
           <td><span class="badge ${s.status === 'confirmed' ? 'confirmed' : s.status === 'paid' ? 'processed' : 'pending'}">${statusMap[s.status] || s.status}</span></td>
           <td>
             ${s.status === 'pending' ? `<button class="btn btn-confirm btn-sm" onclick="confirmSale('${s.id}','${s.ref_code}',${s.commission})">확정</button>` : '<span style="color:#333;font-size:12px">-</span>'}
@@ -275,18 +275,25 @@
 
       if (!refCode || !customer) return showMsg('추천코드와 고객명을 입력해주세요.', 'error')
 
-      // 파트너 존재 확인
-      const { data: partnerData } = await sb.from('partners').select('id').eq('ref_code', refCode).single()
+      // 파트너 존재 확인 + 등급 확인
+      const { data: partnerData } = await sb.from('partners').select('id, role, parent_ref_code').eq('ref_code', refCode).single()
       if (!partnerData) return showMsg(`추천코드 ${refCode}에 해당하는 파트너가 없습니다.`, 'error')
+
+      // 총판 직접 판매 시 30만원, 영업 판매 시 20만원
+      const isDistributor = partnerData.role === 'distributor'
+      const commission = isDistributor ? 300000 : 200000
 
       // 판매 등록 (대기중 상태 - 확정 버튼 클릭 시 포인트 적립)
       const { error } = await sb.from('sales').insert({
         ref_code: refCode, customer_name: customer, memo,
-        status: 'pending', commission: 200000, amount: 1790000
+        status: 'pending', commission: commission, amount: 1790000,
+        parent_ref_code: isDistributor ? null : (partnerData.parent_ref_code || null),
+        parent_commission: isDistributor ? 0 : (partnerData.parent_ref_code ? 100000 : 0)
       })
       if (error) return showMsg('오류: ' + error.message, 'error')
 
-      showMsg(`✅ ${customer} 판매 등록 완료! 확정 버튼을 눌러 포인트를 적립하세요.`, 'success')
+      const roleMsg = isDistributor ? '총판 직접판매 30만원' : '영업 20만원'
+      showMsg(`✅ ${customer} 판매 등록 완료! (${roleMsg}) 확정 버튼을 눌러 포인트를 적립하세요.`, 'success')
       document.getElementById('saleRef').value = ''
       document.getElementById('saleCustomer').value = ''
       document.getElementById('saleMemo').value = ''
@@ -294,46 +301,44 @@
     }
 
     async function confirmSale(saleId, refCode, commission) {
-      if (!confirm('이 판매를 확정하고 파트너에게 포인트를 적립할까요?')) return
+      if (!confirm('이 판매를 확정하고 포인트를 적립할까요?')) return
       try {
-        // 영업 파트너 정보 조회
-        const { data: partner } = await sb.from('partners').select('points, total_earned, parent_ref_code, role').eq('ref_code', refCode).single()
+        // 판매 정보 조회 (이미 등록 시 commission/parent 정보 포함)
+        const { data: sale } = await sb.from('sales').select('*').eq('id', saleId).single()
+        if (!sale) throw new Error('판매 정보를 찾을 수 없습니다')
+
+        const { data: partner } = await sb.from('partners').select('points, total_earned, role').eq('ref_code', refCode).single()
         if (!partner) throw new Error('파트너를 찾을 수 없습니다')
 
-        // 총판 여부 확인
-        const parentCommission = partner.parent_ref_code ? 100000 : 0
-        const partnerCommission = partner.parent_ref_code ? 200000 : commission
-
-        // 판매 확정 + 총판 코드 기록
-        const { error: saleError } = await sb.from('sales').update({
-          status: 'confirmed',
-          parent_ref_code: partner.parent_ref_code || null,
-          parent_commission: parentCommission
-        }).eq('id', saleId)
+        // 판매 확정
+        const { error: saleError } = await sb.from('sales').update({ status: 'confirmed' }).eq('id', saleId)
         if (saleError) throw saleError
 
-        // 영업 파트너 포인트 적립
+        // 파트너 포인트 적립 (sale.commission 기준 — 총판 30만 / 영업 20만)
         await sb.from('partners').update({
-          points: (partner.points || 0) + partnerCommission,
-          total_earned: (partner.total_earned || 0) + partnerCommission
+          points: (partner.points || 0) + sale.commission,
+          total_earned: (partner.total_earned || 0) + sale.commission
         }).eq('ref_code', refCode)
 
-        // 총판 포인트 적립
-        if (partner.parent_ref_code) {
-          const { data: parentPartner } = await sb.from('partners').select('points, total_earned, team_earned').eq('ref_code', partner.parent_ref_code).single()
+        let alertMsg = ''
+        if (partner.role === 'distributor') {
+          alertMsg = `✅ 확정 완료!\n총판 직접판매: ${sale.commission.toLocaleString()}원 적립`
+        } else if (sale.parent_ref_code) {
+          // 영업 파트너 + 상위 총판 있는 경우
+          const { data: parentPartner } = await sb.from('partners').select('points, total_earned, team_earned').eq('ref_code', sale.parent_ref_code).single()
           if (parentPartner) {
             await sb.from('partners').update({
-              points: (parentPartner.points || 0) + parentCommission,
-              total_earned: (parentPartner.total_earned || 0) + parentCommission,
-              team_earned: (parentPartner.team_earned || 0) + parentCommission
-            }).eq('ref_code', partner.parent_ref_code)
+              points: (parentPartner.points || 0) + sale.parent_commission,
+              total_earned: (parentPartner.total_earned || 0) + sale.parent_commission,
+              team_earned: (parentPartner.team_earned || 0) + sale.parent_commission
+            }).eq('ref_code', sale.parent_ref_code)
           }
+          alertMsg = `✅ 확정 완료!\n영업(${refCode}): ${sale.commission.toLocaleString()}원 적립\n총판(${sale.parent_ref_code}): ${sale.parent_commission.toLocaleString()}원 적립`
+        } else {
+          alertMsg = `✅ 확정 완료! ${sale.commission.toLocaleString()}원 적립됨`
         }
 
-        const msg = partner.parent_ref_code
-          ? `✅ 확정 완료!\n영업(${refCode}): 20만원 적립\n총판(${partner.parent_ref_code}): 10만원 적립`
-          : '✅ 확정 완료! 파트너 포인트 20만원 적립됨'
-        alert(msg)
+        alert(alertMsg)
         await loadAll()
       } catch(err) {
         alert('오류: ' + err.message)
