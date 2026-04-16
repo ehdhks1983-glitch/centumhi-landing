@@ -96,7 +96,7 @@
       <!-- 통계 -->
       <div class="stats">
         <div class="stat"><div class="label">총 파트너</div><div class="value" id="totalPartners">-</div></div>
-        <div class="stat"><div class="label">대기중 판매</div><div class="value yellow" id="pendingSales">-</div></div>
+        <div class="stat"><div class="label">총판</div><div class="value yellow" id="totalDistributors">-</div></div>
         <div class="stat"><div class="label">확정 판매</div><div class="value green" id="confirmedSales">-</div></div>
         <div class="stat"><div class="label">대기중 출금</div><div class="value yellow" id="pendingWithdrawals">-</div></div>
       </div>
@@ -178,14 +178,14 @@
     }
 
     async function loadStats() {
-      const [{ count: tp }, { count: ps }, { count: cs }, { count: pw }] = await Promise.all([
+      const [{ count: tp }, { count: td }, { count: cs }, { count: pw }] = await Promise.all([
         sb.from('partners').select('*', { count: 'exact', head: true }),
-        sb.from('sales').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+        sb.from('partners').select('*', { count: 'exact', head: true }).eq('role', 'distributor'),
         sb.from('sales').select('*', { count: 'exact', head: true }).eq('status', 'confirmed'),
         sb.from('withdrawals').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
       ])
       document.getElementById('totalPartners').textContent = tp || 0
-      document.getElementById('pendingSales').textContent = ps || 0
+      document.getElementById('totalDistributors').textContent = td || 0
       document.getElementById('confirmedSales').textContent = cs || 0
       document.getElementById('pendingWithdrawals').textContent = pw || 0
     }
@@ -242,20 +242,23 @@
       if (!data || data.length === 0) {
         document.getElementById('partnerList').innerHTML = '<div class="empty">파트너 없음</div>'; return
       }
-      let html = '<table><thead><tr><th>가입일</th><th>이름</th><th>이메일</th><th>연락처</th><th>추천코드</th><th>포인트</th><th>총누적</th><th>액션</th></tr></thead><tbody>'
+      let html = '<table><thead><tr><th>가입일</th><th>등급</th><th>이름</th><th>이메일</th><th>추천코드</th><th>상위총판</th><th>포인트</th><th>팀수익</th><th>액션</th></tr></thead><tbody>'
       for (const p of data) {
         const date = new Date(p.created_at).toLocaleDateString('ko-KR')
+        const roleLabel = p.role === 'distributor' ? '<span style="color:#fbbf24;font-weight:700">총판</span>' : '<span style="color:#22c55e">영업</span>'
         html += `<tr>
           <td>${date}</td>
+          <td>${roleLabel}</td>
           <td>${p.name}</td>
           <td style="font-size:12px">${p.email}</td>
-          <td>${p.phone}</td>
           <td><code style="color:#22c55e">${p.ref_code}</code></td>
+          <td style="font-size:12px;color:#888">${p.parent_ref_code || '-'}</td>
           <td style="color:#22c55e">${(p.points||0).toLocaleString()}원</td>
-          <td>${(p.total_earned||0).toLocaleString()}원</td>
-          <td style="display:flex;gap:6px">
-            <button class="btn btn-sm" style="background:#1a1a00;color:#fbbf24;border:1px solid #451a03" onclick="resetPoints('${p.ref_code}','${p.name}')">포인트초기화</button>
-            <button class="btn btn-danger btn-sm" onclick="deletePartner('${p.id}','${p.ref_code}','${p.name}')">탈퇴</button>
+          <td style="color:#fbbf24">${(p.team_earned||0).toLocaleString()}원</td>
+          <td style="display:flex;gap:6px;flex-wrap:wrap">
+            ${p.role === 'partner' ? `<button class="btn btn-sm" style="background:#1e1b4b;color:#818cf8;border:1px solid #312e81;font-size:11px" onclick="promoteToDistributor('${p.id}','${p.name}')">총판승급</button>` : `<button class="btn btn-sm" style="background:#1a1000;color:#fbbf24;border:1px solid #451a03;font-size:11px" onclick="demoteToPartner('${p.id}','${p.name}')">영업강등</button>`}
+            <button class="btn btn-sm" style="background:#1a1a00;color:#fbbf24;border:1px solid #451a03;font-size:11px" onclick="resetPoints('${p.ref_code}','${p.name}')">포인트초기화</button>
+            <button class="btn btn-danger btn-sm" style="font-size:11px" onclick="deletePartner('${p.id}','${p.ref_code}','${p.name}')">탈퇴</button>
           </td>
         </tr>`
       }
@@ -293,16 +296,44 @@
     async function confirmSale(saleId, refCode, commission) {
       if (!confirm('이 판매를 확정하고 파트너에게 포인트를 적립할까요?')) return
       try {
-        const { error: saleError } = await sb.from('sales').update({ status: 'confirmed' }).eq('id', saleId)
-        if (saleError) throw saleError
-        const { data: partner } = await sb.from('partners').select('points, total_earned').eq('ref_code', refCode).single()
+        // 영업 파트너 정보 조회
+        const { data: partner } = await sb.from('partners').select('points, total_earned, parent_ref_code, role').eq('ref_code', refCode).single()
         if (!partner) throw new Error('파트너를 찾을 수 없습니다')
-        const { error: pointError } = await sb.from('partners').update({
-          points: (partner.points || 0) + commission,
-          total_earned: (partner.total_earned || 0) + commission
+
+        // 총판 여부 확인
+        const parentCommission = partner.parent_ref_code ? 100000 : 0
+        const partnerCommission = partner.parent_ref_code ? 200000 : commission
+
+        // 판매 확정 + 총판 코드 기록
+        const { error: saleError } = await sb.from('sales').update({
+          status: 'confirmed',
+          parent_ref_code: partner.parent_ref_code || null,
+          parent_commission: parentCommission
+        }).eq('id', saleId)
+        if (saleError) throw saleError
+
+        // 영업 파트너 포인트 적립
+        await sb.from('partners').update({
+          points: (partner.points || 0) + partnerCommission,
+          total_earned: (partner.total_earned || 0) + partnerCommission
         }).eq('ref_code', refCode)
-        if (pointError) throw pointError
-        alert('✅ 확정 완료! 파트너 포인트 적립됨')
+
+        // 총판 포인트 적립
+        if (partner.parent_ref_code) {
+          const { data: parentPartner } = await sb.from('partners').select('points, total_earned, team_earned').eq('ref_code', partner.parent_ref_code).single()
+          if (parentPartner) {
+            await sb.from('partners').update({
+              points: (parentPartner.points || 0) + parentCommission,
+              total_earned: (parentPartner.total_earned || 0) + parentCommission,
+              team_earned: (parentPartner.team_earned || 0) + parentCommission
+            }).eq('ref_code', partner.parent_ref_code)
+          }
+        }
+
+        const msg = partner.parent_ref_code
+          ? `✅ 확정 완료!\n영업(${refCode}): 20만원 적립\n총판(${partner.parent_ref_code}): 10만원 적립`
+          : '✅ 확정 완료! 파트너 포인트 20만원 적립됨'
+        alert(msg)
         await loadAll()
       } catch(err) {
         alert('오류: ' + err.message)
@@ -316,6 +347,30 @@
       await sb.from('partners').update({ points: Math.max(0, (partner.points || 0) - amount) }).eq('ref_code', refCode)
       alert('✅ 출금 처리 완료!')
       await loadAll()
+    }
+
+    async function promoteToDistributor(partnerId, name) {
+      if (!confirm(name + ' 님을 총판으로 승급할까요?\n총판은 하부 영업사원 판매 시 건당 10만원을 받습니다.')) return
+      try {
+        const { error } = await sb.from('partners').update({ role: 'distributor' }).eq('id', partnerId)
+        if (error) throw error
+        alert('✅ ' + name + ' 님 총판 승급 완료!')
+        await loadAll()
+      } catch(err) {
+        alert('오류: ' + err.message)
+      }
+    }
+
+    async function demoteToPartner(partnerId, name) {
+      if (!confirm(name + ' 님을 일반 영업으로 변경할까요?')) return
+      try {
+        const { error } = await sb.from('partners').update({ role: 'partner' }).eq('id', partnerId)
+        if (error) throw error
+        alert('✅ ' + name + ' 님 영업으로 변경 완료!')
+        await loadAll()
+      } catch(err) {
+        alert('오류: ' + err.message)
+      }
     }
 
     async function resetPoints(refCode, name) {
