@@ -166,7 +166,7 @@
 
   <script>
     const SUPABASE_URL = 'https://rxlzgppwvwyduilocrmo.supabase.co'
-    const SUPABASE_KEY = 'YOUR_PUBLISHABLE_KEY' // ← Publishable key로 교체
+    const SUPABASE_KEY = 'sb_publishable_HSt_wuJZd5D415dbpDjDJw_KN_cgap_' // ← Publishable key로 교체
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
     let partner = null
@@ -181,8 +181,8 @@
 
       document.getElementById('userName').textContent = partner.name + ' 님'
       document.getElementById('refLink').textContent = 'https://centumhi.co.kr?ref=' + partner.ref_code
-      document.getElementById('points').textContent = partner.points.toLocaleString()
-      document.getElementById('pointsDisplay').textContent = partner.points.toLocaleString()
+      document.getElementById('points').textContent = (partner.points || 0).toLocaleString()
+      document.getElementById('pointsDisplay').textContent = (partner.points || 0).toLocaleString()
       document.getElementById('accountInfo').textContent =
         `정산 계좌: ${partner.bank_name} ${partner.bank_account} (${partner.bank_holder})`
 
@@ -259,6 +259,9 @@
       })
 
       if (error) return showMsg('오류: ' + error.message, 'error')
+      partner.points -= amount
+      document.getElementById('points').textContent = (partner.points || 0).toLocaleString()
+      document.getElementById('pointsDisplay').textContent = (partner.points || 0).toLocaleString()
       showMsg('✅ 출금 신청이 접수되었습니다. 영업일 2~3일 내 처리됩니다.', 'success')
       await loadWithdrawals()
     }
