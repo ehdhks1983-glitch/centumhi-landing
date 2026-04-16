@@ -86,7 +86,10 @@
   <div id="adminPanel">
     <div class="header">
       <h1>센텀하이 관리자</h1>
-      <span class="logout" onclick="adminLogout()">로그아웃</span>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn btn-sm" style="background:#1a0505;color:#f87171;border:1px solid #450a0a;font-size:12px" onclick="resetAllData()">⚠️ 전체초기화</button>
+        <span class="logout" onclick="adminLogout()">로그아웃</span>
+      </div>
     </div>
     <div class="main">
 
@@ -239,7 +242,7 @@
       if (!data || data.length === 0) {
         document.getElementById('partnerList').innerHTML = '<div class="empty">파트너 없음</div>'; return
       }
-      let html = '<table><thead><tr><th>가입일</th><th>이름</th><th>이메일</th><th>연락처</th><th>추천코드</th><th>포인트</th><th>총누적</th></tr></thead><tbody>'
+      let html = '<table><thead><tr><th>가입일</th><th>이름</th><th>이메일</th><th>연락처</th><th>추천코드</th><th>포인트</th><th>총누적</th><th>액션</th></tr></thead><tbody>'
       for (const p of data) {
         const date = new Date(p.created_at).toLocaleDateString('ko-KR')
         html += `<tr>
@@ -248,8 +251,12 @@
           <td style="font-size:12px">${p.email}</td>
           <td>${p.phone}</td>
           <td><code style="color:#22c55e">${p.ref_code}</code></td>
-          <td style="color:#22c55e">${p.points.toLocaleString()}원</td>
-          <td>${p.total_earned.toLocaleString()}원</td>
+          <td style="color:#22c55e">${(p.points||0).toLocaleString()}원</td>
+          <td>${(p.total_earned||0).toLocaleString()}원</td>
+          <td style="display:flex;gap:6px">
+            <button class="btn btn-sm" style="background:#1a1a00;color:#fbbf24;border:1px solid #451a03" onclick="resetPoints('${p.ref_code}','${p.name}')">포인트초기화</button>
+            <button class="btn btn-danger btn-sm" onclick="deletePartner('${p.id}','${p.ref_code}','${p.name}')">탈퇴</button>
+          </td>
         </tr>`
       }
       html += '</tbody></table>'
@@ -309,6 +316,54 @@
       await sb.from('partners').update({ points: Math.max(0, (partner.points || 0) - amount) }).eq('ref_code', refCode)
       alert('✅ 출금 처리 완료!')
       await loadAll()
+    }
+
+    async function resetPoints(refCode, name) {
+      if (!confirm(name + ' 님의 포인트를 0으로 초기화할까요?')) return
+      try {
+        const { error } = await sb.from('partners').update({ points: 0 }).eq('ref_code', refCode)
+        if (error) throw error
+        alert('✅ ' + name + ' 님 포인트 초기화 완료!')
+        await loadAll()
+      } catch(err) {
+        alert('오류: ' + err.message)
+      }
+    }
+
+    async function deletePartner(partnerId, refCode, name) {
+      if (!confirm(name + ' 님을 탈퇴 처리할까요?
+관련 판매/출금 내역도 모두 삭제됩니다.')) return
+      try {
+        await sb.from('withdrawals').delete().eq('ref_code', refCode)
+        await sb.from('sales').delete().eq('ref_code', refCode)
+        await sb.from('visits').delete().eq('ref_code', refCode)
+        const { error } = await sb.from('partners').delete().eq('id', partnerId)
+        if (error) throw error
+        alert('✅ ' + name + ' 님 탈퇴 처리 완료!')
+        await loadAll()
+      } catch(err) {
+        alert('오류: ' + err.message)
+      }
+    }
+
+    async function resetAllData() {
+      if (!confirm('⚠️ 모든 판매/출금/방문 데이터를 초기화할까요?
+파트너 계정은 유지됩니다.
+이 작업은 되돌릴 수 없습니다!')) return
+      if (!confirm('정말로 초기화하시겠습니까? 마지막 확인입니다.')) return
+      try {
+        await sb.from('withdrawals').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+        await sb.from('sales').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+        await sb.from('visits').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+        const { data: partners } = await sb.from('partners').select('ref_code')
+        for (const p of partners || []) {
+          await sb.from('partners').update({ points: 0, total_earned: 0 }).eq('ref_code', p.ref_code)
+        }
+        alert('✅ 전체 데이터 초기화 완료!')
+        await loadAll()
+      } catch(err) {
+        alert('오류: ' + err.message)
+      }
     }
 
     // 자동 로그인 유지
