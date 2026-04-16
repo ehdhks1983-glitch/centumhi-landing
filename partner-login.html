@@ -4,89 +4,209 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>파트너 로그인 | 센텀하이</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8c96d;
+      --gold-dim: #c9a84c22;
+      --bg: #080808;
+      --surface: #111111;
+      --surface2: #181818;
+      --border: #252525;
+      --text: #e8e8e8;
+      --muted: #555;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, 'Segoe UI', sans-serif;
-      background: #0a0a0a; color: #fff;
-      min-height: 100vh; display: flex;
-      align-items: center; justify-content: center; padding: 20px;
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
     }
-    .container { width: 100%; max-width: 400px; }
-    .logo { text-align: center; margin-bottom: 32px; }
-    .logo h1 { font-size: 26px; font-weight: 800; color: #22c55e; }
-    .logo p { color: #666; margin-top: 4px; font-size: 14px; }
-    .card { background: #141414; border: 1px solid #222; border-radius: 16px; padding: 32px; }
-    .form-group { margin-bottom: 18px; }
-    label { display: block; font-size: 13px; color: #999; margin-bottom: 6px; }
+    /* Background decoration */
+    .bg-deco {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+    .bg-deco::before {
+      content: '';
+      position: absolute;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, #c9a84c08 0%, transparent 65%);
+    }
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(#c9a84c06 1px, transparent 1px),
+        linear-gradient(90deg, #c9a84c06 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    .big-text {
+      position: fixed;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 280px;
+      color: #c9a84c04;
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+    .logo-wrap { text-align: center; margin-bottom: 40px; }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 40px;
+      letter-spacing: 6px;
+      background: linear-gradient(135deg, #e8c96d, #c9a84c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+    }
+    .logo-sub {
+      font-size: 11px;
+      color: #3a3520;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .card {
+      background: linear-gradient(160deg, #131310, #0e0e0b);
+      border: 1px solid #c9a84c18;
+      border-radius: 18px;
+      padding: 36px;
+      box-shadow: 0 24px 80px #00000060;
+    }
+    .card-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+    .fg { margin-bottom: 14px; }
+    label { display: block; font-size: 11px; color: #444; margin-bottom: 6px; letter-spacing: 0.3px; }
     input {
-      width: 100%; padding: 12px 14px;
-      background: #0a0a0a; border: 1px solid #2a2a2a;
-      border-radius: 8px; color: #fff; font-size: 15px;
-      outline: none; transition: border-color 0.2s;
+      width: 100%;
+      padding: 12px 16px;
+      background: #0a0a08;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'Noto Sans KR', sans-serif;
+      outline: none;
+      transition: all 0.2s;
     }
-    input:focus { border-color: #22c55e; }
-    button {
-      width: 100%; padding: 14px; background: #22c55e;
-      color: #000; border: none; border-radius: 8px;
-      font-size: 16px; font-weight: 700; cursor: pointer;
-      margin-top: 8px; transition: background 0.2s;
+    input:focus {
+      border-color: var(--gold);
+      background: #0f0f0c;
+      box-shadow: 0 0 0 3px var(--gold-dim);
     }
-    button:hover { background: #16a34a; }
-    button:disabled { background: #1e1e1e; color: #444; cursor: not-allowed; }
-    .msg {
-      text-align: center; padding: 12px; border-radius: 8px;
-      margin-top: 14px; font-size: 14px; display: none;
+    .lbtn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 8px;
+      background: linear-gradient(135deg, #e8c96d, #c9a84c);
+      color: #000;
+      border: none;
+      border-radius: 9px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
     }
-    .msg.error { background: #1a0505; color: #f87171; border: 1px solid #450a0a; }
-    .msg.success { background: #052e16; color: #4ade80; border: 1px solid #14532d; }
-    .join-link { text-align: center; margin-top: 20px; color: #555; font-size: 14px; }
-    .join-link a { color: #22c55e; text-decoration: none; }
-    .admin-link { text-align: center; margin-top: 12px; }
-    .admin-link a { color: #444; font-size: 12px; text-decoration: none; }
-    .admin-link a:hover { color: #666; }
+    .lbtn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, #ffffff25, transparent);
+      transition: left 0.6s;
+    }
+    .lbtn:hover::after { left: 150%; }
+    .lbtn:hover { box-shadow: 0 6px 28px #c9a84c35; transform: translateY(-1px); }
+    .lbtn:disabled { background: #1e1e1e; color: #333; cursor: not-allowed; transform: none; box-shadow: none; }
+    .msg { padding: 12px 15px; border-radius: 8px; margin-top: 12px; font-size: 13px; display: none; }
+    .msg.error { background: #130303; color: #f87171; border: 1px solid #3a0a0a; }
+    .msg.success { background: #030f03; color: #4ade80; border: 1px solid #0f3a0f; }
+    .links { display: flex; justify-content: space-between; margin-top: 22px; }
+    .links a { font-size: 12px; color: #333; text-decoration: none; transition: color 0.2s; }
+    .links a:hover { color: var(--gold); }
+    .links .gold { color: var(--gold); }
+    .links .gold:hover { color: var(--gold-light); }
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, #c9a84c15, transparent); margin: 22px 0; }
   </style>
 </head>
 <body>
+  <div class="bg-deco"></div>
+  <div class="bg-grid"></div>
+  <div class="big-text">CENTUMHI</div>
+
   <div class="container">
-    <div class="logo">
-      <h1>센텀하이</h1>
-      <p>파트너 로그인</p>
+    <div class="logo-wrap">
+      <span class="logo">CENTUMHI</span>
+      <div class="logo-sub">Partner Program</div>
     </div>
+
     <div class="card">
-      <div class="form-group">
+      <div class="card-title">파트너 로그인</div>
+      <div class="card-sub">수익 현황과 추천 링크를 확인하세요</div>
+
+      <div class="fg">
         <label>이메일</label>
         <input type="email" id="email" placeholder="example@email.com" />
       </div>
-      <div class="form-group">
+      <div class="fg">
         <label>비밀번호</label>
         <input type="password" id="password" placeholder="••••••••"
           onkeydown="if(event.key==='Enter') login()" />
       </div>
-      <button id="loginBtn" onclick="login()">로그인</button>
+
+      <button class="lbtn" id="loginBtn" onclick="login()">로그인</button>
       <div class="msg" id="msg"></div>
+
+      <div class="divider"></div>
+      <div class="links">
+        <a href="/partner-join.html" class="gold">파트너 신청하기 →</a>
+        <a href="/partner-admin.html">관리자</a>
+      </div>
     </div>
-    <div class="join-link">아직 파트너가 아니신가요? <a href="/partner-join.html">신청하기</a></div>
-    <div class="admin-link"><a href="/partner-admin.html">관리자</a></div>
   </div>
 
   <script>
     const SUPABASE_URL = 'https://rxlzgppwvwyduilocrmo.supabase.co'
-    const SUPABASE_KEY = 'sb_publishable_HSt_wuJZd5D415dbpDjDJw_KN_cgap_' // ← Publishable key로 교체
+    const SUPABASE_KEY = 'sb_publishable_HSt_wuJZd5D415dbpDjDJw_KN_cgap_'
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    async function checkSession() {
+      const { data: { session } } = await sb.auth.getSession()
+      if (session) window.location.href = '/partner-dashboard.html'
+    }
+    checkSession()
 
     function showMsg(text, type) {
       const el = document.getElementById('msg')
       el.textContent = text; el.className = 'msg ' + type; el.style.display = 'block'
     }
-
-    // 이미 로그인된 경우 대시보드로 이동
-    async function checkSession() {
-      const { data: { session } } = await sb.auth.getSession()
-      if (session) { window.location.href = '/partner-dashboard.html' }
-    }
-    checkSession()
 
     async function login() {
       const email = document.getElementById('email').value.trim()
@@ -99,8 +219,8 @@
       try {
         const { data, error } = await sb.auth.signInWithPassword({ email, password })
         if (error) throw error
-        showMsg('✅ 로그인 성공! 대시보드로 이동합니다...', 'success')
-        setTimeout(() => { window.location.href = '/partner-dashboard.html' }, 1000)
+        showMsg('✅ 로그인 성공!', 'success')
+        setTimeout(() => { window.location.href = '/partner-dashboard.html' }, 800)
       } catch (err) {
         showMsg('이메일 또는 비밀번호가 올바르지 않습니다.', 'error')
         btn.disabled = false; btn.textContent = '로그인'
