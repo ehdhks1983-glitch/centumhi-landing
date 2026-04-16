@@ -4,162 +4,325 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>관리자 | 센텀하이</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <style>
+    :root {
+      --gold: #b8892a;
+      --gold-light: #d4a843;
+      --gold-dim: #b8892a15;
+      --bg: #f4f3f0;
+      --surface: #ffffff;
+      --border: #e8e5de;
+      --text: #1a1a18;
+      --muted: #888880;
+      --red: #dc2626;
+      --green: #16a34a;
+      --sidebar-w: 240px;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
+
+    /* Login Screen */
     .login-screen {
+      position: fixed; inset: 0;
+      background: #f4f3f0;
       display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; padding: 20px;
+      z-index: 1000;
     }
-    .login-box { background: #141414; border: 1px solid #222; border-radius: 16px; padding: 32px; width: 100%; max-width: 360px; }
-    .login-box h2 { font-size: 18px; margin-bottom: 20px; color: #ccc; }
-    input {
-      width: 100%; padding: 11px 14px; background: #0a0a0a;
-      border: 1px solid #2a2a2a; border-radius: 8px; color: #fff;
-      font-size: 15px; outline: none; margin-bottom: 12px;
+    .login-wrap { width: 100%; max-width: 380px; padding: 20px; }
+    .login-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #d4a843, #b8892a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin-bottom: 4px;
     }
-    input:focus { border-color: #22c55e; }
+    .login-sub { text-align: center; font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; }
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 8px 40px #00000010;
+    }
+    .login-card h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .login-card p { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+    .login-input {
+      width: 100%; padding: 12px 16px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 9px; color: var(--text);
+      font-size: 14px; font-family: 'Noto Sans KR', sans-serif;
+      outline: none; transition: all 0.2s; margin-bottom: 12px;
+    }
+    .login-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-dim); }
+    .login-btn {
+      width: 100%; padding: 13px;
+      background: #1a1a14; color: #fff;
+      border: none; border-radius: 9px;
+      font-size: 14px; font-weight: 600;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .login-btn:hover { background: #2a2a20; }
+    .login-msg { padding: 10px 14px; border-radius: 8px; margin-top: 10px; font-size: 13px; display: none; }
+    .login-msg.error { background: #fff0f0; color: var(--red); border: 1px solid #fecaca; }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: #1a1a14;
+      position: fixed; left: 0; top: 0; bottom: 0;
+      display: flex; flex-direction: column;
+      z-index: 100;
+    }
+    .sidebar-logo { padding: 28px 24px 20px; border-bottom: 1px solid #2a2a20; }
+    .sidebar-logo .name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; letter-spacing: 3px;
+      background: linear-gradient(135deg, #d4a843, #b8892a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .sidebar-logo .sub { font-size: 9px; color: #333; letter-spacing: 3px; text-transform: uppercase; margin-top: 2px; }
+    .sidebar-nav { flex: 1; padding: 16px 12px; }
+    .nav-label { font-size: 9px; color: #2a2a20; letter-spacing: 2px; text-transform: uppercase; padding: 0 12px; margin: 14px 0 6px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      font-size: 13px; color: #555; cursor: pointer;
+      transition: all 0.15s; text-decoration: none; margin-bottom: 2px;
+    }
+    .nav-item:hover { background: #252520; color: #e8e8e0; }
+    .nav-item.active { background: var(--gold-dim); color: #d4a843; }
+    .sidebar-footer { padding: 16px 24px; border-top: 1px solid #2a2a20; }
+    .logout-lnk { font-size: 12px; color: #333; cursor: pointer; background: none; border: none; font-family: 'Noto Sans KR', sans-serif; transition: color 0.2s; }
+    .logout-lnk:hover { color: #666; }
+
+    /* Main */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: none; }
+    .topbar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 36px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .topbar-title { font-size: 15px; font-weight: 600; }
+    .reset-btn {
+      padding: 7px 16px;
+      background: #fff0f0; color: var(--red);
+      border: 1px solid #fecaca; border-radius: 6px;
+      font-size: 12px; font-weight: 600;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .reset-btn:hover { background: #fee2e2; }
+    .content { padding: 28px 36px; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px; position: relative; overflow: hidden;
+    }
+    .stat-card .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .stat-card .top-bar.gold { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    .stat-card .top-bar.green { background: linear-gradient(90deg, #16a34a, #4ade80); }
+    .stat-card .top-bar.yellow { background: linear-gradient(90deg, #d97706, #fbbf24); }
+    .stat-card .top-bar.blue { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+    .s-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .s-value { font-size: 28px; font-weight: 800; color: var(--text); }
+    .s-value.gold { color: var(--gold); }
+    .s-value.green { color: var(--green); }
+    .s-value.yellow { color: #d97706; }
+
+    /* Section */
+    .section { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .section-title { font-size: 14px; font-weight: 700; }
+
+    /* Sale form */
+    .sale-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
+    .sf-group label { font-size: 11px; color: var(--muted); margin-bottom: 5px; display: block; }
+    .sf-input {
+      padding: 10px 14px; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-size: 13px;
+      font-family: 'Noto Sans KR', sans-serif;
+      outline: none; width: 100%; transition: border-color 0.2s;
+    }
+    .sf-input:focus { border-color: var(--gold); }
     .btn {
-      padding: 11px 20px; border: none; border-radius: 8px;
-      font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+      padding: 10px 18px; border: none; border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer; transition: all 0.2s;
     }
-    .btn-primary { background: #22c55e; color: #000; }
-    .btn-primary:hover { background: #16a34a; }
-    .btn-primary:disabled { background: #1e1e1e; color: #444; cursor: not-allowed; }
-    .btn-sm { padding: 6px 14px; font-size: 13px; }
-    .btn-confirm { background: #22c55e; color: #000; }
-    .btn-paid { background: #6366f1; color: #fff; }
-    .btn-danger { background: #dc2626; color: #fff; }
-    .header {
-      background: #141414; border-bottom: 1px solid #1e1e1e;
-      padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
-    }
-    .header h1 { font-size: 16px; font-weight: 700; color: #22c55e; }
-    .header .logout { color: #555; font-size: 13px; cursor: pointer; }
-    .header .logout:hover { color: #888; }
-    .main { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
-    .stat { background: #141414; border: 1px solid #1e1e1e; border-radius: 10px; padding: 16px; }
-    .stat .label { font-size: 11px; color: #555; margin-bottom: 6px; }
-    .stat .value { font-size: 22px; font-weight: 800; }
-    .stat .value.green { color: #22c55e; }
-    .stat .value.yellow { color: #fbbf24; }
-    .section { background: #141414; border: 1px solid #1e1e1e; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-    .section h2 { font-size: 14px; font-weight: 600; color: #888; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th { text-align: left; padding: 8px 10px; color: #444; border-bottom: 1px solid #1e1e1e; font-size: 11px; text-transform: uppercase; }
-    td { padding: 10px 10px; border-bottom: 1px solid #141414; color: #bbb; vertical-align: middle; }
-    tr:last-child td { border-bottom: none; }
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
-    .badge.pending { background: #1a1000; color: #fbbf24; border: 1px solid #451a03; }
-    .badge.confirmed { background: #052e16; color: #4ade80; border: 1px solid #14532d; }
-    .badge.processed { background: #1e1b4b; color: #818cf8; border: 1px solid #312e81; }
-    .add-sale-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
-    .add-sale-form input, .add-sale-form select {
-      padding: 9px 12px; background: #0a0a0a; border: 1px solid #2a2a2a;
-      border-radius: 8px; color: #fff; font-size: 14px; outline: none; width: 100%; margin-bottom: 0;
-    }
-    .add-sale-form label { font-size: 11px; color: #555; margin-bottom: 4px; display: block; }
-    select option { background: #1a1a1a; }
-    .msg { padding: 10px; border-radius: 6px; font-size: 13px; display: none; margin-top: 10px; }
-    .msg.error { background: #1a0505; color: #f87171; }
-    .msg.success { background: #052e16; color: #4ade80; }
-    .empty { text-align: center; color: #333; padding: 24px; font-size: 13px; }
-    #adminPanel { display: none; }
+    .btn-primary { background: #1a1a14; color: #fff; }
+    .btn-primary:hover { background: #2a2a20; }
+    .btn-confirm { background: #f0fff0; color: var(--green); border: 1px solid #bbf7d0; }
+    .btn-confirm:hover { background: #dcfce7; }
+    .btn-paid { background: #f0f0ff; color: #6366f1; border: 1px solid #c7d2fe; }
+    .btn-paid:hover { background: #e0e7ff; }
+    .btn-danger { background: #fff0f0; color: var(--red); border: 1px solid #fecaca; }
+    .btn-danger:hover { background: #fee2e2; }
+    .btn-gold { background: var(--gold-dim); color: var(--gold); border: 1px solid #e8c96d50; }
+    .btn-gold:hover { background: #e8c96d25; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+    /* Tabs */
     .tab-bar { display: flex; gap: 4px; margin-bottom: 16px; }
     .tab-btn {
-      padding: 7px 18px; border-radius: 6px; font-size: 13px; font-weight: 600;
-      cursor: pointer; border: 1px solid #2a2a2a; background: #0a0a0a; color: #555;
-      transition: all 0.2s;
+      padding: 6px 16px; border-radius: 6px;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; border: 1px solid var(--border);
+      background: var(--bg); color: var(--muted);
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: all 0.15s;
     }
-    .tab-btn.active { background: #22c55e; color: #000; border-color: #22c55e; }
-    .tab-btn.active.yellow { background: #fbbf24; border-color: #fbbf24; }
-    .notice-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-    .notice-form input, .notice-form textarea, .notice-form select {
-      padding: 10px 14px; background: #0a0a0a; border: 1px solid #2a2a2a;
-      border-radius: 8px; color: #fff; font-size: 14px; outline: none; width: 100%; margin-bottom: 0;
+    .tab-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+    .tab-btn.active.yellow { background: #d97706; border-color: #d97706; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; padding: 8px 12px; font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+    td { padding: 11px 12px; border-bottom: 1px solid #f0ede6; color: var(--text); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--bg); }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+    .badge.pending { background: #fef9ec; color: #92680a; border: 1px solid #f0d080; }
+    .badge.confirmed { background: #f0faf0; color: #16a34a; border: 1px solid #bbf0bb; }
+    .badge.processed { background: #f0f0ff; color: #6366f1; border: 1px solid #c0c0f0; }
+    .empty { text-align: center; color: var(--muted); padding: 32px; font-size: 13px; }
+    .role-dist { color: #d97706; font-weight: 700; font-size: 12px; }
+    .role-partner { color: var(--green); font-size: 12px; }
+
+    /* Notice form */
+    .notice-form { display: grid; gap: 10px; margin-bottom: 20px; }
+    .nf-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+    .nf-input, .nf-select, .nf-textarea {
+      padding: 10px 14px; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-size: 13px;
+      font-family: 'Noto Sans KR', sans-serif;
+      outline: none; width: 100%; transition: border-color 0.2s;
     }
-    .notice-form textarea { min-height: 80px; resize: vertical; }
-    .notice-form input:focus, .notice-form textarea:focus { border-color: #22c55e; }
-    .notice-item { border-bottom: 1px solid #1e1e1e; padding: 14px 0; }
+    .nf-textarea { min-height: 72px; resize: vertical; }
+    .nf-input:focus, .nf-select:focus, .nf-textarea:focus { border-color: var(--gold); }
+    .notice-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
     .notice-item:last-child { border-bottom: none; }
-    .notice-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 8px; }
-    .notice-tag.notice { background: #1e1b4b; color: #818cf8; }
-    .notice-tag.important { background: #1a0505; color: #f87171; }
-    .notice-tag.update { background: #052e16; color: #4ade80; }
-    .notice-title { font-size: 14px; color: #ccc; font-weight: 600; }
-    .notice-content { font-size: 13px; color: #666; margin-top: 6px; line-height: 1.6; }
-    .notice-date { font-size: 11px; color: #333; margin-top: 6px; }
-    .chart-wrap { position: relative; height: 220px; }
+    .notice-tag { font-size: 10px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+    .notice-tag.notice { background: #eff0ff; color: #6366f1; }
+    .notice-tag.important { background: #fff0f0; color: var(--red); }
+    .notice-tag.update { background: #f0fff0; color: var(--green); }
+    .notice-title-text { font-size: 13px; font-weight: 600; color: var(--text); }
+    .notice-content-text { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .notice-date-text { font-size: 11px; color: #ccc; margin-top: 3px; }
+
+    /* Chart */
+    .chart-wrap { position: relative; height: 200px; }
+
+    /* Msg */
+    .msg { padding: 10px 14px; border-radius: 8px; margin-top: 10px; font-size: 13px; display: none; }
+    .msg.error { background: #fff0f0; color: var(--red); border: 1px solid #fecaca; }
+    .msg.success { background: #f0fff0; color: var(--green); border: 1px solid #bbf0bb; }
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .sale-form { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- 로그인 화면 -->
+  <!-- Login -->
   <div class="login-screen" id="loginScreen">
-    <div class="login-box">
-      <h2>🔐 관리자 로그인</h2>
-      <input type="password" id="adminPw" placeholder="관리자 비밀번호"
-        onkeydown="if(event.key==='Enter') adminLogin()" />
-      <button class="btn btn-primary" style="width:100%" onclick="adminLogin()">로그인</button>
-      <div class="msg" id="loginMsg"></div>
+    <div class="login-wrap">
+      <div class="login-logo">CENTUMHI</div>
+      <div class="login-sub">관리자 시스템</div>
+      <div class="login-card">
+        <h2>관리자 로그인</h2>
+        <p>센텀하이 파트너 시스템 관리자 전용</p>
+        <input class="login-input" type="password" id="adminPw" placeholder="관리자 비밀번호"
+          onkeydown="if(event.key==='Enter') adminLogin()" />
+        <button class="login-btn" onclick="adminLogin()">로그인</button>
+        <div class="login-msg" id="loginMsg"></div>
+      </div>
     </div>
   </div>
 
-  <!-- 관리자 패널 -->
-  <div id="adminPanel">
-    <div class="header">
-      <h1>센텀하이 관리자</h1>
-      <div style="display:flex;gap:10px;align-items:center">
-        <button class="btn btn-sm" style="background:#1a0505;color:#f87171;border:1px solid #450a0a;font-size:12px" onclick="resetAllData()">⚠️ 전체초기화</button>
-        <span class="logout" onclick="adminLogout()">로그아웃</span>
-      </div>
+  <!-- Admin Panel -->
+  <div class="sidebar" id="sidebarEl" style="display:none">
+    <div class="sidebar-logo">
+      <div class="name">CENTUMHI</div>
+      <div class="sub">Admin Panel</div>
     </div>
-    <div class="main">
+    <nav class="sidebar-nav">
+      <div class="nav-label">관리</div>
+      <a class="nav-item active" href="#"><span>📊</span> 대시보드</a>
+      <a class="nav-item" href="#sales-section"><span>💼</span> 판매 관리</a>
+      <a class="nav-item" href="#withdraw-section"><span>💸</span> 출금 관리</a>
+      <a class="nav-item" href="#partner-section"><span>👥</span> 파트너 목록</a>
+      <a class="nav-item" href="#notice-section"><span>📢</span> 공지사항</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-lnk" onclick="adminLogout()">↩ 로그아웃</button>
+    </div>
+  </div>
 
-      <!-- 통계 -->
-      <div class="stats">
-        <div class="stat"><div class="label">총 파트너</div><div class="value" id="totalPartners">-</div></div>
-        <div class="stat"><div class="label">총판</div><div class="value yellow" id="totalDistributors">-</div></div>
-        <div class="stat"><div class="label">확정 판매</div><div class="value green" id="confirmedSales">-</div></div>
-        <div class="stat"><div class="label">대기중 출금</div><div class="value yellow" id="pendingWithdrawals">-</div></div>
+  <div class="main" id="adminPanel">
+    <div class="topbar">
+      <div class="topbar-title">센텀하이 관리자</div>
+      <button class="reset-btn" onclick="resetAllData()">⚠️ 전체 초기화</button>
+    </div>
+
+    <div class="content">
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card"><div class="top-bar gold"></div><div class="s-label">총 파트너</div><div class="s-value gold" id="totalPartners">-</div></div>
+        <div class="stat-card"><div class="top-bar yellow"></div><div class="s-label">총판</div><div class="s-value yellow" id="totalDistributors">-</div></div>
+        <div class="stat-card"><div class="top-bar green"></div><div class="s-label">확정 판매</div><div class="s-value green" id="confirmedSales">-</div></div>
+        <div class="stat-card"><div class="top-bar blue"></div><div class="s-label">대기중 출금</div><div class="s-value" id="pendingWithdrawals">-</div></div>
       </div>
 
-      <!-- 판매 등록 -->
+      <!-- Chart -->
       <div class="section">
-        <h2>➕ 판매 등록 (입금 확인 시 여기서 등록)</h2>
-        <div class="add-sale-form">
-          <div>
-            <label>파트너 ref코드</label>
-            <input type="text" id="saleRef" placeholder="ex: CH1234" />
-          </div>
-          <div>
-            <label>고객명</label>
-            <input type="text" id="saleCustomer" placeholder="홍길동" />
-          </div>
-          <div>
-            <label>메모</label>
-            <input type="text" id="saleMemo" placeholder="추가 메모" />
-          </div>
-          <div>
-            <label>&nbsp;</label>
-            <button class="btn btn-primary btn-sm" onclick="addSale()" style="width:100%;padding:9px 16px">등록</button>
-          </div>
+        <div class="section-title" style="margin-bottom:16px">📈 월별 판매 현황</div>
+        <div class="chart-wrap"><canvas id="salesChart"></canvas></div>
+      </div>
+
+      <!-- Sale register -->
+      <div class="section" id="sales-section">
+        <div class="section-header">
+          <div class="section-title">➕ 판매 등록</div>
+          <div style="font-size:12px;color:var(--muted)">입금 확인 후 여기서 등록</div>
+        </div>
+        <div class="sale-form">
+          <div class="sf-group"><label>파트너 추천코드</label><input class="sf-input" type="text" id="saleRef" placeholder="ex: CH1234" /></div>
+          <div class="sf-group"><label>고객명</label><input class="sf-input" type="text" id="saleCustomer" placeholder="홍길동" /></div>
+          <div class="sf-group"><label>메모 (선택)</label><input class="sf-input" type="text" id="saleMemo" placeholder="추가 메모" /></div>
+          <div class="sf-group"><label>&nbsp;</label><button class="btn btn-primary" onclick="addSale()" style="width:100%">등록</button></div>
         </div>
         <div class="msg" id="saleMsg"></div>
       </div>
 
-      <!-- 판매 목록 -->
+      <!-- Sales list -->
       <div class="section">
-        <h2>📋 판매 내역 전체</h2>
+        <div class="section-title" style="margin-bottom:16px">📋 판매 내역 전체</div>
         <div id="salesList"><div class="empty">불러오는 중...</div></div>
       </div>
 
-      <!-- 출금 신청 목록 -->
-      <div class="section">
-        <h2>💸 출금 신청 목록</h2>
+      <!-- Withdrawals -->
+      <div class="section" id="withdraw-section">
+        <div class="section-title" style="margin-bottom:12px">💸 출금 신청 목록</div>
         <div class="tab-bar">
           <button class="tab-btn active yellow" id="tabPending" onclick="switchWithdrawalTab('pending')">대기중 <span id="pendingCount"></span></button>
           <button class="tab-btn" id="tabDone" onclick="switchWithdrawalTab('done')">완료 <span id="doneCount"></span></button>
@@ -167,42 +330,35 @@
         <div id="withdrawalList"><div class="empty">불러오는 중...</div></div>
       </div>
 
-      <!-- 수익 그래프 -->
-      <div class="section">
-        <h2>📊 월별 판매 현황</h2>
-        <div class="chart-wrap">
-          <canvas id="salesChart"></canvas>
-        </div>
+      <!-- Partners -->
+      <div class="section" id="partner-section">
+        <div class="section-title" style="margin-bottom:16px">👥 파트너 목록</div>
+        <div id="partnerList"><div class="empty">불러오는 중...</div></div>
       </div>
 
-      <!-- 공지사항 관리 -->
-      <div class="section">
-        <h2>📢 공지사항 관리</h2>
+      <!-- Notices -->
+      <div class="section" id="notice-section">
+        <div class="section-title" style="margin-bottom:16px">📢 공지사항 관리</div>
         <div class="notice-form">
-          <div style="display:grid;grid-template-columns:1fr auto;gap:10px">
-            <input type="text" id="noticeTitle" placeholder="공지 제목" />
-            <select id="noticeType" style="width:100px">
+          <div class="nf-row">
+            <input class="nf-input" type="text" id="noticeTitle" placeholder="공지 제목" />
+            <select class="nf-select" id="noticeType" style="width:110px">
               <option value="notice">공지</option>
               <option value="important">중요</option>
               <option value="update">업데이트</option>
             </select>
           </div>
-          <textarea id="noticeContent" placeholder="공지 내용을 입력하세요"></textarea>
-          <button class="btn btn-primary" style="width:120px" onclick="addNotice()">공지 등록</button>
+          <textarea class="nf-textarea" id="noticeContent" placeholder="공지 내용을 입력하세요"></textarea>
+          <div><button class="btn btn-primary" style="min-width:120px" onclick="addNotice()">공지 등록</button></div>
         </div>
         <div id="noticeAdminList"><div class="empty">공지사항 없음</div></div>
       </div>
 
-      <!-- 파트너 목록 -->
-      <div class="section">
-        <h2>👥 파트너 목록</h2>
-        <div id="partnerList"><div class="empty">불러오는 중...</div></div>
-      </div>
     </div>
   </div>
 
   <script>
-    // ⚠️ 아래 두 값을 교체하세요
+// ⚠️ 아래 두 값을 교체하세요
     const SUPABASE_URL = 'https://rxlzgppwvwyduilocrmo.supabase.co'
     const SUPABASE_KEY = 'sb_publishable_HSt_wuJZd5D415dbpDjDJw_KN_cgap_' // ← Secret key로 교체 (관리자 전용 페이지)
     const ADMIN_PASSWORD = 'love0821aa@'
@@ -215,6 +371,7 @@
       if (pw === ADMIN_PASSWORD) {
         sessionStorage.setItem('admin_auth', '1')
         document.getElementById('loginScreen').style.display = 'none'
+        document.getElementById('sidebarEl').style.display = 'flex'
         document.getElementById('adminPanel').style.display = 'block'
         loadAll()
       } else {
@@ -226,6 +383,7 @@
     function adminLogout() {
       sessionStorage.removeItem('admin_auth')
       document.getElementById('loginScreen').style.display = 'flex'
+      document.getElementById('sidebarEl').style.display = 'none'
       document.getElementById('adminPanel').style.display = 'none'
     }
 
@@ -593,6 +751,7 @@
     // 자동 로그인 유지
     if (sessionStorage.getItem('admin_auth') === '1') {
       document.getElementById('loginScreen').style.display = 'none'
+      document.getElementById('sidebarEl').style.display = 'flex'
       document.getElementById('adminPanel').style.display = 'block'
       loadAll()
     }
