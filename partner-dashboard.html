@@ -172,23 +172,31 @@
     let partner = null
 
     async function init() {
-      const { data: { session } } = await sb.auth.getSession()
-      if (!session) { window.location.href = '/partner-login.html'; return }
+      try {
+        const { data: { session }, error: sessionError } = await sb.auth.getSession()
+        if (sessionError || !session) { window.location.href = '/partner-login.html'; return }
 
-      const { data } = await sb.from('partners').select('*').eq('id', session.user.id).single()
-      if (!data) { window.location.href = '/partner-login.html'; return }
-      partner = data
+        const { data, error: partnerError } = await sb.from('partners').select('*').eq('id', session.user.id).single()
+        if (partnerError || !data) {
+          await sb.auth.signOut()
+          window.location.href = '/partner-login.html'
+          return
+        }
+        partner = data
 
-      document.getElementById('userName').textContent = partner.name + ' 님'
-      document.getElementById('refLink').textContent = 'https://centumhi.co.kr?ref=' + partner.ref_code
-      document.getElementById('points').textContent = (partner.points || 0).toLocaleString()
-      document.getElementById('pointsDisplay').textContent = (partner.points || 0).toLocaleString()
-      document.getElementById('accountInfo').textContent =
-        `정산 계좌: ${partner.bank_name} ${partner.bank_account} (${partner.bank_holder})`
+        document.getElementById('userName').textContent = partner.name + ' 님'
+        document.getElementById('refLink').textContent = 'https://centumhi.co.kr?ref=' + partner.ref_code
+        document.getElementById('points').textContent = (partner.points || 0).toLocaleString()
+        document.getElementById('pointsDisplay').textContent = (partner.points || 0).toLocaleString()
+        document.getElementById('accountInfo').textContent =
+          `정산 계좌: ${partner.bank_name || '-'} ${partner.bank_account || '-'} (${partner.bank_holder || '-'})`
 
-      await loadVisits()
-      await loadSales()
-      await loadWithdrawals()
+        await loadVisits()
+        await loadSales()
+        await loadWithdrawals()
+      } catch(err) {
+        window.location.href = '/partner-login.html'
+      }
     }
 
     async function loadVisits() {
