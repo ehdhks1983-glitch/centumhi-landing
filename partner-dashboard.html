@@ -4,199 +4,463 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>파트너 대시보드 | 센텀하이</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <style>
+    :root {
+      --gold: #b8892a;
+      --gold-light: #d4a843;
+      --gold-dim: #b8892a15;
+      --bg: #f4f3f0;
+      --surface: #ffffff;
+      --surface2: #fafaf8;
+      --border: #e8e5de;
+      --text: #1a1a18;
+      --muted: #888880;
+      --sidebar-w: 240px;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
-    .header {
-      background: #141414; border-bottom: 1px solid #1e1e1e;
-      padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
     }
-    .header h1 { font-size: 18px; font-weight: 700; color: #22c55e; }
-    .header .user { font-size: 13px; color: #666; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: #1a1a14;
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+    .sidebar-logo {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid #2a2a20;
+    }
+    .sidebar-logo .name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, #d4a843, #b8892a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .sidebar-logo .sub { font-size: 10px; color: #333; letter-spacing: 2px; text-transform: uppercase; margin-top: 1px; }
+    .sidebar-user {
+      padding: 16px 24px;
+      border-bottom: 1px solid #2a2a20;
+    }
+    .sidebar-user .user-name { font-size: 13px; font-weight: 600; color: #e8e8e0; }
+    .sidebar-user .user-role {
+      font-size: 10px;
+      color: var(--gold-light);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .sidebar-user .user-code { font-size: 11px; color: #333; margin-top: 4px; font-family: monospace; }
+    .sidebar-nav { flex: 1; padding: 16px 12px; }
+    .nav-label { font-size: 9px; color: #2a2a20; letter-spacing: 2px; text-transform: uppercase; padding: 0 12px; margin: 14px 0 6px; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      margin-bottom: 2px;
+    }
+    .nav-item:hover { background: #252520; color: #e8e8e0; }
+    .nav-item.active { background: var(--gold-dim); color: var(--gold-light); }
+    .nav-item .icon { width: 16px; text-align: center; font-size: 14px; }
+    .sidebar-footer {
+      padding: 16px 24px;
+      border-top: 1px solid #2a2a20;
+    }
     .logout-btn {
-      padding: 6px 14px; background: transparent; border: 1px solid #333;
-      border-radius: 6px; color: #888; font-size: 13px; cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #333;
+      cursor: pointer;
+      transition: color 0.2s;
+      background: none;
+      border: none;
+      font-family: 'Noto Sans KR', sans-serif;
     }
-    .logout-btn:hover { border-color: #555; color: #fff; }
-    .main { max-width: 800px; margin: 0 auto; padding: 28px 20px; }
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+    .logout-btn:hover { color: #888; }
+
+    /* ── Main ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 36px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topbar-title { font-size: 15px; font-weight: 600; color: var(--text); }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .copy-link-btn {
+      padding: 7px 16px;
+      background: linear-gradient(135deg, #d4a843, #b8892a);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-link-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .copy-link-btn.copied { background: #16a34a; }
+
+    .content { padding: 32px 36px; }
+
+    /* ── Notice banner ── */
+    .notice-banner {
+      background: linear-gradient(135deg, #1a1a14, #252520);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      display: none;
+    }
+    .notice-banner-title { font-size: 11px; color: var(--gold-light); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+    .notice-item { padding: 8px 0; border-bottom: 1px solid #2a2a20; display: flex; align-items: flex-start; gap: 10px; }
+    .notice-item:last-child { border-bottom: none; }
+    .notice-tag { font-size: 10px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+    .notice-tag.notice { background: #1e1b4b; color: #818cf8; }
+    .notice-tag.important { background: #3a0a0a; color: #f87171; }
+    .notice-tag.update { background: #0f3a0f; color: #4ade80; }
+    .notice-text { font-size: 13px; color: #aaa; }
+
+    /* ── Stats grid ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
     .stat-card {
-      background: #141414; border: 1px solid #1e1e1e;
-      border-radius: 12px; padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
     }
-    .stat-card .label { font-size: 12px; color: #555; margin-bottom: 8px; }
-    .stat-card .value { font-size: 26px; font-weight: 800; color: #fff; }
-    .stat-card .value.green { color: #22c55e; }
-    .stat-card .sub { font-size: 12px; color: #555; margin-top: 4px; }
-    .section { background: #141414; border: 1px solid #1e1e1e; border-radius: 12px; padding: 24px; margin-bottom: 20px; }
-    .section h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #ccc; }
+    .stat-card:hover { box-shadow: 0 4px 20px #00000010; }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .stat-card:hover::before { opacity: 1; }
+    .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 0.5px; margin-bottom: 10px; text-transform: uppercase; }
+    .stat-value { font-size: 30px; font-weight: 800; color: var(--text); line-height: 1; }
+    .stat-value.gold { color: var(--gold); }
+    .stat-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+    .stat-icon { position: absolute; top: 20px; right: 20px; font-size: 22px; opacity: 0.15; }
+
+    /* Distributor card */
+    .dist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; display: none; }
+    .dist-card {
+      background: linear-gradient(135deg, #1a1a14, #252520);
+      border-radius: 14px;
+      padding: 22px 24px;
+      color: #fff;
+    }
+    .dist-card .label { font-size: 11px; color: var(--gold-light); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .dist-card .value { font-size: 26px; font-weight: 800; color: var(--gold-light); }
+    .dist-card .sub { font-size: 12px; color: #555; margin-top: 4px; }
+
+    /* ── Sections ── */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .section-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .section-sub { font-size: 12px; color: var(--muted); }
+
+    /* Ref link box */
     .ref-box {
-      background: #0a0a0a; border: 1px solid #22c55e40;
-      border-radius: 8px; padding: 14px 16px;
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      background: var(--bg);
+      border: 1.5px dashed var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
     }
-    .ref-box .link { font-size: 14px; color: #22c55e; word-break: break-all; flex: 1; }
-    .copy-btn {
-      padding: 8px 16px; background: #22c55e; color: #000;
-      border: none; border-radius: 6px; font-size: 13px; font-weight: 700;
-      cursor: pointer; white-space: nowrap; transition: background 0.2s;
+    .ref-link-text { font-size: 13px; color: var(--gold); font-weight: 500; word-break: break-all; flex: 1; }
+    .ref-copy-btn {
+      padding: 7px 16px;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
     }
-    .copy-btn:hover { background: #16a34a; }
-    .copy-btn.copied { background: #166534; color: #4ade80; }
-    .how-to { margin-top: 14px; }
-    .how-to p { font-size: 13px; color: #666; line-height: 1.8; }
-    .how-to span { color: #22c55e; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    th { text-align: left; padding: 10px 12px; color: #555; font-size: 12px; border-bottom: 1px solid #1e1e1e; }
-    td { padding: 12px 12px; border-bottom: 1px solid #141414; color: #ccc; }
-    .badge {
-      display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px;
+    .ref-copy-btn:hover { background: var(--gold-light); }
+    .ref-copy-btn.copied { background: #16a34a; }
+    .how-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .step {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
     }
-    .badge.pending { background: #1a1000; color: #fbbf24; border: 1px solid #451a03; }
-    .badge.confirmed { background: #052e16; color: #4ade80; border: 1px solid #14532d; }
-    .badge.paid { background: #1e1b4b; color: #818cf8; border: 1px solid #312e81; }
-    .withdraw-section { }
-    .points-display { font-size: 36px; font-weight: 800; color: #22c55e; margin-bottom: 6px; }
-    .points-sub { font-size: 13px; color: #555; margin-bottom: 20px; }
-    .withdraw-form { display: grid; gap: 14px; }
-    .withdraw-form input {
-      padding: 11px 14px; background: #0a0a0a; border: 1px solid #2a2a2a;
-      border-radius: 8px; color: #fff; font-size: 15px; outline: none; width: 100%;
+    .step-num {
+      width: 26px; height: 26px;
+      background: var(--gold);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+    }
+    .step-text { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+    td { padding: 12px 12px; border-bottom: 1px solid #f0ede6; color: var(--text); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--bg); }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+    .badge.pending { background: #fef9ec; color: #92680a; border: 1px solid #f0d080; }
+    .badge.confirmed { background: #f0faf0; color: #16a34a; border: 1px solid #bbf0bb; }
+    .badge.paid { background: #f0f0ff; color: #6366f1; border: 1px solid #c0c0f0; }
+    .empty { text-align: center; color: var(--muted); padding: 36px; font-size: 13px; }
+
+    /* Withdraw form */
+    .withdraw-area { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; }
+    .withdraw-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+    .withdraw-input {
+      padding: 11px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'Noto Sans KR', sans-serif;
+      outline: none;
+      width: 100%;
       transition: border-color 0.2s;
     }
-    .withdraw-form input:focus { border-color: #22c55e; }
-    .withdraw-form label { font-size: 13px; color: #666; margin-bottom: 6px; display: block; }
+    .withdraw-input:focus { border-color: var(--gold); }
     .withdraw-btn {
-      padding: 12px 24px; background: #22c55e; color: #000;
-      border: none; border-radius: 8px; font-size: 15px; font-weight: 700;
-      cursor: pointer; transition: background 0.2s;
+      padding: 11px 24px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
     }
-    .withdraw-btn:hover { background: #16a34a; }
-    .withdraw-btn:disabled { background: #1e1e1e; color: #444; cursor: not-allowed; }
-    .msg { padding: 10px; border-radius: 6px; font-size: 13px; display: none; margin-top: 10px; }
-    .msg.error { background: #1a0505; color: #f87171; }
-    .msg.success { background: #052e16; color: #4ade80; }
-    .empty { text-align: center; color: #444; padding: 30px; font-size: 14px; }
-    .notice-item { border-bottom: 1px solid #1e1e1e; padding: 12px 0; }
-    .notice-item:last-child { border-bottom: none; }
-    .notice-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 8px; }
-    .notice-tag.notice { background: #1e1b4b; color: #818cf8; }
-    .notice-tag.important { background: #1a0505; color: #f87171; }
-    .notice-tag.update { background: #052e16; color: #4ade80; }
-    .notice-title { font-size: 14px; color: #ccc; font-weight: 600; }
-    .notice-content { font-size: 13px; color: #666; margin-top: 6px; line-height: 1.6; }
-    .notice-date { font-size: 11px; color: #333; margin-top: 4px; }
-    @media (max-width: 600px) {
-      .stats { grid-template-columns: 1fr 1fr; }
-      .stats .stat-card:last-child { grid-column: 1/-1; }
+    .withdraw-btn:hover { background: #333; }
+    .withdraw-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+    .account-info { font-size: 12px; color: var(--muted); margin-top: 10px; padding: 10px 14px; background: var(--bg); border-radius: 8px; }
+    .msg { padding: 10px 14px; border-radius: 8px; margin-top: 10px; font-size: 13px; display: none; }
+    .msg.error { background: #fff0f0; color: #dc2626; border: 1px solid #fecaca; }
+    .msg.success { background: #f0fff0; color: #16a34a; border: 1px solid #bbf0bb; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr; }
+      .content { padding: 20px 16px; }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>센텀하이 파트너</h1>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <span class="user" id="userName">로딩 중...</span>
-      <button class="logout-btn" onclick="logout()">로그아웃</button>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="name">CENTUMHI</div>
+      <div class="sub">Partner Program</div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-name" id="sideUserName">로딩 중...</div>
+      <div class="user-role" id="sideUserRole">영업 파트너</div>
+      <div class="user-code" id="sideUserCode"></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">메뉴</div>
+      <a class="nav-item active" href="/partner-dashboard.html"><span class="icon">📊</span> 대시보드</a>
+      <a class="nav-item" href="#sales"><span class="icon">💼</span> 판매 내역</a>
+      <a class="nav-item" href="#withdraw"><span class="icon">💸</span> 출금 신청</a>
+      <div class="nav-label">정보</div>
+      <a class="nav-item" href="#notice"><span class="icon">📢</span> 공지사항</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="logout()">↩ 로그아웃</button>
     </div>
   </div>
 
+  <!-- Main -->
   <div class="main">
-    <!-- 통계 -->
-    <div class="stats">
-      <div class="stat-card">
-        <div class="label">총 방문수</div>
-        <div class="value" id="visitCount">-</div>
-        <div class="sub">내 링크 클릭 횟수</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">확정 판매</div>
-        <div class="value green" id="saleCount">-</div>
-        <div class="sub">건수</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">출금 가능 포인트</div>
-        <div class="value green" id="points">-</div>
-        <div class="sub">원</div>
+    <div class="topbar">
+      <div class="topbar-title" id="topbarGreet">안녕하세요 👋</div>
+      <div class="topbar-right">
+        <button class="copy-link-btn" id="topCopyBtn" onclick="copyLink()">🔗 내 링크 복사</button>
       </div>
     </div>
-    <!-- 총판 전용 팀 수익 섹션 -->
-    <div id="distributorSection" style="display:none;margin-bottom:20px">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div class="stat-card" style="border-color:#fbbf2440">
-          <div class="label" style="color:#fbbf24">🏆 총판 등급</div>
-          <div class="value" style="color:#fbbf24;font-size:18px">총판</div>
+
+    <div class="content">
+
+      <!-- Notice Banner -->
+      <div class="notice-banner" id="noticeBanner">
+        <div class="notice-banner-title">📢 공지사항</div>
+        <div id="noticeList"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👁</div>
+          <div class="stat-label">총 방문수</div>
+          <div class="stat-value" id="visitCount">-</div>
+          <div class="stat-sub">내 링크 클릭 횟수</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-label">확정 판매</div>
+          <div class="stat-value gold" id="saleCount">-</div>
+          <div class="stat-sub">건수</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-label">출금 가능 포인트</div>
+          <div class="stat-value gold" id="points">-</div>
+          <div class="stat-sub">원</div>
+        </div>
+      </div>
+
+      <!-- Distributor Section -->
+      <div class="dist-grid" id="distGrid">
+        <div class="dist-card">
+          <div class="label">👑 총판 등급</div>
+          <div class="value">총판</div>
           <div class="sub">하부 영업 판매 시 건당 10만원</div>
         </div>
-        <div class="stat-card" style="border-color:#fbbf2440">
-          <div class="label" style="color:#fbbf24">팀 누적 수익</div>
-          <div class="value" style="color:#fbbf24" id="teamEarned">-</div>
+        <div class="dist-card">
+          <div class="label">팀 누적 수익</div>
+          <div class="value" id="teamEarned">-</div>
           <div class="sub">원 (하부 영업 통한 수익)</div>
         </div>
       </div>
-    </div>
 
-    <!-- 내 추천 링크 -->
-    <div class="section">
-      <h2>🔗 내 추천 링크</h2>
-      <div class="ref-box">
-        <div class="link" id="refLink">로딩 중...</div>
-        <button class="copy-btn" id="copyBtn" onclick="copyLink()">복사</button>
-      </div>
-      <div class="how-to">
-        <p>
-          <span>① 이 링크를 자영업자 지인에게 공유</span><br>
-          지인이 링크로 접속하면 자동으로 내 코드가 기록됩니다<br>
-          <span>② 구매 발생 시 자동 적립</span><br>
-          관리자가 입금 확인 후 포인트가 적립됩니다<br>
-          <span>③ 아래에서 출금 신청</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- 공지사항 -->
-    <div class="section" id="noticeSection" style="display:none">
-      <h2>📢 공지사항</h2>
-      <div id="noticeList"></div>
-    </div>
-
-    <!-- 판매 내역 -->
-    <div class="section">
-      <h2>📋 판매 내역</h2>
-      <div id="salesTable">
-        <div class="empty">판매 내역을 불러오는 중...</div>
-      </div>
-    </div>
-
-    <!-- 출금 신청 -->
-    <div class="section">
-      <h2>💸 출금 신청</h2>
-      <div class="points-display" id="pointsDisplay">-</div>
-      <div class="points-sub">원 출금 가능</div>
-      <div class="withdraw-form">
-        <div>
-          <label>출금 금액 (최소 20만원)</label>
-          <input type="number" id="withdrawAmount" placeholder="200000" min="200000" step="200000" />
+      <!-- My Link -->
+      <div class="section">
+        <div class="section-header">
+          <div>
+            <div class="section-title">🔗 내 추천 링크</div>
+            <div class="section-sub">이 링크를 공유하면 자동으로 내 코드가 기록됩니다</div>
+          </div>
         </div>
-        <div style="font-size:13px;color:#555;" id="accountInfo">계좌 정보 불러오는 중...</div>
-        <button class="withdraw-btn" onclick="requestWithdraw()">출금 신청</button>
+        <div class="ref-box">
+          <div class="ref-link-text" id="refLink">로딩 중...</div>
+          <button class="ref-copy-btn" id="copyBtn" onclick="copyLink()">복사</button>
+        </div>
+        <div class="how-steps">
+          <div class="step"><div class="step-num">1</div><div class="step-text">자영업자 지인에게<br>링크 공유</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text">입금 확인 후<br>포인트 자동 적립</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text">아래에서<br>출금 신청</div></div>
+        </div>
+      </div>
+
+      <!-- Sales -->
+      <div class="section" id="sales">
+        <div class="section-header">
+          <div class="section-title">📋 판매 내역</div>
+        </div>
+        <div id="salesTable"><div class="empty">판매 내역을 불러오는 중...</div></div>
+      </div>
+
+      <!-- Withdraw -->
+      <div class="section" id="withdraw">
+        <div class="section-header">
+          <div>
+            <div class="section-title">💸 출금 신청</div>
+            <div class="section-sub">최소 20만원 / 20만원 단위</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;color:var(--muted)">출금 가능</div>
+            <div style="font-size:22px;font-weight:800;color:var(--gold)" id="pointsDisplay">-</div>
+            <div style="font-size:11px;color:var(--muted)">원</div>
+          </div>
+        </div>
+        <div class="withdraw-area">
+          <div>
+            <div class="withdraw-label">출금 금액</div>
+            <input class="withdraw-input" type="number" id="withdrawAmount" placeholder="200000" min="200000" step="200000" />
+          </div>
+          <button class="withdraw-btn" onclick="requestWithdraw()">출금 신청</button>
+        </div>
+        <div class="account-info" id="accountInfo">계좌 정보 불러오는 중...</div>
         <div class="msg" id="withdrawMsg"></div>
       </div>
-    </div>
 
-    <!-- 출금 내역 -->
-    <div class="section">
-      <h2>🏦 출금 신청 내역</h2>
-      <div id="withdrawalTable">
-        <div class="empty">내역을 불러오는 중...</div>
+      <!-- Withdrawal history -->
+      <div class="section">
+        <div class="section-title" style="margin-bottom:16px">🏦 출금 신청 내역</div>
+        <div id="withdrawalTable"><div class="empty">출금 신청 내역이 없습니다</div></div>
       </div>
+
     </div>
   </div>
 
   <script>
     const SUPABASE_URL = 'https://rxlzgppwvwyduilocrmo.supabase.co'
-    const SUPABASE_KEY = 'sb_publishable_HSt_wuJZd5D415dbpDjDJw_KN_cgap_' // ← Publishable key로 교체
+    const SUPABASE_KEY = 'sb_publishable_HSt_wuJZd5D415dbpDjDJw_KN_cgap_'
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
     let partner = null
@@ -205,16 +469,13 @@
       try {
         const { data } = await sb.from('notices').select('*').order('created_at', { ascending: false }).limit(5)
         if (!data || data.length === 0) return
-        document.getElementById('noticeSection').style.display = 'block'
+        document.getElementById('noticeBanner').style.display = 'block'
         const typeLabel = { notice: '공지', important: '중요', update: '업데이트' }
         let html = ''
         for (const n of data) {
-          const date = new Date(n.created_at).toLocaleDateString('ko-KR')
           html += `<div class="notice-item">
             <span class="notice-tag ${n.type}">${typeLabel[n.type] || n.type}</span>
-            <span class="notice-title">${n.title}</span>
-            <div class="notice-content">${n.content}</div>
-            <div class="notice-date">${date}</div>
+            <span class="notice-text">${n.title} — ${n.content}</span>
           </div>`
         }
         document.getElementById('noticeList').innerHTML = html
@@ -234,12 +495,20 @@
         }
         partner = data
 
-        document.getElementById('userName').textContent = partner.name + ' 님'
+        document.getElementById('sideUserName').textContent = partner.name
+        document.getElementById('sideUserRole').textContent = partner.role === 'distributor' ? '👑 총판' : '💼 영업 파트너'
+        document.getElementById('sideUserCode').textContent = '코드: ' + partner.ref_code
+        document.getElementById('topbarGreet').textContent = partner.name + ' 님, 안녕하세요 👋'
         document.getElementById('refLink').textContent = 'https://centumhi.co.kr?ref=' + partner.ref_code
         document.getElementById('points').textContent = (partner.points || 0).toLocaleString()
         document.getElementById('pointsDisplay').textContent = (partner.points || 0).toLocaleString()
         document.getElementById('accountInfo').textContent =
           `정산 계좌: ${partner.bank_name || '-'} ${partner.bank_account || '-'} (${partner.bank_holder || '-'})`
+
+        if (partner.role === 'distributor') {
+          document.getElementById('distGrid').style.display = 'grid'
+          document.getElementById('teamEarned').textContent = (partner.team_earned || 0).toLocaleString()
+        }
 
         await loadNotices()
         await loadVisits()
@@ -259,16 +528,15 @@
       const { data } = await sb.from('sales').select('*').eq('ref_code', partner.ref_code).order('created_at', { ascending: false })
       const confirmed = (data || []).filter(s => s.status === 'confirmed').length
       document.getElementById('saleCount').textContent = confirmed
-
       if (!data || data.length === 0) {
-        document.getElementById('salesTable').innerHTML = '<div class="empty">아직 판매 내역이 없습니다<br>링크를 공유해보세요!</div>'
+        document.getElementById('salesTable').innerHTML = '<div class="empty">아직 판매 내역이 없습니다 — 링크를 공유해보세요!</div>'
         return
       }
+      const statusMap = { pending: '확인중', confirmed: '확정', paid: '지급완료' }
       let html = '<table><thead><tr><th>날짜</th><th>고객명</th><th>수수료</th><th>상태</th></tr></thead><tbody>'
       for (const s of data) {
         const date = new Date(s.created_at).toLocaleDateString('ko-KR')
-        const statusMap = { pending: '확인중', confirmed: '확정', paid: '지급완료' }
-        html += `<tr><td>${date}</td><td>${s.customer_name || '-'}</td><td>${s.commission.toLocaleString()}원</td><td><span class="badge ${s.status}">${statusMap[s.status] || s.status}</span></td></tr>`
+        html += `<tr><td>${date}</td><td>${s.customer_name || '-'}</td><td style="font-weight:600">${s.commission.toLocaleString()}원</td><td><span class="badge ${s.status}">${statusMap[s.status] || s.status}</span></td></tr>`
       }
       html += '</tbody></table>'
       document.getElementById('salesTable').innerHTML = html
@@ -280,12 +548,12 @@
         document.getElementById('withdrawalTable').innerHTML = '<div class="empty">출금 신청 내역이 없습니다</div>'
         return
       }
+      const statusMap = { pending: '처리중', processed: '지급완료' }
       let html = '<table><thead><tr><th>신청일</th><th>금액</th><th>상태</th></tr></thead><tbody>'
       for (const w of data) {
         const date = new Date(w.created_at).toLocaleDateString('ko-KR')
-        const statusMap = { pending: '처리중', processed: '지급완료' }
-        const cls = w.status === 'processed' ? 'paid' : 'pending'
-        html += `<tr><td>${date}</td><td>${w.amount.toLocaleString()}원</td><td><span class="badge ${cls}">${statusMap[w.status] || w.status}</span></td></tr>`
+        const cls = w.status === 'processed' ? 'confirmed' : 'pending'
+        html += `<tr><td>${date}</td><td style="font-weight:600">${w.amount.toLocaleString()}원</td><td><span class="badge ${cls}">${statusMap[w.status] || w.status}</span></td></tr>`
       }
       html += '</tbody></table>'
       document.getElementById('withdrawalTable').innerHTML = html
@@ -294,29 +562,27 @@
     async function copyLink() {
       const link = 'https://centumhi.co.kr?ref=' + partner.ref_code
       await navigator.clipboard.writeText(link)
-      const btn = document.getElementById('copyBtn')
-      btn.textContent = '복사됨!'; btn.className = 'copy-btn copied'
-      setTimeout(() => { btn.textContent = '복사'; btn.className = 'copy-btn' }, 2000)
+      const btns = [document.getElementById('copyBtn'), document.getElementById('topCopyBtn')]
+      btns.forEach(b => { b.textContent = '복사됨!'; b.className = (b.id === 'topCopyBtn' ? 'copy-link-btn' : 'ref-copy-btn') + ' copied' })
+      setTimeout(() => {
+        document.getElementById('copyBtn').textContent = '복사'
+        document.getElementById('copyBtn').className = 'ref-copy-btn'
+        document.getElementById('topCopyBtn').textContent = '🔗 내 링크 복사'
+        document.getElementById('topCopyBtn').className = 'copy-link-btn'
+      }, 2000)
     }
 
     async function requestWithdraw() {
       const amount = parseInt(document.getElementById('withdrawAmount').value)
       const msg = document.getElementById('withdrawMsg')
       const showMsg = (text, type) => { msg.textContent = text; msg.className = 'msg ' + type; msg.style.display = 'block' }
-
       if (!amount || amount < 200000) return showMsg('최소 20만원부터 출금 신청 가능합니다.', 'error')
       if (amount > partner.points) return showMsg('출금 가능 포인트가 부족합니다.', 'error')
       if (amount % 200000 !== 0) return showMsg('20만원 단위로 신청해주세요.', 'error')
-
       const { error } = await sb.from('withdrawals').insert({
-        partner_id: partner.id,
-        ref_code: partner.ref_code,
-        amount,
-        bank_name: partner.bank_name,
-        bank_account: partner.bank_account,
-        bank_holder: partner.bank_holder
+        partner_id: partner.id, ref_code: partner.ref_code, amount,
+        bank_name: partner.bank_name, bank_account: partner.bank_account, bank_holder: partner.bank_holder
       })
-
       if (error) return showMsg('오류: ' + error.message, 'error')
       partner.points -= amount
       document.getElementById('points').textContent = (partner.points || 0).toLocaleString()
