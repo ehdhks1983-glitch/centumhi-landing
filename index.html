@@ -144,6 +144,7 @@ footer a{text-decoration:none;}
 .sticky-cta-inner{display:flex;gap:10px;max-width:560px;margin:0 auto;}
 @media(max-width:768px){.sticky-cta{display:block;}}
 </style>
+<script src="https://js.tosspayments.com/v1/payment"></script>
 </head>
 <body>
 
@@ -405,6 +406,7 @@ footer a{text-decoration:none;}
         <li>💬 1:1 카카오톡 세팅 지원</li>
       </ul>
       <div class="price-actions">
+        <button class="btn-primary" onclick="requestPayment()" style="font-size:0.95rem;">💳 카드결제 / 간편결제</button>
         <a href="https://open.kakao.com/o/gCFBLaqi" target="_blank" class="btn-kakao">💬 카카오톡으로 구매 문의</a>
       </div>
     </div>
@@ -474,6 +476,22 @@ const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
 },{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// 토스페이먼츠 결제
+var tossPayments = TossPayments('test_ck_d46qopOB89ZLEmNAOPZE3ZmM75y0');
+function requestPayment(){
+  tossPayments.requestPayment('카드',{
+    amount:1790000,
+    orderId:'CENTUMHI_'+Date.now(),
+    orderName:'센텀하이 마케팅 자동화 패키지',
+    customerName:'구매자',
+    successUrl:window.location.origin+'/success.html',
+    failUrl:window.location.origin+'/fail.html'
+  }).catch(function(err){
+    if(err.code==='USER_CANCEL')return;
+    alert('결제 중 오류가 발생했습니다: '+err.message);
+  });
+}
 </script>
 </body>
 </html>
