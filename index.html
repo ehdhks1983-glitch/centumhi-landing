@@ -3,298 +3,990 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-<title>센텀하이 | 자영업자 마케팅 자동화</title>
-<meta name="description" content="센텀하이 마케팅 자동화 시스템. 프로그램 무제한 패키지, 월구독 서비스, 노트북 풀패키지 중 사장님 상황에 맞게 선택하세요.">
+<title>센텀하이 | 블로그 수익화 자동화 3종 패키지</title>
+<meta name="description" content="블로그봇, 서이추봇, 움짤봇 3종 자동화 패키지. 정가 119만원, 한량연구소 한정 특가 79만원. 월구독 서비스와 노트북 풀패키지도 선택 가능합니다.">
+<meta property="og:title" content="센텀하이 | 블로그 수익화 자동화 3종 패키지">
+<meta property="og:description" content="블로그 홍보 자동화와 쿠팡파트너스·네이버 쇼핑커넥트 활용 구조까지. 노트북 없이 79만원부터 시작하세요.">
+<meta property="og:type" content="website">
 <style>
+:root{
+  --bg:#071022;
+  --bg2:#0a1630;
+  --card:#101d3a;
+  --card2:#0d1934;
+  --line:#203967;
+  --line2:rgba(59,130,246,.35);
+  --text:#f8fbff;
+  --muted:#94a6c7;
+  --orange:#ff8a00;
+  --orange2:#ffb21a;
+  --yellow:#ffe500;
+  --blue:#2f80ff;
+  --green:#38e07b;
+  --red:#ff4d4d;
+}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;}
-body{font-family:-apple-system,'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;background:#0a0a0f;color:#f1f0ff;line-height:1.65;overflow-x:hidden;word-break:keep-all;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  overflow-x:hidden;
+  word-break:keep-all;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-2;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(47,128,255,.22),transparent 26%),
+    radial-gradient(circle at 85% 15%,rgba(255,138,0,.15),transparent 28%),
+    radial-gradient(circle at 50% 100%,rgba(59,130,246,.14),transparent 35%),
+    linear-gradient(180deg,#071022 0%,#060b18 100%);
+}
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  opacity:.23;
+  background-image:
+    linear-gradient(rgba(59,130,246,.16) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(59,130,246,.16) 1px,transparent 1px);
+  background-size:54px 54px;
+  mask-image:linear-gradient(to bottom,black,transparent 75%);
+}
 a{color:inherit;}
 button,a{font-family:inherit;}
-.nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,10,15,0.96);backdrop-filter:blur(12px);border-bottom:1px solid #29293d;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:56px;}
-.nav-brand{font-size:1rem;font-weight:900;background:linear-gradient(135deg,#f59e0b,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;letter-spacing:-0.02em;}
-.nav-menu{display:flex;align-items:center;gap:14px;}
-.nav-menu a{font-size:0.78rem;color:#a4a3bd;text-decoration:none;font-weight:700;}
-.nav-cta{background:linear-gradient(135deg,#f59e0b,#fb923c);color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:0.78rem;font-weight:900;cursor:pointer;text-decoration:none;white-space:nowrap;}
-@media(max-width:640px){.nav-menu a{display:none;}.nav{height:52px;}}
-.container{max-width:1080px;margin:0 auto;padding:0 16px;}
-.sec{padding:72px 16px;}
-.sec-alt{background:#12121a;}
-.sec-tag{display:inline-flex;align-items:center;gap:6px;font-size:0.68rem;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;color:#f59e0b;}
-.sec-title{font-size:clamp(1.65rem,5vw,2.7rem);font-weight:950;margin-bottom:12px;letter-spacing:-0.04em;line-height:1.18;}
-.sec-sub{font-size:0.92rem;color:#a4a3bd;line-height:1.8;}
-.em{font-style:normal;background:linear-gradient(135deg,#f59e0b,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.green{background:linear-gradient(135deg,#4ade80,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:14px;padding:15px 20px;font-size:0.9rem;font-weight:900;cursor:pointer;text-decoration:none;transition:transform .2s,opacity .2s;width:100%;}
+.container{max-width:1120px;margin:0 auto;padding:0 18px;}
+.sec{padding:86px 0;}
+.sec-tight{padding:48px 0;}
+.sec-alt{background:linear-gradient(180deg,rgba(13,25,52,.8),rgba(7,16,34,.5));border-top:1px solid rgba(59,130,246,.12);border-bottom:1px solid rgba(59,130,246,.12);}
+.sec-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:var(--orange2);
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+.sec-title{
+  font-size:clamp(1.75rem,5.6vw,3.15rem);
+  line-height:1.18;
+  letter-spacing:-.045em;
+  font-weight:950;
+}
+.sec-title em,
+.grad{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--orange2),var(--orange),#fff06a);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.sec-sub{
+  margin-top:14px;
+  color:var(--muted);
+  font-size:clamp(.92rem,2.4vw,1.05rem);
+}
+.nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:500;
+  height:64px;
+  border-bottom:1px solid rgba(59,130,246,.22);
+  background:rgba(7,16,34,.88);
+  backdrop-filter:blur(18px);
+}
+.nav-in{
+  max-width:1160px;
+  height:64px;
+  margin:0 auto;
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:950;
+  letter-spacing:-.02em;
+  white-space:nowrap;
+}
+.brand-mark{
+  width:34px;height:34px;
+  border-radius:11px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,var(--orange2),var(--orange));
+  color:#061022;
+  box-shadow:0 0 28px rgba(255,138,0,.35);
+}
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  color:#b8c7e8;
+  font-size:.86rem;
+  font-weight:800;
+}
+.nav-links a{text-decoration:none;}
+.nav-cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:none;
+  border-radius:999px;
+  padding:10px 16px;
+  color:#071022;
+  font-size:.86rem;
+  font-weight:950;
+  text-decoration:none;
+  background:linear-gradient(135deg,var(--yellow),var(--orange2),var(--orange));
+  box-shadow:0 10px 28px rgba(255,138,0,.25);
+  white-space:nowrap;
+}
+@media(max-width:720px){
+  .nav-links{display:none;}
+  .nav{height:58px;}
+  .nav-in{height:58px;}
+}
+.hero{
+  min-height:100svh;
+  display:flex;
+  align-items:center;
+  padding:104px 0 70px;
+  position:relative;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:1.04fr .96fr;
+  gap:36px;
+  align-items:center;
+}
+@media(max-width:920px){
+  .hero-grid{grid-template-columns:1fr;gap:28px;}
+  .hero{text-align:center;min-height:auto;padding-top:96px;}
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  border:1px solid rgba(255,178,26,.45);
+  border-radius:999px;
+  padding:8px 14px;
+  background:linear-gradient(135deg,rgba(255,178,26,.18),rgba(255,138,0,.08));
+  color:#ffe4a3;
+  font-size:.78rem;
+  font-weight:950;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),0 8px 28px rgba(255,138,0,.12);
+  margin-bottom:18px;
+}
+.hero h1{
+  font-size:clamp(2.25rem,8.2vw,5.25rem);
+  line-height:1.04;
+  letter-spacing:-.07em;
+  font-weight:1000;
+}
+.hero h1 .white3d{
+  text-shadow:0 5px 0 #13213f,0 18px 30px rgba(0,0,0,.45);
+}
+.hero-lead{
+  margin-top:20px;
+  color:#c3d0ee;
+  font-size:clamp(.98rem,2.8vw,1.18rem);
+  line-height:1.78;
+}
+.hero-price{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:22px;
+}
+@media(max-width:920px){.hero-price{justify-content:center;}}
+.price-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  border-radius:18px;
+  padding:11px 15px;
+  background:#0f1b36;
+  border:1px solid rgba(59,130,246,.35);
+}
+.price-pill .old{text-decoration:line-through;color:#8ea1c6;font-size:.86rem;font-weight:800;}
+.price-pill .new{font-size:1.35rem;font-weight:1000;color:var(--orange2);}
+.hero-note{
+  margin-top:10px;
+  color:#ffed9c;
+  font-size:.84rem;
+  font-weight:800;
+}
+.btn-row{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:28px;
+}
+@media(max-width:920px){.btn-row{justify-content:center;}}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  min-height:52px;
+  padding:14px 20px;
+  border-radius:14px;
+  border:1px solid transparent;
+  text-decoration:none;
+  font-weight:950;
+  cursor:pointer;
+  transition:.22s ease;
+}
 .btn:hover{transform:translateY(-2px);}
-.btn-primary{background:linear-gradient(135deg,#f59e0b,#fb923c);color:#fff;box-shadow:0 10px 30px rgba(245,158,11,.2);}
-.btn-kakao{background:#FEE500;color:#191919;}
-.btn-dark{background:#222237;color:#fff;border:1px solid #373751;}
-.btn-group{display:flex;gap:10px;justify-content:center;align-items:center;max-width:520px;margin:0 auto;}
-@media(max-width:560px){.btn-group{flex-direction:column;}}
-.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:92px 20px 58px;background:radial-gradient(ellipse at 50% 22%,rgba(245,158,11,.18),transparent 56%),radial-gradient(ellipse at 80% 70%,rgba(34,211,238,.08),transparent 48%);}
-.hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.33);color:#fbbf24;border-radius:999px;padding:7px 15px;font-size:0.74rem;font-weight:900;margin-bottom:22px;}
-.hero h1{font-size:clamp(2.05rem,8vw,4.8rem);font-weight:950;line-height:1.08;margin-bottom:18px;letter-spacing:-0.055em;}
-.hero-sub{font-size:clamp(.96rem,3.2vw,1.22rem);color:#d7d5e9;margin-bottom:10px;line-height:1.72;font-weight:700;}
-.hero-sub2{font-size:0.86rem;color:#a4a3bd;margin-bottom:28px;line-height:1.7;}
-.hero-note{font-size:.72rem;color:#777692;line-height:1.6;margin-top:14px;}
-.hero-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:38px;width:100%;max-width:820px;}
-.kpi-item{background:rgba(22,22,42,.72);border:1px solid #2c2c43;border-radius:16px;padding:16px 12px;text-align:center;}
-.kpi-num{font-size:clamp(1.05rem,3.6vw,1.55rem);font-weight:950;background:linear-gradient(135deg,#f59e0b,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2;}
-.kpi-label{font-size:.72rem;color:#a4a3bd;margin-top:5px;line-height:1.35;}
-@media(max-width:640px){.hero-kpi{grid-template-columns:1fr;gap:8px;}.kpi-item{padding:13px 10px;}}
-.alert-strip{background:#1a1208;border-top:1px solid rgba(245,158,11,.25);border-bottom:1px solid rgba(245,158,11,.25);padding:16px;text-align:center;color:#fbbf24;font-size:.88rem;font-weight:900;line-height:1.55;}
-.pain-grid,.feature-grid,.product-grid,.usecase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px;}
-@media(max-width:860px){.pain-grid,.feature-grid,.product-grid,.usecase-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:560px){.pain-grid,.feature-grid,.product-grid,.usecase-grid{grid-template-columns:1fr;}}
-.card{background:#171729;border:1px solid #2b2b43;border-radius:18px;padding:22px;}
-.card h3{font-size:1rem;font-weight:950;margin-bottom:8px;line-height:1.35;letter-spacing:-0.02em;}
-.card p{font-size:.84rem;color:#a4a3bd;line-height:1.78;}
-.card-icon{font-size:1.75rem;margin-bottom:10px;}
-.pain-card{border-left:4px solid #ef4444;}
-.solution-wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:stretch;margin-top:28px;}
-@media(max-width:820px){.solution-wrap{grid-template-columns:1fr;}}
-.flow-card{background:#16162a;border:1px solid #2a2a40;border-radius:20px;padding:24px;}
-.flow-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #2a2a40;}
-.flow-row:last-child{border-bottom:none;}
-.flow-num{width:30px;height:30px;border-radius:999px;background:rgba(245,158,11,.14);border:1px solid rgba(245,158,11,.35);color:#fbbf24;display:flex;align-items:center;justify-content:center;font-weight:950;flex-shrink:0;font-size:.78rem;}
-.flow-row strong{font-size:.9rem;line-height:1.35;}
-.flow-row span{font-size:.78rem;color:#a4a3bd;display:block;line-height:1.55;margin-top:2px;}
-.product-section{background:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,.12),transparent 45%),#0a0a0f;}
-.product-grid{grid-template-columns:1.1fr .95fr .95fr;align-items:stretch;}
-@media(max-width:960px){.product-grid{grid-template-columns:1fr;}}
-.product-card{position:relative;background:#171729;border:1px solid #2b2b43;border-radius:22px;padding:24px;display:flex;flex-direction:column;min-height:100%;}
-.product-card.best{border:2px solid #f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.08),0 20px 50px rgba(245,158,11,.08);}
-.product-badge{display:inline-flex;align-self:flex-start;background:rgba(245,158,11,.13);border:1px solid rgba(245,158,11,.35);color:#fbbf24;border-radius:999px;padding:5px 10px;font-size:.66rem;font-weight:950;margin-bottom:12px;letter-spacing:.05em;}
-.product-badge.green-badge{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3);color:#4ade80;}
-.product-badge.gray-badge{background:#222237;border-color:#373751;color:#d7d5e9;}
-.product-name{font-size:1.25rem;font-weight:950;letter-spacing:-.03em;margin-bottom:8px;line-height:1.25;}
-.product-price{font-size:2.2rem;font-weight:950;line-height:1.1;margin:6px 0 8px;background:linear-gradient(135deg,#f59e0b,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.04em;}
-.product-price small{font-size:.82rem;-webkit-text-fill-color:#a4a3bd;background:none;font-weight:800;}
-.product-desc{font-size:.86rem;color:#c8c6dc;line-height:1.75;margin-bottom:15px;}
-.product-list{list-style:none;margin:14px 0 18px;}
-.product-list li{font-size:.82rem;color:#d8d6eb;border-bottom:1px solid #29293d;padding:8px 0;display:flex;gap:8px;line-height:1.45;}
-.product-list li::before{content:'✓';color:#4ade80;font-weight:950;flex-shrink:0;}
-.recommend{background:#0d0d15;border:1px solid #29293d;border-radius:14px;padding:12px;margin-top:auto;margin-bottom:14px;}
-.recommend strong{font-size:.76rem;color:#fbbf24;display:block;margin-bottom:3px;}
-.recommend p{font-size:.76rem;color:#a4a3bd;line-height:1.6;}
-.guide-box{margin-top:24px;background:#16162a;border:1px solid #2a2a40;border-radius:20px;padding:22px;}
-.guide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;}
-@media(max-width:760px){.guide-grid{grid-template-columns:1fr;}}
-.guide-item{background:#0d0d15;border:1px solid #29293d;border-radius:14px;padding:15px;}
-.guide-item strong{display:block;color:#fbbf24;margin-bottom:6px;font-size:.88rem;}
-.guide-item p{font-size:.8rem;color:#a4a3bd;line-height:1.65;}
-.rev-section{background:#12121a;}
-.rev-main{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;margin-top:28px;align-items:stretch;}
-@media(max-width:860px){.rev-main{grid-template-columns:1fr;}}
-.rev-highlight{background:#0d0d15;border:2px solid #4ade80;border-radius:22px;padding:26px;text-align:center;display:flex;flex-direction:column;justify-content:center;}
-.rev-highlight .big{font-size:clamp(2rem,7vw,3.4rem);font-weight:950;line-height:1;background:linear-gradient(135deg,#4ade80,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:12px 0;letter-spacing:-.04em;}
-.rev-highlight p{font-size:.84rem;color:#a4a3bd;line-height:1.75;}
-.usecase-grid{grid-template-columns:repeat(2,1fr);}
-@media(max-width:620px){.usecase-grid{grid-template-columns:1fr;}}
-.usecase{background:#171729;border:1px solid #2b2b43;border-radius:16px;padding:18px;}
-.usecase h4{font-size:.92rem;margin-bottom:7px;}
-.usecase p{font-size:.8rem;color:#a4a3bd;line-height:1.72;}
-.disclaimer{font-size:.72rem;color:#777692;line-height:1.65;margin-top:16px;background:#0d0d15;border:1px solid #29293d;border-radius:14px;padding:14px;}
-.video-box{padding:28px 16px;background:#0a0a0f;}
-.video-box video,.video-box img{width:100%;border-radius:16px;display:block;border:1px solid #2a2a40;}
-.process-steps{display:flex;flex-direction:column;gap:0;margin-top:28px;}
-.proc-step{display:flex;gap:16px;align-items:flex-start;padding-bottom:26px;position:relative;}
-.proc-step::before{content:'';position:absolute;left:19px;top:42px;width:2px;height:calc(100% - 42px);background:#2a2a40;}
-.proc-step:last-child::before{display:none;}
-.proc-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#fb923c);display:flex;align-items:center;justify-content:center;font-weight:950;font-size:.9rem;color:#fff;flex-shrink:0;}
-.proc-txt h4{font-size:1rem;font-weight:950;margin-bottom:5px;letter-spacing:-.02em;}
-.proc-txt p{font-size:.84rem;color:#a4a3bd;line-height:1.75;}
-.proc-time{display:inline-block;margin-top:7px;font-size:.7rem;color:#f59e0b;background:rgba(245,158,11,.1);padding:3px 10px;border-radius:999px;font-weight:900;}
-.faq-list{display:flex;flex-direction:column;gap:9px;margin-top:28px;}
-.faq-item{background:#16162a;border:1px solid #2a2a40;border-radius:14px;overflow:hidden;}
-.faq-q{padding:17px;font-weight:900;font-size:.88rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;user-select:none;line-height:1.45;}
-.faq-q:hover{color:#fbbf24;}
-.faq-icon{font-size:1.05rem;color:#8b8aa8;transition:transform .25s;flex-shrink:0;}
-.faq-item.open .faq-icon{transform:rotate(45deg);}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;}
-.faq-item.open .faq-a{max-height:520px;}
-.faq-a p{padding:0 17px 17px;font-size:.83rem;color:#a4a3bd;line-height:1.82;}
-.final{text-align:center;padding:78px 20px;background:radial-gradient(ellipse at 50% 50%,rgba(245,158,11,.13),transparent 65%);}
-.final h2{font-size:clamp(1.8rem,6vw,3rem);font-weight:950;margin-bottom:14px;letter-spacing:-.045em;line-height:1.18;}
-.final p{color:#c8c6dc;margin-bottom:28px;font-size:.94rem;line-height:1.8;}
-footer{text-align:center;padding:30px 16px 96px;border-top:1px solid #2a2a40;color:#8b8aa8;font-size:.75rem;background:#09090e;}
-.footer-links{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0;}
-.footer-links a{color:#f59e0b;text-decoration:none;font-weight:900;}
-.footer-info{margin-top:10px;font-size:.66rem;color:#5f5e78;line-height:1.9;}
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease;}
+.btn-primary{
+  background:linear-gradient(135deg,var(--yellow),var(--orange2),var(--orange));
+  color:#071022;
+  box-shadow:0 14px 36px rgba(255,138,0,.28);
+}
+.btn-ghost{
+  color:#eaf1ff;
+  border-color:rgba(59,130,246,.35);
+  background:rgba(16,29,58,.68);
+}
+.hero-mini{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:26px;
+  max-width:570px;
+}
+@media(max-width:920px){.hero-mini{margin-left:auto;margin-right:auto;}}
+.mini-card{
+  border:1px solid rgba(59,130,246,.24);
+  border-radius:16px;
+  background:rgba(16,29,58,.62);
+  padding:13px 12px;
+}
+.mini-card strong{
+  display:block;
+  color:#fff;
+  font-size:.95rem;
+  line-height:1.25;
+}
+.mini-card span{
+  display:block;
+  color:var(--muted);
+  font-size:.72rem;
+  margin-top:4px;
+}
+@media(max-width:520px){
+  .hero-mini{grid-template-columns:1fr;max-width:360px;}
+  .btn{width:100%;}
+}
+.dashboard{
+  position:relative;
+  border:1px solid rgba(59,130,246,.42);
+  border-radius:28px;
+  background:
+    linear-gradient(145deg,rgba(16,29,58,.96),rgba(7,16,34,.96)),
+    radial-gradient(circle at top right,rgba(255,138,0,.16),transparent 35%);
+  box-shadow:0 24px 80px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.04);
+  overflow:hidden;
+}
+.dashboard::before{
+  content:'';
+  position:absolute;
+  inset:-2px;
+  border-radius:28px;
+  pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,178,26,.55),transparent 30%,rgba(47,128,255,.5) 76%,transparent);
+  opacity:.16;
+}
+.dash-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:18px 18px 14px;
+  border-bottom:1px solid rgba(59,130,246,.24);
+}
+.dash-title{font-weight:950;}
+.live{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  color:#96ffbd;
+  font-size:.74rem;
+  font-weight:900;
+}
+.live i{
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 16px var(--green);
+}
+.dash-body{padding:18px;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.stat{
+  background:rgba(7,16,34,.72);
+  border:1px solid rgba(59,130,246,.22);
+  border-radius:18px;
+  padding:15px;
+}
+.stat .num{
+  font-size:1.7rem;
+  font-weight:1000;
+  line-height:1;
+  background:linear-gradient(135deg,#fff,var(--orange2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.stat .lab{margin-top:7px;color:#9fb1d3;font-size:.78rem;font-weight:800;}
+.flow{
+  margin-top:14px;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+.flow-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border-radius:16px;
+  background:rgba(7,16,34,.58);
+  border:1px solid rgba(59,130,246,.18);
+}
+.flow-icon{
+  width:36px;height:36px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,138,0,.14);
+}
+.flow-row strong{display:block;font-size:.88rem;}
+.flow-row span{display:block;color:var(--muted);font-size:.72rem;margin-top:1px;}
+.offer-strip{
+  margin-top:14px;
+  padding:14px;
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(255,229,0,.14),rgba(255,138,0,.12));
+  border:1px solid rgba(255,178,26,.35);
+}
+.offer-strip strong{color:var(--yellow);}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px;}
+@media(max-width:900px){.card-grid{grid-template-columns:1fr;}}
+.problem-card,.benefit-card,.feature-card,.faq-item{
+  border:1px solid rgba(59,130,246,.22);
+  background:linear-gradient(180deg,rgba(16,29,58,.74),rgba(13,25,52,.72));
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 18px 50px rgba(0,0,0,.18);
+}
+.problem-card{border-left:4px solid var(--red);}
+.problem-card .emoji,.benefit-card .emoji,.feature-card .emoji{font-size:2rem;margin-bottom:10px;}
+.problem-card h3,.benefit-card h3,.feature-card h3{font-size:1.02rem;line-height:1.35;margin-bottom:8px;}
+.problem-card p,.benefit-card p,.feature-card p{color:var(--muted);font-size:.88rem;line-height:1.72;}
+.video-box{
+  margin-top:32px;
+  border:1px solid rgba(255,178,26,.45);
+  border-radius:26px;
+  padding:10px;
+  background:linear-gradient(135deg,rgba(255,138,0,.18),rgba(47,128,255,.10));
+  box-shadow:0 24px 80px rgba(0,0,0,.36);
+}
+.video-inner{
+  position:relative;
+  width:100%;
+  padding-top:56.25%;
+  border-radius:18px;
+  overflow:hidden;
+  background:#000;
+}
+.video-inner iframe{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+}
+.check-panel{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.check{
+  border:1px solid rgba(59,130,246,.22);
+  border-radius:16px;
+  background:rgba(7,16,34,.6);
+  padding:13px;
+  color:#c5d3f1;
+  font-size:.82rem;
+  font-weight:800;
+}
+@media(max-width:760px){.check-panel{grid-template-columns:1fr 1fr;}}
+.revenue-wrap{
+  margin-top:34px;
+  display:grid;
+  grid-template-columns:.9fr 1.1fr;
+  gap:18px;
+  align-items:stretch;
+}
+@media(max-width:900px){.revenue-wrap{grid-template-columns:1fr;}}
+.big-money{
+  border:1px solid rgba(56,224,123,.38);
+  background:radial-gradient(circle at 50% 0%,rgba(56,224,123,.18),transparent 45%),rgba(7,16,34,.72);
+  border-radius:26px;
+  padding:26px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
+}
+.big-money .small{color:#a6b8d8;font-weight:800;font-size:.9rem;}
+.big-money .money{
+  margin:8px 0;
+  font-size:clamp(2.4rem,9vw,4.8rem);
+  line-height:1;
+  font-weight:1000;
+  background:linear-gradient(135deg,#8cffb1,#38e07b,#22d3ee);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.big-money .warn{font-size:.74rem;color:#8ea1c6;line-height:1.6;}
+.step-flow{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+}
+.step-flow .step{
+  padding:16px 10px;
+  text-align:center;
+  background:rgba(16,29,58,.76);
+  border:1px solid rgba(59,130,246,.22);
+  border-radius:18px;
+}
+.step .ic{font-size:1.8rem;margin-bottom:8px;}
+.step strong{display:block;font-size:.86rem;line-height:1.35;}
+.step span{display:block;color:var(--muted);font-size:.7rem;margin-top:5px;}
+@media(max-width:760px){.step-flow{grid-template-columns:1fr;}.step-flow .step{text-align:left;display:flex;align-items:center;gap:12px;}.step .ic{margin:0;}}
+.products{
+  display:grid;
+  grid-template-columns:1.12fr .94fr .94fr;
+  gap:18px;
+  margin-top:36px;
+  align-items:stretch;
+}
+@media(max-width:980px){.products{grid-template-columns:1fr;}}
+.product{
+  position:relative;
+  border:1px solid rgba(59,130,246,.26);
+  background:linear-gradient(180deg,rgba(16,29,58,.82),rgba(8,17,35,.86));
+  border-radius:28px;
+  padding:26px;
+  overflow:hidden;
+  box-shadow:0 24px 70px rgba(0,0,0,.25);
+}
+.product.best{
+  border:2px solid rgba(255,178,26,.78);
+  box-shadow:0 26px 90px rgba(255,138,0,.18),0 24px 70px rgba(0,0,0,.25);
+}
+.product.best::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle at top right,rgba(255,178,26,.19),transparent 42%);
+}
+.ribbon{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:5px 10px;
+  background:rgba(255,138,0,.16);
+  border:1px solid rgba(255,178,26,.45);
+  color:#ffe49d;
+  font-size:.72rem;
+  font-weight:1000;
+  margin-bottom:12px;
+}
+.product h3{
+  font-size:1.4rem;
+  line-height:1.25;
+  letter-spacing:-.03em;
+}
+.product .desc{color:var(--muted);font-size:.86rem;margin-top:9px;}
+.price-area{margin-top:16px;}
+.original{
+  color:#90a3c7;
+  text-decoration:line-through;
+  font-weight:900;
+  font-size:.9rem;
+}
+.main-price{
+  margin-top:2px;
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.main-price strong{
+  font-size:2.65rem;
+  line-height:1;
+  letter-spacing:-.06em;
+  font-weight:1000;
+  color:var(--orange2);
+}
+.main-price span{color:#fff;font-weight:950;}
+.price-table{
+  margin-top:14px;
+  border:1px solid rgba(59,130,246,.22);
+  border-radius:16px;
+  overflow:hidden;
+}
+.price-table div{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 12px;
+  font-size:.86rem;
+  border-bottom:1px solid rgba(59,130,246,.16);
+}
+.price-table div:last-child{border-bottom:0;}
+.price-table b{color:#fff;}
+.price-table strong{color:var(--orange2);}
+.product ul{
+  list-style:none;
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+.product li{
+  color:#c6d4ef;
+  font-size:.88rem;
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+}
+.product li::before{
+  content:'✓';
+  color:var(--green);
+  font-weight:1000;
+  flex:0 0 auto;
+}
+.product .btn{width:100%;margin-top:22px;}
+.gift-box{
+  margin-top:24px;
+  border:1px solid rgba(255,229,0,.35);
+  border-radius:22px;
+  background:linear-gradient(135deg,rgba(255,229,0,.11),rgba(255,138,0,.11));
+  padding:20px;
+}
+.gift-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:14px;
+}
+.gift{
+  border:1px solid rgba(255,178,26,.24);
+  border-radius:16px;
+  padding:14px;
+  background:rgba(7,16,34,.58);
+  text-align:center;
+}
+.gift .ic{font-size:1.8rem;margin-bottom:7px;}
+.gift strong{display:block;font-size:.9rem;color:#fff;}
+.gift span{display:block;color:#fdf08c;font-weight:900;font-size:.8rem;margin-top:2px;}
+@media(max-width:760px){.gift-grid{grid-template-columns:1fr 1fr;}}
+.select-guide{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:28px;
+}
+@media(max-width:820px){.select-guide{grid-template-columns:1fr;}}
+.guide{
+  border:1px solid rgba(59,130,246,.22);
+  border-radius:20px;
+  background:rgba(16,29,58,.66);
+  padding:20px;
+}
+.guide .tag{color:var(--orange2);font-size:.78rem;font-weight:1000;margin-bottom:8px;}
+.guide strong{display:block;font-size:1.05rem;line-height:1.35;}
+.guide p{color:var(--muted);font-size:.86rem;margin-top:8px;}
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:32px;
+}
+@media(max-width:900px){.feature-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.feature-grid{grid-template-columns:1fr;}}
+.feature-card{padding:20px;}
+.process{
+  margin-top:32px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+.proc{
+  border:1px solid rgba(59,130,246,.22);
+  border-radius:22px;
+  background:rgba(16,29,58,.66);
+  padding:20px;
+}
+.proc-num{
+  width:40px;height:40px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,var(--orange2),var(--orange));
+  color:#081126;
+  font-weight:1000;
+  margin-bottom:14px;
+}
+.proc strong{display:block;line-height:1.35;}
+.proc p{color:var(--muted);font-size:.84rem;margin-top:8px;}
+@media(max-width:900px){.process{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.process{grid-template-columns:1fr;}}
+.faq-list{margin-top:30px;display:flex;flex-direction:column;gap:10px;}
+.faq-q{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  border:0;
+  background:transparent;
+  color:#fff;
+  font-size:.96rem;
+  font-weight:950;
+  cursor:pointer;
+  text-align:left;
+}
+.faq-q span{color:var(--orange2);font-size:1.35rem;}
+.faq-a{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .28s ease;
+}
+.faq-item.open .faq-a{max-height:360px;}
+.faq-a p{
+  padding-top:12px;
+  color:var(--muted);
+  font-size:.88rem;
+}
+.final{
+  text-align:center;
+  padding:88px 0;
+  background:radial-gradient(circle at center,rgba(255,138,0,.14),transparent 56%);
+}
+.final h2{
+  font-size:clamp(2rem,6vw,4rem);
+  line-height:1.12;
+  letter-spacing:-.055em;
+  font-weight:1000;
+}
+.final p{margin-top:16px;color:#c1d0ef;}
+.final .btn-row{justify-content:center;}
+.footer{
+  border-top:1px solid rgba(59,130,246,.24);
+  padding:34px 0 94px;
+  color:#8ea1c6;
+  font-size:.78rem;
+}
+.footer-in{
+  display:flex;
+  justify-content:space-between;
+  gap:22px;
+  align-items:flex-start;
+}
+.footer a{color:#ffbd45;text-decoration:none;font-weight:900;}
+.biz-info{line-height:1.85;max-width:760px;}
+.policy-links{display:flex;gap:12px;white-space:nowrap;}
+@media(max-width:820px){.footer-in{flex-direction:column}.policy-links{flex-wrap:wrap;}}
+.sticky{
+  position:fixed;
+  left:0;right:0;bottom:0;
+  z-index:450;
+  padding:10px 14px;
+  background:rgba(7,16,34,.92);
+  backdrop-filter:blur(18px);
+  border-top:1px solid rgba(59,130,246,.28);
+  display:none;
+}
+.sticky-in{
+  max-width:680px;
+  margin:0 auto;
+  display:flex;
+  gap:10px;
+}
+.sticky .btn{flex:1;min-height:48px;padding:12px 10px;border-radius:14px;font-size:.86rem;}
+@media(max-width:760px){.sticky{display:block;}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease;}
 .reveal.visible{opacity:1;transform:none;}
-.sticky-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:250;padding:12px 14px;background:rgba(10,10,15,.97);border-top:1px solid #2a2a40;backdrop-filter:blur(10px);}
-.sticky-cta-inner{display:flex;gap:9px;max-width:620px;margin:0 auto;}
-@media(max-width:768px){.sticky-cta{display:block;}.sec{padding:58px 16px;}}
+.notice{
+  margin-top:18px;
+  padding:14px 16px;
+  border:1px solid rgba(148,166,199,.22);
+  border-radius:18px;
+  background:rgba(7,16,34,.62);
+  color:#96a8ca;
+  font-size:.76rem;
+  line-height:1.65;
+}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="nav-brand">⚡ 센텀하이</div>
-  <div class="nav-menu">
-    <a href="#products">상품</a>
-    <a href="#revenue">부수익 구조</a>
-    <a href="#faq">FAQ</a>
-    <a class="nav-cta" href="#products">상품 3종 보기</a>
+  <div class="nav-in">
+    <a href="#" class="brand" style="text-decoration:none;">
+      <span class="brand-mark">⚡</span>
+      <span>센텀하이</span>
+    </a>
+    <div class="nav-links">
+      <a href="#demo-video">실제영상</a>
+      <a href="#products">상품구성</a>
+      <a href="#revenue">수익구조</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="nav-cta" href="#products">79만원 특가 보기</a>
   </div>
 </nav>
 
-<section class="hero">
-  <div class="hero-badge">블로그 · SNS · 플레이스 · 수익형 링크 자동화</div>
-  <h1>사장님,<br>블로그가 <em class="em">홍보만 하고 끝나면</em><br>너무 아깝습니다</h1>
-  <p class="hero-sub">센텀하이는 내 가게 홍보글을 자동으로 쌓고<br>쿠팡파트너스·네이버 쇼핑커넥트까지 활용해<br>수익형 콘텐츠 구조까지 만들 수 있게 돕습니다.</p>
-  <p class="hero-sub2">노트북 없이 79만원부터 시작 · 월구독 / 프로그램 패키지 / 노트북 풀패키지 선택 가능</p>
-  <div class="btn-group">
-    <a href="#products" class="btn btn-primary">내게 맞는 상품 보기</a>
-    <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" class="btn btn-kakao">💬 카카오톡 상담</a>
-  </div>
-  <p class="hero-note">※ 수익은 운영 방식과 방문자 수에 따라 달라지며, 보장 수익이 아닙니다.</p>
-  <div class="hero-kpi">
-    <div class="kpi-item"><div class="kpi-num">79만원부터</div><div class="kpi-label">프로그램 패키지 시작</div></div>
-    <div class="kpi-item"><div class="kpi-num">3가지 선택</div><div class="kpi-label">월구독 · 프로그램 · 노트북</div></div>
-    <div class="kpi-item"><div class="kpi-num">월 30만원</div><div class="kpi-label">부수익까지 노려볼 수 있는 구조</div></div>
-  </div>
-</section>
+<header class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="badge">✦ 한량연구소 한정 특가 ✦</div>
+      <h1>
+        <span class="white3d">사장님 블로그,</span><br>
+        홍보만 하고 끝나면<br>
+        <em>너무 아깝습니다</em>
+      </h1>
+      <p class="hero-lead">
+        블로그봇 · 서이추봇 · 움짤봇 3종 자동화로<br>
+        홍보글 발행부터 이웃 증가, 콘텐츠 제작까지 자동화하고<br>
+        쿠팡파트너스 · 네이버 쇼핑커넥트 수익 구조까지 함께 설계하세요.
+      </p>
 
-<div class="alert-strip">노트북부터 사지 않아도 됩니다. 이미 쓰는 PC가 있다면 프로그램 패키지로 먼저 시작하세요.</div>
+      <div class="hero-price">
+        <div class="price-pill">
+          <span class="old">정가 119만원</span>
+          <span class="new">특가 79만원</span>
+        </div>
+        <div class="price-pill">
+          <span style="color:#dbe7ff;font-weight:950;">무제한 평생 라이선스</span>
+        </div>
+      </div>
+      <div class="hero-note">노트북 없이 시작 가능 · 월구독 / 노트북 풀패키지도 선택 가능</div>
 
-<section class="sec sec-alt reveal">
+      <div class="btn-row">
+        <a href="#products" class="btn btn-primary">🔥 상품 3종 확인하기</a>
+        <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" class="btn btn-ghost">💬 카카오톡 상담하기</a>
+      </div>
+
+      <div class="hero-mini">
+        <div class="mini-card"><strong>1PC 79만원</strong><span>정가 119만원 → 할인</span></div>
+        <div class="mini-card"><strong>2PC 139만원</strong><span>여러 계정 운영용</span></div>
+        <div class="mini-card"><strong>3PC 179만원</strong><span>확장 운영 패키지</span></div>
+      </div>
+    </div>
+
+    <div class="dashboard reveal">
+      <div class="dash-top">
+        <div class="dash-title">오늘 자동화 현황</div>
+        <div class="live"><i></i> LIVE</div>
+      </div>
+      <div class="dash-body">
+        <div class="stat-grid">
+          <div class="stat"><div class="num">12</div><div class="lab">블로그 발행 준비</div></div>
+          <div class="stat"><div class="num">40</div><div class="lab">서로이웃 작업</div></div>
+          <div class="stat"><div class="num">8</div><div class="lab">움짤 콘텐츠 생성</div></div>
+          <div class="stat"><div class="num">ON</div><div class="lab">수익형 링크 구조</div></div>
+        </div>
+        <div class="flow">
+          <div class="flow-row"><div class="flow-icon">📝</div><div><strong>블로그봇</strong><span>키워드 기반 홍보글 발행 흐름 자동화</span></div></div>
+          <div class="flow-row"><div class="flow-icon">🤝</div><div><strong>서이추봇</strong><span>블로그 이웃 확장 작업 자동화</span></div></div>
+          <div class="flow-row"><div class="flow-icon">🎞️</div><div><strong>움짤봇</strong><span>GIF/WEBP 콘텐츠 제작 자동화</span></div></div>
+        </div>
+        <div class="offer-strip">
+          <strong>6월 30일까지 구매 시</strong><br>
+          쓰레드봇 · 티스토리봇 무료 + 신기능 6개월 무료
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="sec-tight sec-alt reveal" id="demo-video">
   <div class="container">
-    <div class="sec-tag">사장님 현실</div>
-    <h2 class="sec-title">홍보는 해야 하는데,<br>매일 직접 하기엔 너무 벅찹니다</h2>
-    <p class="sec-sub">센텀하이는 “홍보를 대신 해주는 직원”처럼 반복 작업을 줄이고, 쌓이는 콘텐츠를 수익형 구조까지 연결하는 방향으로 설계합니다.</p>
-    <div class="pain-grid">
-      <div class="card pain-card"><div class="card-icon">😮‍💨</div><h3>블로그 쓸 시간이 없습니다</h3><p>가게 운영만 해도 바쁜데 키워드 찾고, 제목 짓고, 글 쓰고, 올리는 일을 매일 하기 어렵습니다.</p></div>
-      <div class="card pain-card"><div class="card-icon">💸</div><h3>광고대행사는 부담됩니다</h3><p>매달 나가는 비용은 큰데, 내 가게에 실제로 도움이 되는지 확인하기 어렵습니다.</p></div>
-      <div class="card pain-card"><div class="card-icon">📉</div><h3>글을 써도 반응이 없습니다</h3><p>한두 번 올리고 끝나면 검색 유입이 쌓이지 않습니다. 결국 꾸준함이 핵심입니다.</p></div>
-      <div class="card pain-card"><div class="card-icon">🤷</div><h3>뭘 연결해야 할지 모릅니다</h3><p>쿠팡파트너스, 쇼핑커넥트, 애드포스트를 들어봤지만 내 업종에 어떻게 써야 할지 막막합니다.</p></div>
-      <div class="card pain-card"><div class="card-icon">🖥️</div><h3>노트북 풀패키지는 비싸게 느껴집니다</h3><p>장비까지 한 번에 사기 부담된다면, 프로그램 패키지나 월구독으로 낮게 시작할 수 있습니다.</p></div>
-      <div class="card pain-card"><div class="card-icon">📌</div><h3>꾸준히 쌓이는 구조가 필요합니다</h3><p>한 번 반짝하는 광고보다, 검색에 남는 콘텐츠가 계속 쌓이는 구조가 장기적으로 유리합니다.</p></div>
+    <div class="sec-tag">실제 사용 사례</div>
+    <h2 class="sec-title">말로만 설명하지 않습니다.<br><em>실제 작동 화면</em>을 먼저 확인하세요</h2>
+    <p class="sec-sub">
+      4분 30초 실제 사용 사례 영상으로 블로그 자동화, 서이추 자동화, 콘텐츠 제작 흐름을 확인할 수 있습니다.
+    </p>
+
+    <div class="video-box">
+      <div class="video-inner">
+        <iframe src="https://www.youtube.com/embed/na3dqMp2JiA" title="센텀하이 자동화 프로그램 실제 사용 사례" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="check-panel">
+      <div class="check">✅ 실제 프로그램 작동 흐름</div>
+      <div class="check">✅ 블로그봇 활용 방식</div>
+      <div class="check">✅ 서이추봇 운영 구조</div>
+      <div class="check">✅ 수익형 링크 활용 가능성</div>
     </div>
   </div>
 </section>
 
 <section class="sec reveal">
   <div class="container">
-    <div class="sec-tag">센텀하이 방식</div>
-    <h2 class="sec-title">홍보글 하나를<br><em class="green">손님 유입 + 부수익 콘텐츠</em>로 바꿉니다</h2>
-    <p class="sec-sub">단순히 글만 많이 올리는 게 아닙니다. 업종에 맞는 홍보 주제와 수익형 링크 활용 구조를 함께 설계합니다.</p>
-    <div class="solution-wrap">
-      <div class="flow-card">
-        <div class="flow-row"><div class="flow-num">1</div><div><strong>가게 홍보글 자동 발행</strong><span>메뉴, 서비스, 지역 키워드, 이벤트성 콘텐츠를 꾸준히 쌓습니다.</span></div></div>
-        <div class="flow-row"><div class="flow-num">2</div><div><strong>쿠팡파트너스 상품 연결</strong><span>업종과 어울리는 관련 상품을 콘텐츠 안에서 자연스럽게 활용합니다.</span></div></div>
-        <div class="flow-row"><div class="flow-num">3</div><div><strong>네이버 쇼핑커넥트 활용</strong><span>네이버 쇼핑 상품 링크를 활용해 판매 연동 수익 구조를 노려볼 수 있습니다.</span></div></div>
-        <div class="flow-row"><div class="flow-num">4</div><div><strong>검색 유입 누적</strong><span>한 번 올리고 사라지는 광고가 아니라, 검색에 남는 콘텐츠 자산을 쌓습니다.</span></div></div>
-      </div>
-      <div class="flow-card" style="border-color:rgba(74,222,128,.35);">
-        <div class="sec-tag" style="color:#4ade80;">핵심 후킹</div>
-        <h3 style="font-size:1.55rem;line-height:1.22;letter-spacing:-.04em;margin-bottom:12px;">운영이 잘 맞으면<br><em class="green">월 30만원 부수익</em>까지<br>노려볼 수 있는 구조</h3>
-        <p style="font-size:.86rem;color:#a4a3bd;line-height:1.85;">블로그 방문자, 콘텐츠 품질, 상품 선택, 전환율이 맞아떨어지면 쿠팡파트너스·네이버 쇼핑커넥트·애드포스트 등으로 부수익을 만들 수 있습니다.</p>
-        <div class="disclaimer">※ 월 30만원은 보장 수익이 아니라 목표로 노려볼 수 있는 구조입니다. 실제 수익은 운영 환경에 따라 달라집니다.</div>
-      </div>
+    <div class="sec-tag">사장님이 막히는 지점</div>
+    <h2 class="sec-title">홍보는 해야 하는데,<br>매일 직접 하기엔 <em>너무 벅찹니다</em></h2>
+    <div class="card-grid">
+      <div class="problem-card"><div class="emoji">😮‍💨</div><h3>블로그 써야 하는 건 아는데 시간이 없습니다</h3><p>가게 운영 끝나고 글을 쓰려면 체력도, 집중력도 남아 있지 않습니다.</p></div>
+      <div class="problem-card"><div class="emoji">💸</div><h3>광고대행사는 매달 비용이 부담됩니다</h3><p>월 광고비는 계속 나가는데, 글과 자산은 내 것이 아닌 경우가 많습니다.</p></div>
+      <div class="problem-card"><div class="emoji">🤷</div><h3>쿠팡파트너스·쇼핑커넥트는 알지만 활용이 어렵습니다</h3><p>수익형 링크를 어디에, 어떻게 연결해야 할지 몰라 그냥 놓치는 경우가 많습니다.</p></div>
     </div>
   </div>
 </section>
 
-<section class="video-box">
+<section class="sec sec-alt reveal" id="revenue">
   <div class="container">
-    <video autoplay muted loop playsinline>
-      <source src="video1.mp4" type="video/mp4">
-    </video>
+    <div class="sec-tag">수익형 블로그 구조</div>
+    <h2 class="sec-title">홍보글 하나가<br><em>손님 유입 + 부수익 글</em>이 됩니다</h2>
+    <p class="sec-sub">
+      센텀하이는 단순히 글만 쌓는 구조가 아닙니다. 업종에 맞는 콘텐츠와 제휴 링크를 함께 활용해
+      홍보글을 수익형 콘텐츠로 바꾸는 구조를 설계합니다.
+    </p>
+
+    <div class="revenue-wrap">
+      <div class="big-money">
+        <div class="small">운영이 잘 맞으면</div>
+        <div class="money">월 30만원</div>
+        <div class="small">부수익까지 노려볼 수 있는 구조</div>
+        <p class="warn" style="margin-top:14px;">보장 수익이 아닙니다. 방문자 수, 콘텐츠 품질, 상품 선택, 전환율에 따라 결과가 달라집니다.</p>
+      </div>
+
+      <div class="step-flow">
+        <div class="step"><div class="ic">📝</div><div><strong>홍보글 자동화</strong><span>업종 키워드 기반</span></div></div>
+        <div class="step"><div class="ic">🔎</div><div><strong>검색 유입</strong><span>콘텐츠 누적</span></div></div>
+        <div class="step"><div class="ic">🛒</div><div><strong>쿠팡파트너스</strong><span>관련 상품 연결</span></div></div>
+        <div class="step"><div class="ic">🛍️</div><div><strong>쇼핑커넥트</strong><span>네이버 상품 연결</span></div></div>
+        <div class="step"><div class="ic">💰</div><div><strong>부수익 구조</strong><span>클릭·구매 전환</span></div></div>
+      </div>
+    </div>
+
+    <div class="notice">
+      ※ 제휴 링크가 포함된 콘텐츠에는 관련 법령 및 플랫폼 정책에 따른 경제적 이해관계 표시가 필요합니다.<br>
+      ※ 플랫폼 정책, 계정 상태, 키워드 경쟁도에 따라 노출과 수익 결과는 달라질 수 있습니다.
+    </div>
   </div>
 </section>
 
-<section class="sec product-section reveal" id="products">
+<section class="sec reveal" id="products">
   <div class="container">
-    <div class="sec-tag">상품 3종 선택</div>
-    <h2 class="sec-title">사장님 상황에 맞게<br>필요한 방식만 선택하세요</h2>
-    <p class="sec-sub">노트북 풀패키지 하나만 파는 구조가 아닙니다. 이미 PC가 있으면 79만원 프로그램 패키지로, 직접 운영이 부담되면 월구독으로 시작할 수 있습니다.</p>
-    <div class="product-grid">
-      <div class="product-card best">
-        <span class="product-badge">BEST · 가장 많이 추천</span>
-        <h3 class="product-name">프로그램 무제한 패키지</h3>
-        <div class="product-price">790,000원</div>
-        <p class="product-desc">이미 노트북이나 PC가 있다면 가장 합리적으로 시작하는 자동화 패키지입니다.</p>
-        <ul class="product-list">
-          <li>블로그 자동화 프로그램</li>
-          <li>티스토리 자동화 프로그램</li>
-          <li>서로이웃 자동화</li>
-          <li>SNS 운영 자동화</li>
+    <div class="sec-tag">상품 선택</div>
+    <h2 class="sec-title">사장님 상황에 맞게<br><em>3가지 방식</em> 중 선택하세요</h2>
+    <p class="sec-sub">노트북을 꼭 사야 하는 구조가 아닙니다. 이미 쓰는 PC가 있다면 프로그램 패키지만으로 시작할 수 있습니다.</p>
+
+    <div class="products">
+      <div class="product best">
+        <div class="ribbon">BEST · 가장 많이 추천</div>
+        <h3>블로그 수익화<br>자동화 3종 패키지</h3>
+        <p class="desc">블로그봇 + 서이추봇 + 움짤봇을 무제한 평생 라이선스로 제공합니다.</p>
+        <div class="price-area">
+          <div class="original">정가 1,190,000원</div>
+          <div class="main-price"><strong>790,000</strong><span>원</span></div>
+        </div>
+
+        <div class="price-table">
+          <div><b>1PC</b><strong>79만원</strong></div>
+          <div><b>2PC</b><strong>139만원</strong></div>
+          <div><b>3PC</b><strong>179만원</strong></div>
+        </div>
+
+        <ul>
+          <li>블로그봇 · 서이추봇 · 움짤봇 3종 제공</li>
           <li>쿠팡파트너스 활용 구조 안내</li>
           <li>네이버 쇼핑커넥트 활용 구조 안내</li>
-          <li>기본 세팅 가이드 + 카카오톡 안내</li>
+          <li>기본 업데이트 평생 무료</li>
+          <li>기존 PC나 노트북으로 시작 가능</li>
         </ul>
-        <div class="recommend"><strong>추천 대상</strong><p>노트북은 이미 있고, 직접 실행하면서 자동화를 돌리고 싶은 사장님</p></div>
-        <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" class="btn btn-primary">79만원 패키지 상담하기</a>
+        <a class="btn btn-primary" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank">🔥 79만원 특가 상담하기</a>
       </div>
-      <div class="product-card">
-        <span class="product-badge green-badge">관리형</span>
-        <h3 class="product-name">월구독 서비스</h3>
-        <div class="product-price"><small>월 이용료</small><br>상담 후 안내</div>
-        <p class="product-desc">직접 세팅하고 관리하는 게 부담스러운 사장님을 위한 관리형 서비스입니다.</p>
-        <ul class="product-list">
-          <li>업종별 홍보 방향 세팅</li>
-          <li>자동화 운영 관리</li>
-          <li>블로그/SNS 운영 방향 점검</li>
-          <li>오류 발생 시 대응</li>
-          <li>월별 운영 상담</li>
-          <li>수익형 링크 활용 방향 안내</li>
+
+      <div class="product">
+        <div class="ribbon">관리형</div>
+        <h3>월구독<br>관리 서비스</h3>
+        <p class="desc">직접 세팅하고 관리하는 게 부담스러운 분을 위한 월 단위 관리형 서비스입니다.</p>
+        <div class="price-area">
+          <div class="main-price"><strong style="font-size:2rem;">상담 후</strong><span>안내</span></div>
+        </div>
+        <ul>
+          <li>업종별 블로그 운영 방향 세팅</li>
+          <li>자동화 운영 관리 상담</li>
+          <li>콘텐츠 방향 점검</li>
+          <li>오류 발생 시 대응 안내</li>
+          <li>직접 만지기 어려운 분께 추천</li>
         </ul>
-        <div class="recommend"><strong>추천 대상</strong><p>직접 만지는 게 어렵고, 꾸준히 관리받고 싶은 사장님</p></div>
-        <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" class="btn btn-kakao">월구독 상담하기</a>
+        <a class="btn btn-ghost" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank">💬 월구독 상담하기</a>
       </div>
-      <div class="product-card">
-        <span class="product-badge gray-badge">FULL PACKAGE</span>
-        <h3 class="product-name">노트북 풀패키지</h3>
-        <div class="product-price">1,790,000원</div>
-        <p class="product-desc">노트북부터 프로그램까지 전부 세팅된 상태로 받고 싶은 분께 추천합니다.</p>
-        <ul class="product-list">
+
+      <div class="product">
+        <div class="ribbon">FULL SET</div>
+        <h3>노트북<br>풀세팅 패키지</h3>
+        <p class="desc">노트북부터 프로그램까지 세팅된 상태로 받고 싶은 분을 위한 풀패키지입니다.</p>
+        <div class="price-area">
+          <div class="main-price"><strong style="font-size:2rem;">구성별</strong><span>상담</span></div>
+        </div>
+        <ul>
           <li>자동화 전용 노트북 포함</li>
-          <li>프로그램 설치 완료 배송</li>
-          <li>초기 세팅 지원</li>
-          <li>바로 실행 가능한 상태로 세팅</li>
-          <li>카카오톡 1:1 지원</li>
-          <li>수익화 전자책/운영 가이드 제공</li>
+          <li>프로그램 설치 완료 상태로 준비</li>
+          <li>초기 세팅 안내</li>
+          <li>컴퓨터 세팅이 어려운 분께 추천</li>
+          <li>수령 후 바로 운영 가능한 구조</li>
         </ul>
-        <div class="recommend"><strong>추천 대상</strong><p>PC 세팅이 어렵거나, 장비까지 한 번에 받고 싶은 사장님</p></div>
-        <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" class="btn btn-dark">풀패키지 상담하기</a>
+        <a class="btn btn-ghost" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank">🖥️ 풀패키지 상담하기</a>
       </div>
     </div>
-    <div class="guide-box">
-      <h3 style="font-size:1.1rem;letter-spacing:-.02em;">어떤 상품을 골라야 할까요?</h3>
-      <div class="guide-grid">
-        <div class="guide-item"><strong>PC/노트북이 있다면</strong><p>프로그램 무제한 패키지 79만원으로 시작하는 게 가장 합리적입니다.</p></div>
-        <div class="guide-item"><strong>직접 관리가 어렵다면</strong><p>월구독 서비스로 운영 부담을 줄이고, 관리형으로 진행하는 게 좋습니다.</p></div>
-        <div class="guide-item"><strong>장비까지 필요하다면</strong><p>노트북 풀패키지를 선택하면 세팅된 상태로 받아 바로 시작할 수 있습니다.</p></div>
+
+    <div class="gift-box">
+      <div class="sec-tag" style="margin-bottom:2px;">한량연구소 한정 구매 혜택</div>
+      <h3 style="font-size:1.35rem;line-height:1.35;">6월 30일까지 구매 시 추가 혜택 제공</h3>
+      <div class="gift-grid">
+        <div class="gift"><div class="ic">🧵</div><strong>쓰레드봇</strong><span>무료</span></div>
+        <div class="gift"><div class="ic">🟠</div><strong>티스토리봇</strong><span>무료</span></div>
+        <div class="gift"><div class="ic">🚀</div><strong>신기능</strong><span>6개월 무료</span></div>
+        <div class="gift"><div class="ic">🛡️</div><strong>기본 업데이트</strong><span>평생 무료</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="sec rev-section reveal" id="revenue">
+<section class="sec-tight sec-alt reveal">
   <div class="container">
-    <div class="sec-tag" style="color:#4ade80;">수익형 블로그 구조</div>
-    <h2 class="sec-title">광고비만 줄이는 게 아니라,<br>블로그에서 <em class="green">부수익</em>까지 노려봅니다</h2>
-    <p class="sec-sub">업종에 어울리는 상품을 연결하면, 가게 홍보글이 단순 광고글이 아니라 수익형 콘텐츠가 될 수 있습니다.</p>
-    <div class="rev-main">
-      <div class="rev-highlight">
-        <span class="sec-tag" style="justify-content:center;color:#4ade80;">목표 구조</span>
-        <div class="big">월 30만원</div>
-        <p>쿠팡파트너스 · 네이버 쇼핑커넥트 · 애드포스트 등을 함께 활용해 부수익을 노려볼 수 있습니다.</p>
-      </div>
-      <div class="usecase-grid">
-        <div class="usecase"><h4>☕ 카페/디저트</h4><p>커피머신, 원두, 텀블러, 홈카페 용품 등 관련 상품 연결</p></div>
-        <div class="usecase"><h4>✂️ 미용실/네일샵</h4><p>헤어에센스, 드라이기, 샴푸, 뷰티 소품 등 관련 상품 연결</p></div>
-        <div class="usecase"><h4>💪 헬스장/PT샵</h4><p>보충제, 운동용품, 마사지건, 스트레칭 도구 등 관련 상품 연결</p></div>
-        <div class="usecase"><h4>🍗 식당/배달</h4><p>주방용품, 밀키트, 식재료, 조리도구 등 관련 상품 연결</p></div>
-      </div>
-    </div>
-    <div class="disclaimer">
-      ※ 수익은 방문자 수, 콘텐츠 품질, 상품 선택, 전환율에 따라 달라지며 보장 수익이 아닙니다.<br>
-      ※ 쿠팡파트너스·네이버 쇼핑커넥트 등 제휴 링크가 포함된 콘텐츠에는 관련 법령 및 플랫폼 정책에 따른 경제적 이해관계 표시가 필요합니다.<br>
-      ※ 센텀하이는 수익 보장을 약속하는 서비스가 아니라, 홍보 자동화와 수익형 콘텐츠 활용 구조를 세팅하는 서비스입니다.
+    <div class="sec-tag">선택 가이드</div>
+    <h2 class="sec-title">어떤 상품이 맞을까요?</h2>
+    <div class="select-guide">
+      <div class="guide"><div class="tag">PC/노트북이 이미 있다면</div><strong>프로그램 3종 패키지</strong><p>가장 합리적으로 시작할 수 있습니다. 1PC 기준 특가 79만원입니다.</p></div>
+      <div class="guide"><div class="tag">직접 운영이 부담된다면</div><strong>월구독 관리 서비스</strong><p>세팅과 운영 방향을 꾸준히 관리받고 싶은 분께 적합합니다.</p></div>
+      <div class="guide"><div class="tag">컴퓨터 세팅이 어렵다면</div><strong>노트북 풀세팅 패키지</strong><p>장비부터 프로그램까지 한 번에 준비하고 싶은 분께 적합합니다.</p></div>
     </div>
   </div>
 </section>
@@ -302,36 +994,27 @@ footer{text-align:center;padding:30px 16px 96px;border-top:1px solid #2a2a40;col
 <section class="sec reveal">
   <div class="container">
     <div class="sec-tag">자동화 기능</div>
-    <h2 class="sec-title">반복 홍보 업무를<br>자동화 구조로 바꿉니다</h2>
-    <p class="sec-sub">사장님은 가게 운영에 집중하고, 반복되는 홍보 작업은 자동화 시스템으로 줄여보세요.</p>
+    <h2 class="sec-title">3종 패키지로<br>블로그 운영의 핵심을 자동화합니다</h2>
     <div class="feature-grid">
-      <div class="card"><div class="card-icon">📝</div><h3>블로그 자동화</h3><p>가게 소개, 메뉴, 이벤트, 지역 키워드 콘텐츠를 꾸준히 발행할 수 있게 돕습니다.</p></div>
-      <div class="card"><div class="card-icon">🟠</div><h3>티스토리 자동화</h3><p>블로그 외 채널에도 콘텐츠를 쌓아 검색 유입을 넓히는 구조를 만들 수 있습니다.</p></div>
-      <div class="card"><div class="card-icon">🤝</div><h3>서로이웃 자동화</h3><p>블로그 운영 초반에 필요한 이웃 관리 반복 작업을 줄이는 데 활용합니다.</p></div>
-      <div class="card"><div class="card-icon">🧵</div><h3>SNS 운영 자동화</h3><p>스레드 등 SNS에 가게 소식과 콘텐츠를 꾸준히 쌓는 운영 구조를 만듭니다.</p></div>
-      <div class="card"><div class="card-icon">🏪</div><h3>가게 홍보 자동화</h3><p>플레이스, 스마트스토어, 지역 키워드 기반 콘텐츠로 자연 유입을 노려볼 수 있습니다.</p></div>
-      <div class="card"><div class="card-icon">🛒</div><h3>제휴 링크 활용</h3><p>쿠팡파트너스와 네이버 쇼핑커넥트를 콘텐츠 안에서 활용할 수 있는 방향을 잡습니다.</p></div>
+      <div class="feature-card"><div class="emoji">📝</div><h3>블로그봇</h3><p>업종 키워드와 주제에 맞춰 블로그 홍보 콘텐츠를 꾸준히 쌓을 수 있는 구조를 만듭니다.</p></div>
+      <div class="feature-card"><div class="emoji">🤝</div><h3>서이추봇</h3><p>블로그 이웃 확장 작업을 자동화해 콘텐츠를 볼 수 있는 접점을 늘립니다.</p></div>
+      <div class="feature-card"><div class="emoji">🎞️</div><h3>움짤봇</h3><p>GIF/WEBP 콘텐츠 제작을 도와 블로그와 SNS에서 활용할 수 있는 시각 자료를 만듭니다.</p></div>
+      <div class="feature-card"><div class="emoji">🛒</div><h3>쿠팡파트너스 활용</h3><p>업종과 어울리는 상품 링크를 콘텐츠에 연결해 부수익 구조를 만들 수 있습니다.</p></div>
+      <div class="feature-card"><div class="emoji">🛍️</div><h3>네이버 쇼핑커넥트 활용</h3><p>네이버 생태계 안에서 상품 링크를 활용해 콘텐츠 수익화를 노려볼 수 있습니다.</p></div>
+      <div class="feature-card"><div class="emoji">⚙️</div><h3>평생 업데이트</h3><p>기본 업데이트를 평생 무료로 제공해 장기적으로 사용할 수 있는 구조를 지향합니다.</p></div>
     </div>
-  </div>
-</section>
-
-<section class="video-box">
-  <div class="container">
-    <video autoplay muted loop playsinline>
-      <source src="video2.mp4" type="video/mp4">
-    </video>
   </div>
 </section>
 
 <section class="sec sec-alt reveal">
   <div class="container">
     <div class="sec-tag">진행 방식</div>
-    <h2 class="sec-title">복잡하게 시작하지 않습니다<br>상담 후 맞는 상품으로 진행합니다</h2>
-    <div class="process-steps">
-      <div class="proc-step"><div class="proc-num">1</div><div class="proc-txt"><h4>카카오톡 상담</h4><p>현재 PC 보유 여부, 업종, 원하는 운영 방식, 부수익 활용 여부를 먼저 확인합니다.</p><span class="proc-time">상담 시작</span></div></div>
-      <div class="proc-step"><div class="proc-num">2</div><div class="proc-txt"><h4>상품 선택</h4><p>프로그램 무제한 패키지, 월구독 서비스, 노트북 풀패키지 중 상황에 맞는 방식을 선택합니다.</p><span class="proc-time">상품 결정</span></div></div>
-      <div class="proc-step"><div class="proc-num">3</div><div class="proc-txt"><h4>세팅 및 안내</h4><p>프로그램 설치, 사용 가이드, 계정 준비, 쿠팡파트너스·쇼핑커넥트 활용 방향을 안내합니다.</p><span class="proc-time">초기 세팅</span></div></div>
-      <div class="proc-step"><div class="proc-num">4</div><div class="proc-txt"><h4>자동화 운영 시작</h4><p>홍보글을 꾸준히 쌓고, 필요 시 월구독 관리형으로 운영 부담을 줄일 수 있습니다.</p><span class="proc-time">운영 시작</span></div></div>
+    <h2 class="sec-title">구매 전 상담부터<br>세팅까지 쉽게 진행됩니다</h2>
+    <div class="process">
+      <div class="proc"><div class="proc-num">1</div><strong>카카오톡 상담</strong><p>사용할 PC 수, 운영 목적, 원하는 상품을 먼저 확인합니다.</p></div>
+      <div class="proc"><div class="proc-num">2</div><strong>상품 선택</strong><p>3종 프로그램, 월구독, 노트북 풀패키지 중 맞는 방식을 선택합니다.</p></div>
+      <div class="proc"><div class="proc-num">3</div><strong>세팅 안내</strong><p>프로그램 사용 방식과 계정 준비 사항을 안내합니다.</p></div>
+      <div class="proc"><div class="proc-num">4</div><strong>자동화 시작</strong><p>블로그 홍보와 수익형 링크 활용 구조를 함께 운영합니다.</p></div>
     </div>
   </div>
 </section>
@@ -340,52 +1023,85 @@ footer{text-align:center;padding:30px 16px 96px;border-top:1px solid #2a2a40;col
   <div class="container">
     <div class="sec-tag">FAQ</div>
     <h2 class="sec-title">구매 전 많이 묻는 질문</h2>
+
     <div class="faq-list">
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">노트북이 없어도 사용할 수 있나요? <span class="faq-icon">+</span></div><div class="faq-a"><p>네. 기존 PC나 노트북이 있다면 프로그램 무제한 패키지로 시작할 수 있습니다. 다만 자동화 프로그램이 안정적으로 작동하려면 전원이 켜진 상태에서 운영하는 것을 권장합니다.</p></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">프로그램 무제한 패키지와 노트북 풀패키지는 뭐가 다른가요? <span class="faq-icon">+</span></div><div class="faq-a"><p>프로그램 무제한 패키지는 기존 PC에 프로그램을 세팅해서 사용하는 방식이고, 노트북 풀패키지는 자동화 전용 노트북까지 포함해 세팅된 상태로 받는 방식입니다.</p></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">월구독 서비스는 뭔가요? <span class="faq-icon">+</span></div><div class="faq-a"><p>직접 세팅하고 운영하는 게 부담스러운 분들을 위한 관리형 서비스입니다. 업종과 상황에 따라 운영 범위가 달라질 수 있어 카카오톡 상담 후 안내드립니다.</p></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">월 30만원 수익이 보장되나요? <span class="faq-icon">+</span></div><div class="faq-a"><p>아닙니다. 쿠팡파트너스, 네이버 쇼핑커넥트, 애드포스트 등은 방문자 수, 콘텐츠 품질, 상품 선택, 전환율에 따라 결과가 달라집니다. 센텀하이는 수익을 보장하기보다 수익형 콘텐츠를 쌓을 수 있는 구조를 세팅해드립니다.</p></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">쿠팡파트너스나 쇼핑커넥트 계정이 꼭 필요한가요? <span class="faq-icon">+</span></div><div class="faq-a"><p>부수익 구조까지 활용하려면 관련 계정이 필요합니다. 계정이 없는 경우 준비 방향을 안내해드립니다. 제휴 링크가 포함된 콘텐츠에는 경제적 이해관계 표시가 필요합니다.</p></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">환불은 어떻게 되나요? <span class="faq-icon">+</span></div><div class="faq-a"><p>상품 유형과 세팅 진행 단계에 따라 환불 기준이 달라질 수 있습니다. 자세한 내용은 하단 이용약관을 확인해주시고, 구매 전 카카오톡 상담에서 다시 안내드립니다.</p></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">상위노출이나 수익을 보장하나요? <span class="faq-icon">+</span></div><div class="faq-a"><p>보장하지 않습니다. 검색 노출과 수익은 플랫폼 정책, 경쟁도, 콘텐츠 품질, 방문자 반응에 따라 달라집니다. 센텀하이는 반복 홍보와 콘텐츠 누적을 자동화하는 구조를 제공합니다.</p></div></div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">노트북이 없어도 사용할 수 있나요? <span>+</span></button>
+        <div class="faq-a"><p>네. 기존 PC나 노트북이 있다면 프로그램 3종 패키지로 시작할 수 있습니다. 다만 자동화 프로그램이 안정적으로 작동하려면 전원이 켜진 상태에서 운영하는 것을 권장합니다.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">정가 119만원인데 왜 79만원인가요? <span>+</span></button>
+        <div class="faq-a"><p>1PC 기준 프로그램 패키지 정가는 119만원이며, 현재 한량연구소 한정 특가로 79만원에 안내하고 있습니다. 이벤트와 혜택은 종료 시 변경될 수 있습니다.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">월 30만원 수익이 보장되나요? <span>+</span></button>
+        <div class="faq-a"><p>아닙니다. 쿠팡파트너스, 네이버 쇼핑커넥트, 애드포스트 등은 방문자 수, 콘텐츠 품질, 상품 선택, 전환율에 따라 결과가 달라집니다. 센텀하이는 보장 수익이 아니라 수익형 콘텐츠를 쌓을 수 있는 구조를 안내합니다.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">쿠팡파트너스나 쇼핑커넥트 계정이 꼭 필요한가요? <span>+</span></button>
+        <div class="faq-a"><p>부수익 구조까지 활용하려면 관련 계정이 필요합니다. 계정이 없다면 준비 방법과 운영 시 주의사항을 안내해드립니다.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">블로그 자동화를 운영할 때 주의할 점이 있나요? <span>+</span></button>
+        <div class="faq-a"><p>각 플랫폼 정책을 준수하는 범위에서 운영해야 합니다. 과도한 반복 작업, 품질 낮은 콘텐츠, 표시 의무 누락은 문제가 될 수 있으므로 콘텐츠 품질과 경제적 이해관계 표시를 함께 관리하는 것이 중요합니다.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">환불은 어떻게 되나요? <span>+</span></button>
+        <div class="faq-a"><p>디지털 프로그램과 세팅형 상품 특성상 상품별 환불 기준이 다를 수 있습니다. 구매 전 이용약관과 환불 기준을 확인해주시고, 궁금한 점은 카카오톡으로 상담 후 진행해주세요.</p></div>
+      </div>
     </div>
   </div>
 </section>
 
-<div class="final reveal">
-  <h2>내 가게 홍보글,<br>이제 <em class="em">손님 유입과 부수익</em>까지<br>노려보세요</h2>
-  <p>노트북 없이 79만원부터 시작할 수 있습니다.<br>월구독, 프로그램 패키지, 노트북 풀패키지 중 내 상황에 맞게 상담받아보세요.</p>
-  <div class="btn-group">
-    <a href="#products" class="btn btn-primary">상품 3종 다시 보기</a>
-    <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" class="btn btn-kakao">💬 카카오톡 상담</a>
+<section class="final reveal">
+  <div class="container">
+    <h2>내 블로그를<br>홍보 채널에서<br><em>수익형 자산</em>으로 바꾸세요</h2>
+    <p>블로그봇 · 서이추봇 · 움짤봇 3종 자동화 패키지<br>정가 119만원 → 한량연구소 한정 특가 79만원</p>
+    <div class="btn-row">
+      <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" class="btn btn-primary">💬 지금 카카오톡 상담하기</a>
+      <a href="#demo-video" class="btn btn-ghost">▶ 실제 사용 영상 보기</a>
+    </div>
   </div>
-</div>
+</section>
 
-<footer>
-  <p>© 2026 센텀하이 마케팅자동화봇</p>
-  <div class="footer-links">
-    <a href="terms.html">이용약관</a>
-    <span>·</span>
-    <a href="privacy.html">개인정보처리방침</a>
-    <span>·</span>
-    <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank">카카오톡 채널</a>
+<footer class="footer">
+  <div class="container footer-in">
+    <div class="biz-info">
+      <p style="font-weight:950;color:#fff;font-size:.94rem;margin-bottom:6px;">센텀하이 마케팅 자동화봇</p>
+      <p>상호: 한량컴퍼니 · 대표: 이광석 · 사업자등록번호: 102-17-93934</p>
+      <p>주소: 인천광역시 계양구 안남로573번길 34, 4층 D6호(효성동, 미추홀빌딩)</p>
+      <p>전화: 1533-8781 · 이메일: suk39100@naver.com · 통신판매업 신고번호: 제 2026-인천계양-0354 호</p>
+      <p style="margin-top:8px;color:#6f83a8;">© 2026 센텀하이. All rights reserved.</p>
+    </div>
+    <div class="policy-links">
+      <a href="terms.html">이용약관</a>
+      <a href="privacy.html">개인정보처리방침</a>
+      <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank">카카오톡 채널</a>
+    </div>
   </div>
-  <p class="footer-info">상호: 한량컴퍼니 &nbsp;·&nbsp; 대표: 이광석 &nbsp;·&nbsp; 사업자등록번호: 102-17-93934<br>주소: 인천광역시 계양구 안남로573번길 34, 4층 D6호(효성동, 미추홀빌딩)<br>전화: 1533-8781 &nbsp;·&nbsp; 이메일: suk39100@naver.com<br>통신판매업 신고번호: 제 2026-인천계양-0354 호</p>
 </footer>
 
-<div class="sticky-cta">
-  <div class="sticky-cta-inner">
-    <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" class="btn btn-kakao" style="flex:1;">💬 상담</a>
-    <a href="#products" class="btn btn-primary" style="flex:1.3;">상품 보기</a>
+<div class="sticky">
+  <div class="sticky-in">
+    <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" class="btn btn-ghost">💬 상담</a>
+    <a href="#products" class="btn btn-primary">🔥 79만원 특가</a>
   </div>
 </div>
 
 <script>
-function toggleFaq(el){el.parentElement.classList.toggle('open');}
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
-},{threshold:0.1});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+document.querySelectorAll('.faq-q').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    const item=btn.closest('.faq-item');
+    item.classList.toggle('open');
+  });
+});
+
+const obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting)e.target.classList.add('visible');
+  });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
 </script>
 </body>
 </html>
