@@ -164,7 +164,7 @@ button,a{font-family:inherit;}
   min-height:100svh;
   display:flex;
   align-items:center;
-  padding:104px 0 70px;
+  padding:118px 0 72px;
   position:relative;
 }
 .hero-grid{
@@ -176,6 +176,27 @@ button,a{font-family:inherit;}
 @media(max-width:920px){
   .hero-grid{grid-template-columns:1fr;gap:28px;}
   .hero{text-align:center;min-height:auto;padding-top:96px;}
+}
+@media(max-width:560px){
+  .hero{padding:84px 0 42px;align-items:flex-start;}
+  .hero h1{font-size:clamp(2.15rem,12.2vw,3.85rem);line-height:1.07;letter-spacing:-.07em;}
+  .hero-lead{font-size:.95rem;line-height:1.72;margin-top:16px;}
+  .badge{font-size:.7rem;padding:7px 11px;margin-bottom:14px;}
+  .hero-price{gap:8px;margin-top:18px;}
+  .price-pill{width:100%;justify-content:center;padding:10px 12px;border-radius:15px;}
+  .price-pill .new{font-size:1.18rem;}
+  .hero-note{font-size:.74rem;line-height:1.5;}
+  .dashboard{border-radius:22px;}
+  .dash-top{padding:14px 14px 12px;}
+  .dash-body{padding:14px;}
+  .stat-grid{gap:9px;}
+  .stat{padding:12px;border-radius:15px;}
+  .stat .num{font-size:1.32rem;}
+  .stat .lab{font-size:.68rem;}
+  .flow-row{padding:10px;border-radius:14px;}
+  .flow-icon{width:32px;height:32px;border-radius:11px;}
+  .flow-row strong{font-size:.82rem;}
+  .flow-row span{font-size:.68rem;}
 }
 .badge{
   display:inline-flex;
@@ -192,9 +213,9 @@ button,a{font-family:inherit;}
   margin-bottom:18px;
 }
 .hero h1{
-  font-size:clamp(2.25rem,8.2vw,5.25rem);
-  line-height:1.04;
-  letter-spacing:-.07em;
+  font-size:clamp(2.05rem,6.9vw,4.55rem);
+  line-height:1.08;
+  letter-spacing:-.06em;
   font-weight:1000;
 }
 .hero h1 .white3d{
@@ -419,6 +440,60 @@ button,a{font-family:inherit;}
   width:100%;
   height:100%;
   border:0;
+}
+.local-video-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:30px;
+}
+.local-video-card{
+  border:1px solid rgba(59,130,246,.28);
+  border-radius:24px;
+  overflow:hidden;
+  background:rgba(16,29,58,.72);
+  box-shadow:0 18px 55px rgba(0,0,0,.22);
+}
+.local-video-card video{
+  width:100%;
+  display:block;
+  background:#000;
+  aspect-ratio:16/9;
+  object-fit:cover;
+}
+.local-video-caption{
+  padding:14px 16px 16px;
+}
+.local-video-caption strong{
+  display:block;
+  font-size:.96rem;
+  color:#fff;
+}
+.local-video-caption span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:.78rem;
+}
+@media(max-width:760px){
+  .local-video-grid{grid-template-columns:1fr;gap:14px;margin-top:22px;}
+  .video-box{border-radius:20px;padding:7px;margin-top:22px;}
+  .video-inner{border-radius:14px;}
+  .check-panel{grid-template-columns:1fr;gap:8px;}
+  .check{font-size:.78rem;padding:11px 12px;}
+}
+@media(max-width:420px){
+  .container{padding:0 14px;}
+  .sec{padding:64px 0;}
+  .sec-tight{padding:42px 0;}
+  .sec-title{font-size:clamp(1.65rem,8.8vw,2.45rem);}
+  .sec-sub{font-size:.9rem;line-height:1.7;}
+  .products{gap:14px;margin-top:26px;}
+  .product{padding:21px;border-radius:22px;}
+  .main-price strong{font-size:2.25rem;}
+  .gift-grid{grid-template-columns:1fr;}
+  .feature-grid{grid-template-columns:1fr;}
+  .footer{padding-bottom:92px;}
 }
 .check-panel{
   margin-top:16px;
@@ -773,8 +848,8 @@ button,a{font-family:inherit;}
       <div class="badge">✦ 한량연구소 한정 특가 ✦</div>
       <h1>
         <span class="white3d">사장님 블로그,</span><br>
-        홍보만 하고 끝나면<br>
-        <em>너무 아깝습니다</em>
+        이제 홍보만 하지 말고<br>
+        <em>수익까지 노려보세요</em>
       </h1>
       <p class="hero-lead">
         블로그봇 · 서이추봇 · 움짤봇 3종 자동화로<br>
@@ -850,6 +925,27 @@ button,a{font-family:inherit;}
       <div class="check">✅ 블로그봇 활용 방식</div>
       <div class="check">✅ 서이추봇 운영 구조</div>
       <div class="check">✅ 수익형 링크 활용 가능성</div>
+    </div>
+
+    <div class="local-video-grid">
+      <div class="local-video-card">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="video1.mp4" type="video/mp4">
+        </video>
+        <div class="local-video-caption">
+          <strong>자동화 시연 영상 01</strong>
+          <span>랜딩페이지에 기존 업로드된 video1.mp4를 다시 연결했습니다.</span>
+        </div>
+      </div>
+      <div class="local-video-card">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="video2.mp4" type="video/mp4">
+        </video>
+        <div class="local-video-caption">
+          <strong>자동화 시연 영상 02</strong>
+          <span>기존 영상 파일이 사라진 게 아니라, 새 코드에 다시 삽입했습니다.</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1084,7 +1180,7 @@ button,a{font-family:inherit;}
 <div class="sticky">
   <div class="sticky-in">
     <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" class="btn btn-ghost">💬 상담</a>
-    <a href="#products" class="btn btn-primary">🔥 79만원 특가</a>
+    <a href="#products" class="btn btn-primary">🔥 특가 보기</a>
   </div>
 </div>
 
