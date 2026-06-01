@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>쿠팡진입점수 AI | 역소싱 분석기</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <div class="logo">
+      <div class="logo-mark">AI</div>
+      <span>쿠팡진입점수 AI</span>
+    </div>
+    <div class="api-status" id="apiStatus">
+      <span class="status-pill demo"><span class="status-dot dot-m"></span>확인 중...</span>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <div class="layout">
+
+      <!-- ── 사이드바 (입력) ── -->
+      <div class="sidebar">
+
+        <!-- 키워드 입력 -->
+        <div class="card">
+          <div class="card-title">🔍 상품 분석</div>
+          <label class="field-label">키워드 or 상품명</label>
+          <input class="field" type="text" id="keyword" placeholder="예: 미니 마사지볼, 무선충전기..." />
+
+          <label class="field-label">쿠팡 판매가 (원) <span style="color:var(--muted);font-weight:500;">선택 — API없을때직접입력</span></label>
+          <input class="field" type="number" id="manualPrice" placeholder="예: 14900" />
+
+          <div class="row-2">
+            <div>
+              <label class="field-label">리뷰 평균</label>
+              <input class="field" type="number" id="manualReviews" placeholder="예: 150" />
+            </div>
+            <div>
+              <label class="field-label">판매자 수</label>
+              <input class="field" type="number" id="manualSellers" placeholder="예: 8" />
+            </div>
+          </div>
+          <label class="field-label">로켓배송 비중 (%)</label>
+          <input class="field" type="number" id="manualRocket" placeholder="예: 20" />
+          <div class="field-hint">쿠팡 검색 결과에서 로켓 상품 비율</div>
+
+          <button class="run-btn" id="runBtn" onclick="runAnalysis()">🎯 진입점수 분석</button>
+
+          <div class="demo-note" id="demoNote" style="display:none;">
+            ⚠️ API 키가 없어 <strong>데모 데이터</strong>로 작동 중입니다.<br>
+            .env 파일에 쿠팡·도매꾹 API 키를 입력하면 실제 데이터로 분석됩니다.
+          </div>
+        </div>
+
+        <!-- 마진 계산기 -->
+        <div class="card">
+          <div class="card-title">💰 마진 계산기</div>
+          <div style="background:rgba(6,14,28,.6);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px;">
+            <div class="m-row"><span class="m-lbl">판매가</span><input class="m-inp" type="number" id="mp" value="14900" oninput="calcMargin()"></div>
+            <div class="m-row"><span class="m-lbl">도매 원가</span><input class="m-inp" type="number" id="mc" value="4800" oninput="calcMargin()"></div>
+            <div class="m-row"><span class="m-lbl">쿠팡 수수료 (%)</span><input class="m-inp" type="number" id="mf" value="10.8" oninput="calcMargin()"></div>
+            <div class="m-row"><span class="m-lbl">배송비</span><input class="m-inp" type="number" id="ms" value="3000" oninput="calcMargin()"></div>
+            <div class="m-row"><span class="m-lbl">포장비</span><input class="m-inp" type="number" id="mk" value="500" oninput="calcMargin()"></div>
+            <div class="m-row"><span class="m-lbl">광고비</span><input class="m-inp" type="number" id="ma" value="1500" oninput="calcMargin()"></div>
+            <div class="m-row"><span class="m-lbl">반품/CS (%)</span><input class="m-inp" type="number" id="mr" value="2" oninput="calcMargin()"></div>
+          </div>
+          <div id="marginOut"></div>
+        </div>
+
+      </div>
+
+      <!-- ── 결과 영역 ── -->
+      <div class="results" id="resultsArea">
+        <div class="empty">
+          <div class="empty-icon">🎯</div>
+          <p>키워드를 입력하고 분석을 시작하세요.<br>
+          쿠팡 경쟁 분석 + 도매 원가 매칭 +<br>
+          진입가능점수를 즉시 계산합니다.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
