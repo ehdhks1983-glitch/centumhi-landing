@@ -1,8 +1,26 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKKMGV2LY0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-BKKMGV2LY0');
+</script>
+<!-- Danggeun Market Code -->
+<script src="https://karrot-pixel.business.daangn.com/karrot-pixel.js"></script>
+<script>
+  if (window.karrotPixel) {
+    window.karrotPixel.init('1782617212101701001');
+    window.karrotPixel.track('ViewPage');
+  }
+</script>
+<!-- End Danggeun Market Code -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-site-verification" content="G2YtyTihbv4XyHvLLBzii5WCuPBuRuWIMBu7BxB3Qd8" />
 <title>곰대리 올인원 — 직원 6명을 한 번에 | 1차 한정 100명</title>
 <meta name="description" content="블로그·상세페이지·움짤까지 자동화하는 곰대리 6종 올인원. 크몽 정가 160만 원 패키지를 1차 100명에게만 29만 원에. 월 구독 없이 한 번 사면 평생.">
 <meta property="og:title" content="곰대리 올인원 — 직원 6명을 한 번에, 1차 29만 원">
@@ -514,6 +532,11 @@ const CONFIG = {
   document.documentElement.classList.add('has-js');
   document.querySelectorAll('.js-form-link').forEach(a=>a.href=CONFIG.kakaoUrl); // 신청 버튼도 카톡으로
   document.querySelectorAll('.js-kakao-link').forEach(a=>a.href=CONFIG.kakaoUrl);
+  // 카톡 버튼 클릭 → 전환 이벤트 (당근 Lead + GA4 generate_lead)
+  document.querySelectorAll('.js-kakao-link, .js-form-link').forEach(a=>a.addEventListener('click',function(){
+    try{ if(window.karrotPixel) window.karrotPixel.track('Lead'); }catch(e){}
+    try{ if(window.gtag) window.gtag('event','generate_lead',{method:'kakao'}); }catch(e){}
+  }));
   const setAll=(s,v)=>document.querySelectorAll(s).forEach(el=>el.textContent=v);
   setAll('.js-phase',CONFIG.phaseNo); setAll('.js-price',CONFIG.price);
 
