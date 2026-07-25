@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>네이버 순위추적기</title>
+<style>
+  :root {
+    --ground: #F5F7F5; --card: #FFFFFF; --ink: #171D19; --sub: #5E6B62;
+    --line: #DFE6E0; --accent: #03C75A; --accent-deep: #02893F;
+    --accent-soft: #E4F7EC; --warn: #D9482B; --warn-soft: #FBEAE5;
+    --console-bg: #10221A; --console-ink: #A8D8BC; --chip-name: #EEF2EF;
+    --btn-ink: #FFFFFF;
+    --shadow: 0 1px 3px rgba(23,29,25,.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #0E120F; --card: #161C17; --ink: #E6ECE8; --sub: #93A198;
+      --line: #28322B; --accent: #0ED268; --accent-deep: #7BE3A8;
+      --accent-soft: #12301F; --warn: #F0684A; --warn-soft: #3A1D15;
+      --console-bg: #0A1710; --console-ink: #8FCBA6; --chip-name: #1E2620;
+      --btn-ink: #08130C;
+      --shadow: 0 1px 3px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0E120F; --card: #161C17; --ink: #E6ECE8; --sub: #93A198;
+    --line: #28322B; --accent: #0ED268; --accent-deep: #7BE3A8;
+    --accent-soft: #12301F; --warn: #F0684A; --warn-soft: #3A1D15;
+    --console-bg: #0A1710; --console-ink: #8FCBA6; --chip-name: #1E2620;
+    --btn-ink: #08130C;
+    --shadow: 0 1px 3px rgba(0,0,0,.4);
+  }
+  :root[data-theme="light"] {
+    --ground: #F5F7F5; --card: #FFFFFF; --ink: #171D19; --sub: #5E6B62;
+    --line: #DFE6E0; --accent: #03C75A; --accent-deep: #02893F;
+    --accent-soft: #E4F7EC; --warn: #D9482B; --warn-soft: #FBEAE5;
+    --console-bg: #10221A; --console-ink: #A8D8BC; --chip-name: #EEF2EF;
+    --btn-ink: #FFFFFF;
+    --shadow: 0 1px 3px rgba(23,29,25,.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--ground); color: var(--ink);
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    font-size: 15px; line-height: 1.55; padding: 1.25rem;
+  }
+  .mono { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+  .app { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: .9rem; }
+
+  header { display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap; }
+  header h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -.01em; }
+  header h1 em { font-style: normal; color: var(--accent-deep); }
+  .ver { font-size: .72rem; font-weight: 700; letter-spacing: .06em; color: var(--accent-deep);
+         border: 1px solid var(--accent); border-radius: 3px; padding: .05rem .4rem; }
+  header .spacer { flex: 1; }
+  .stat { display: inline-flex; align-items: center; gap: .4rem; font-size: .82rem; color: var(--sub); }
+  .stat b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); }
+
+  .settings { display: flex; align-items: center; gap: .55rem; padding: .65rem .9rem; flex-wrap: wrap; }
+  .settings .label { font-size: .82rem; color: var(--sub); white-space: nowrap; }
+  .settings input {
+    padding: .38rem .55rem; border: 1px solid var(--line); border-radius: 5px;
+    background: var(--ground); color: var(--ink); font: inherit;
+  }
+  .settings input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  #cid, #csec { width: 11rem; }
+  #checkHour { width: 4rem; }
+  .keystate { font-size: .78rem; margin-left: auto; }
+  .keystate.ok { color: var(--accent-deep); font-weight: 700; }
+  .keystate.no { color: var(--warn); font-weight: 700; }
+
+  button {
+    font: inherit; font-weight: 600; cursor: pointer;
+    border-radius: 6px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); padding: .45rem .9rem;
+  }
+  button:hover { border-color: var(--accent); }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--btn-ink); }
+  button.primary:hover { filter: brightness(1.05); }
+  button:disabled { opacity: .5; cursor: default; }
+  button.ghost { background: transparent; }
+
+  .toolbar { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+
+  .main { display: grid; grid-template-columns: 1.15fr .85fr; gap: .9rem; align-items: start; }
+  @media (max-width: 760px) { .main { grid-template-columns: 1fr; } }
+
+  .panel-head {
+    padding: .6rem .9rem; border-bottom: 1px solid var(--line);
+    font-size: .78rem; font-weight: 700; letter-spacing: .07em; color: var(--sub);
+  }
+  .panel-body { padding: .5rem .6rem .7rem; }
+
+  .product { border: 1px solid var(--line); border-radius: 7px; margin: .4rem .3rem; overflow: hidden; }
+  .product-head { display: flex; align-items: center; gap: .55rem; padding: .55rem .75rem; background: var(--ground); flex-wrap: wrap; }
+  .product-head .pname { font-weight: 700; }
+  .product-head .mall { font-size: .8rem; color: var(--sub); }
+  .product-head .del { margin-left: auto; font-size: .75rem; padding: .2rem .55rem; color: var(--warn); border-color: transparent; background: transparent; }
+  .product-head .del:hover { border-color: var(--warn); }
+  .badge-nvmid {
+    font-size: .68rem; font-weight: 800; letter-spacing: .04em;
+    background: var(--accent-soft); color: var(--accent-deep);
+    border-radius: 999px; padding: .1rem .5rem;
+  }
+  .kwrow {
+    display: flex; align-items: center; gap: .6rem; width: 100%;
+    padding: .5rem .75rem; border: 0; border-top: 1px solid var(--line);
+    background: var(--card); text-align: left; border-radius: 0; font-weight: 500;
+  }
+  .kwrow:hover { background: var(--accent-soft); border-color: var(--line); }
+  .kwrow.selected { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+  .kwrow .kw { flex: 1; }
+  .kwrow .rank { font-variant-numeric: tabular-nums; font-weight: 800; min-width: 3.6rem; text-align: right; }
+  .kwrow .rank.none { color: var(--sub); font-weight: 500; font-size: .82rem; }
+  .chip { font-size: .68rem; font-weight: 700; border-radius: 999px; padding: .12rem .5rem; letter-spacing: .03em; }
+  .chip.nvmid { background: var(--accent); color: var(--btn-ink); }
+  .chip.name { background: var(--chip-name); color: var(--ink); border: 1px solid var(--line); }
+  .chip.not_found { background: transparent; color: var(--sub); border: 1px dashed var(--line); }
+  .chip.wait { background: transparent; color: var(--sub); border: 1px solid transparent; }
+  .empty { padding: 1.6rem 1rem; text-align: center; color: var(--sub); font-size: .86rem; }
+
+  .history-title { padding: .55rem .9rem .1rem; font-size: .85rem; color: var(--sub); }
+  .history-title b { color: var(--ink); }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  th, td { padding: .45rem .9rem; text-align: left; border-top: 1px solid var(--line); }
+  th { font-size: .72rem; letter-spacing: .06em; color: var(--sub); border-top: 0; }
+  td.num { font-variant-numeric: tabular-nums; font-weight: 700; }
+  .delta { font-size: .75rem; font-weight: 700; margin-left: .35rem; }
+  .delta.up { color: var(--accent-deep); }
+  .delta.down { color: var(--warn); }
+
+  .console {
+    background: var(--console-bg); color: var(--console-ink);
+    border-radius: 8px; border: 1px solid var(--line);
+    padding: .7rem .9rem; height: 168px; overflow-y: auto;
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: .78rem; line-height: 1.7; white-space: pre-wrap; word-break: break-all;
+  }
+
+  dialog {
+    border: 1px solid var(--line); border-radius: 10px; padding: 0;
+    background: var(--card); color: var(--ink);
+    width: min(30rem, calc(100vw - 2rem));
+    box-shadow: 0 16px 48px rgba(0,0,0,.25);
+  }
+  dialog::backdrop { background: rgba(10,20,14,.45); }
+  .dlg-head { padding: .9rem 1.2rem; border-bottom: 1px solid var(--line); font-weight: 800; }
+  .dlg-body { padding: 1rem 1.2rem; display: flex; flex-direction: column; gap: .75rem; }
+  .field label { display: block; font-size: .78rem; font-weight: 600; color: var(--sub); margin-bottom: .25rem; }
+  .field label .opt { font-weight: 400; }
+  .field input, .field textarea, .field select {
+    width: 100%; padding: .5rem .65rem; border: 1px solid var(--line); border-radius: 6px;
+    background: var(--ground); color: var(--ink); font: inherit;
+  }
+  .field textarea { height: 4.4rem; resize: vertical; }
+  .field input:focus, .field textarea:focus, .field select:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+  .dlg-foot { padding: .8rem 1.2rem; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: .6rem; }
+  .form-err { color: var(--warn); font-size: .8rem; min-height: 1.1em; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .kwrow, button, .product { transition: background .12s, border-color .12s, filter .12s; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1><em>N</em> 순위추적기</h1>
+    <span class="ver">v1.1 WEB</span>
+    <span class="spacer"></span>
+    <span class="stat">오늘 API 사용량 <b id="usage" class="mono">0</b><span>/ 24,000</span></span>
+  </header>
+
+  <div class="card settings">
+    <span class="label">Client ID</span><input id="cid" autocomplete="off">
+    <span class="label">Client Secret</span><input id="csec" type="password" autocomplete="off">
+    <span class="label">자동 조회</span><input id="checkHour" type="number" min="0" max="23" value="9"><span class="label">시 00분</span>
+    <button id="saveSettings" class="ghost">설정 저장</button>
+    <span class="keystate" id="keyState"></span>
+  </div>
+
+  <div class="toolbar">
+    <button class="primary" id="openReg">+ 상품 등록</button>
+    <button id="runCheck">지금 조회</button>
+  </div>
+
+  <div class="main">
+    <section class="card">
+      <div class="panel-head">상품 · 키워드 — 클릭하면 이력 표시</div>
+      <div class="panel-body" id="productList"></div>
+    </section>
+    <section class="card">
+      <div class="panel-head">순위 이력</div>
+      <div class="history-title" id="historyTitle">키워드를 선택하세요</div>
+      <div id="historyBody"><div class="empty">—</div></div>
+    </section>
+  </div>
+
+  <div class="console" id="console" aria-live="polite"></div>
+</div>
+
+<dialog id="regDlg">
+  <div class="dlg-head">상품 등록 — API 호출 없이 저장, 첫 조회 때 자동 정밀 매칭</div>
+  <div class="dlg-body">
+    <div class="field"><label for="fName">상품명 *</label><input id="fName"></div>
+    <div class="field"><label for="fMall">몰명 <span class="opt">(선택 — 동명 타셀러 구분)</span></label><input id="fMall"></div>
+    <div class="field"><label for="fLink">상품 링크 <span class="opt">(선택)</span></label><input id="fLink"></div>
+    <div class="field">
+      <label for="fLimit">추적 범위</label>
+      <select id="fLimit">
+        <option value="100">100위까지 (API 1회)</option>
+        <option value="200">200위까지 (API 2회)</option>
+        <option value="300">300위까지 (API 3회)</option>
+        <option value="400" selected>400위까지 (API 4회)</option>
+        <option value="1000">1000위까지 (API 10회)</option>
+      </select>
+    </div>
+    <div class="field"><label for="fKw">키워드 * <span class="opt">(줄바꿈 또는 쉼표로 구분)</span></label><textarea id="fKw"></textarea></div>
+    <div class="form-err" id="formErr"></div>
+  </div>
+  <div class="dlg-foot">
+    <button id="regCancel" class="ghost">취소</button>
+    <button id="regSave" class="primary">등록</button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+let selectedKw = null;      // {id, keyword, productName}
+let logCursor = 0;
+let pollTimer = null;
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  if (!r.ok) {
+    let msg = r.statusText;
+    try { msg = (await r.json()).detail || msg; } catch (e) {}
+    throw new Error(msg);
+  }
+  return r.json();
+}
+
+/* ── 로그 ── */
+async function pullLogs() {
+  try {
+    const { next, lines } = await api(`/api/logs?since=${logCursor}`);
+    logCursor = next;
+    if (lines.length) {
+      for (const l of lines) {
+        const div = document.createElement("div");
+        div.textContent = l;
+        $("console").appendChild(div);
+      }
+      $("console").scrollTop = $("console").scrollHeight;
+    }
+  } catch (e) { /* 서버 재시작 등 — 다음 폴링에서 회복 */ }
+}
+
+/* ── 상태 렌더링 ── */
+const CHIP_LABEL = { nvmid: "nvmid 정밀", name: "이름 매칭", not_found: "미발견" };
+
+async function refresh() {
+  const s = await api("/api/state");
+  $("usage").textContent = s.usage.toLocaleString();
+  $("checkHour").value = s.check_hour;
+  const ks = $("keyState");
+  ks.textContent = s.has_keys ? "API 키 저장됨 ✓" : "API 키 미설정 — 먼저 저장하세요";
+  ks.className = "keystate " + (s.has_keys ? "ok" : "no");
+  $("runCheck").disabled = s.checking;
+  $("runCheck").textContent = s.checking ? "조회 중…" : "지금 조회";
+
+  const list = $("productList");
+  list.textContent = "";
+  if (!s.products.length) {
+    const e = document.createElement("div"); e.className = "empty";
+    e.innerHTML = "등록된 상품이 없습니다.<br>“+ 상품 등록”으로 시작하세요.";
+    list.appendChild(e);
+  }
+  for (const p of s.products) {
+    const card = document.createElement("div"); card.className = "product";
+    const head = document.createElement("div"); head.className = "product-head";
+    const nm = document.createElement("span"); nm.className = "pname"; nm.textContent = p.name;
+    head.appendChild(nm);
+    if (p.mall) { const m = document.createElement("span"); m.className = "mall"; m.textContent = p.mall; head.appendChild(m); }
+    if (p.nvmid) { const b = document.createElement("span"); b.className = "badge-nvmid"; b.textContent = "nvmid 확보"; head.appendChild(b); }
+    const del = document.createElement("button"); del.className = "del"; del.textContent = "삭제";
+    del.onclick = async () => {
+      if (!confirm(`"${p.name}" 상품과 이력을 모두 삭제할까요?`)) return;
+      await api(`/api/products/${p.id}`, { method: "DELETE" });
+      if (selectedKw && selectedKw.productId === p.id) selectedKw = null;
+      refresh(); renderHistory();
+    };
+    head.appendChild(del);
+    card.appendChild(head);
+
+    for (const k of p.keywords) {
+      const row = document.createElement("button"); row.className = "kwrow";
+      if (selectedKw && selectedKw.id === k.id) row.classList.add("selected");
+      const kw = document.createElement("span"); kw.className = "kw"; kw.textContent = k.keyword; row.appendChild(kw);
+
+      const chip = document.createElement("span");
+      if (!k.latest) { chip.className = "chip wait"; chip.textContent = "미조회"; }
+      else { chip.className = "chip " + k.latest.method; chip.textContent = CHIP_LABEL[k.latest.method]; }
+      row.appendChild(chip);
+
+      const rk = document.createElement("span");
+      if (k.latest && k.latest.rank) { rk.className = "rank"; rk.textContent = k.latest.rank + "위"; }
+      else if (k.latest) { rk.className = "rank none"; rk.textContent = "범위 밖"; }
+      else { rk.className = "rank none"; rk.textContent = "—"; }
+      row.appendChild(rk);
+
+      row.onclick = () => { selectedKw = { id: k.id, keyword: k.keyword, productName: p.name, productId: p.id }; refresh(); renderHistory(); };
+      card.appendChild(row);
+    }
+    list.appendChild(card);
+  }
+  return s;
+}
+
+async function renderHistory() {
+  const body = $("historyBody"), title = $("historyTitle");
+  body.textContent = "";
+  if (!selectedKw) {
+    title.textContent = "키워드를 선택하세요";
+    const e = document.createElement("div"); e.className = "empty"; e.textContent = "—";
+    body.appendChild(e); return;
+  }
+  title.innerHTML = "";
+  title.append(Object.assign(document.createElement("b"), { textContent: selectedKw.keyword }),
+               ` — ${selectedKw.productName}`);
+  const rows = await api(`/api/history/${selectedKw.id}`);
+  if (!rows.length) {
+    const e = document.createElement("div"); e.className = "empty"; e.textContent = "아직 조회 이력이 없습니다";
+    body.appendChild(e); return;
+  }
+  const tbl = document.createElement("table");
+  tbl.innerHTML = "<thead><tr><th>날짜</th><th>순위</th><th>매칭 방식</th></tr></thead>";
+  const tb = document.createElement("tbody");
+  rows.forEach((h, idx) => {
+    const prev = idx + 1 < rows.length ? rows[idx + 1] : null;
+    const tr = document.createElement("tr");
+    const td1 = document.createElement("td"); td1.className = "mono"; td1.textContent = h.date;
+    const td2 = document.createElement("td"); td2.className = "num";
+    td2.textContent = h.rank ? h.rank + "위" : "미발견";
+    if (h.rank && prev && prev.rank) {
+      const diff = prev.rank - h.rank;
+      if (diff !== 0) {
+        const sp = document.createElement("span");
+        sp.className = "delta " + (diff > 0 ? "up" : "down");
+        sp.textContent = (diff > 0 ? "▲" : "▼") + Math.abs(diff);
+        td2.appendChild(sp);
+      }
+    }
+    const td3 = document.createElement("td");
+    const chip = document.createElement("span"); chip.className = "chip " + h.method;
+    chip.textContent = CHIP_LABEL[h.method]; td3.appendChild(chip);
+    tr.append(td1, td2, td3); tb.appendChild(tr);
+  });
+  tbl.appendChild(tb); body.appendChild(tbl);
+}
+
+/* ── 조회 실행: 시작 후 끝날 때까지 빠른 폴링 ── */
+async function runCheck() {
+  try {
+    const r = await api("/api/check", { method: "POST" });
+    if (!r.started) return;
+  } catch (e) { alert(e.message); return; }
+  $("runCheck").disabled = true; $("runCheck").textContent = "조회 중…";
+  const fast = setInterval(async () => {
+    await pullLogs();
+    const s = await refresh();
+    if (!s.checking) { clearInterval(fast); renderHistory(); }
+  }, 1000);
+}
+
+/* ── 설정 저장 ── */
+$("saveSettings").onclick = async () => {
+  await api("/api/settings", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_id: $("cid").value, client_secret: $("csec").value,
+      check_hour: parseInt($("checkHour").value, 10) || 9,
+    }),
+  });
+  $("cid").value = ""; $("csec").value = "";
+  await pullLogs(); refresh();
+};
+
+/* ── 등록 모달 ── */
+$("openReg").onclick = () => { $("formErr").textContent = ""; $("regDlg").showModal(); };
+$("regCancel").onclick = () => $("regDlg").close();
+$("regSave").onclick = async () => {
+  const name = $("fName").value.trim();
+  const kws = $("fKw").value.replace(/,/g, "\n").split("\n").map(x => x.trim()).filter(Boolean);
+  if (!name || !kws.length) { $("formErr").textContent = "상품명과 키워드는 필수입니다"; return; }
+  try {
+    await api("/api/products", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name, mall: $("fMall").value, link: $("fLink").value,
+        track_limit: parseInt($("fLimit").value, 10), keywords: kws,
+      }),
+    });
+  } catch (e) { $("formErr").textContent = e.message; return; }
+  ["fName", "fMall", "fLink", "fKw"].forEach(id => $(id).value = "");
+  $("regDlg").close();
+  await pullLogs(); refresh();
+};
+
+$("runCheck").onclick = runCheck;
+
+/* ── 초기화 + 완만한 폴링 (스케줄 자동조회 반영용) ── */
+refresh(); pullLogs();
+pollTimer = setInterval(() => { pullLogs(); refresh(); }, 5000);
+</script>
+</body>
+</html>

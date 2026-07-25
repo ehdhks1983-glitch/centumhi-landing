@@ -1,12 +1,18 @@
-"""엔트리 포인트 + APScheduler 기동 (개발명령서 v1.1 §7)
+"""엔트리 포인트 — APScheduler + FastAPI 웹 서버 기동 (웹 전환판)
 
-앱이 떠 있을 때만 자동 조회 동작. 기본 매일 09:00, 메인화면에서 변경 가능.
+실행: python main.py  →  브라우저에서 http://localhost:8000 접속
+서버가 떠 있는 동안 매일 check_hour시에 자동 조회. (서버에 올리면 24시간 자동)
+
+호스트/포트 변경: 환경변수 HOST, PORT (예: HOST=0.0.0.0 PORT=8080 python main.py)
 """
+import os
+
+import uvicorn
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import db
 import tracker
-from gui import App
+import webapp
 
 JOB_ID = "daily_check"
 
@@ -17,17 +23,19 @@ def main():
     check_hour = int(db.get_setting("check_hour", "9"))
     scheduler = BackgroundScheduler()
     scheduler.add_job(
-        tracker.run_all_checks, "cron",
+        lambda: tracker.run_all_checks(log=webapp.add_log), "cron",
         hour=check_hour, minute=0, id=JOB_ID,
     )
     scheduler.start()
+    webapp.reschedule_fn = lambda h: scheduler.reschedule_job(
+        JOB_ID, trigger="cron", hour=h, minute=0
+    )
+    webapp.add_log(f"서버 시작 — 자동 조회 매일 {check_hour:02d}:00")
 
-    def reschedule(hour):
-        scheduler.reschedule_job(JOB_ID, trigger="cron", hour=hour, minute=0)
-
-    app = App(scheduler=scheduler, reschedule=reschedule)
+    host = os.environ.get("HOST", "127.0.0.1")
+    port = int(os.environ.get("PORT", "8000"))
     try:
-        app.mainloop()
+        uvicorn.run(webapp.app, host=host, port=port, log_level="warning")
     finally:
         scheduler.shutdown(wait=False)
 
