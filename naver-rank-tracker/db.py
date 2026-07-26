@@ -66,6 +66,9 @@ def init_db():
             conn.execute("ALTER TABLE products ADD COLUMN channel TEXT NOT NULL DEFAULT 'naver'")
         if "ext_ids" not in cols:
             conn.execute("ALTER TABLE products ADD COLUMN ext_ids TEXT")
+        hcols = {r["name"] for r in conn.execute("PRAGMA table_info(rank_history)")}
+        if "real_rank" not in hcols:
+            conn.execute("ALTER TABLE rank_history ADD COLUMN real_rank INTEGER")
 
 
 # ---------- settings ----------
@@ -184,6 +187,26 @@ def save_result(keyword_id, rank, match_method, checked_date=None):
             "rank = excluded.rank, match_method = excluded.match_method",
             (keyword_id, checked_date, rank, match_method),
         )
+
+
+def save_real_rank(keyword_id, real_rank, checked_date=None):
+    """실측 검증 결과를 당일 이력 행에 기록"""
+    checked_date = checked_date or date.today().isoformat()
+    with get_conn() as conn:
+        conn.execute(
+            "UPDATE rank_history SET real_rank = ? WHERE keyword_id = ? AND checked_date = ?",
+            (real_rank, keyword_id, checked_date),
+        )
+
+
+def get_prev_rank(keyword_id, before_date):
+    """급변 알림용: 오늘 이전의 가장 최근 이력 (같은 날 재조회는 비교 대상 아님)"""
+    with get_conn() as conn:
+        return conn.execute(
+            "SELECT * FROM rank_history WHERE keyword_id = ? AND checked_date < ? "
+            "ORDER BY checked_date DESC LIMIT 1",
+            (keyword_id, before_date),
+        ).fetchone()
 
 
 def get_history(keyword_id, limit=30):

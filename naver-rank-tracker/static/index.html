@@ -186,12 +186,22 @@
     <span class="stat">오늘 API 사용량 <b id="usage" class="mono">0</b><span>/ 24,000</span></span>
   </header>
 
-  <div class="card settings">
-    <span class="label">Client ID</span><input id="cid" autocomplete="off">
-    <span class="label">Client Secret</span><input id="csec" type="password" autocomplete="off">
-    <span class="label">자동 조회</span><input id="checkHour" type="number" min="0" max="23" value="9"><span class="label">시 00분</span>
-    <button id="saveSettings" class="ghost">설정 저장</button>
-    <span class="keystate" id="keyState"></span>
+  <div class="card">
+    <div class="settings">
+      <span class="label">Client ID</span><input id="cid" autocomplete="off">
+      <span class="label">Client Secret</span><input id="csec" type="password" autocomplete="off">
+      <span class="label">자동 조회</span><input id="checkHour" type="number" min="0" max="23" value="9"><span class="label">시 00분</span>
+      <span class="keystate" id="keyState"></span>
+    </div>
+    <div class="settings" style="border-top:1px solid var(--line)">
+      <label class="label" style="display:inline-flex;align-items:center;gap:.35rem;cursor:pointer">
+        <input type="checkbox" id="verifyReal" style="accent-color:var(--accent)"> 실측 검증 (네이버 · 브라우저 필요)
+      </label>
+      <span class="label">텔레그램 Token</span><input id="tgToken" style="width:10rem" autocomplete="off">
+      <span class="label">Chat ID</span><input id="tgChat" style="width:6.5rem" autocomplete="off">
+      <span class="label">급변 알림 기준</span><input id="alertTh" type="number" min="1" max="500" value="10" style="width:4rem"><span class="label">위 이상</span>
+      <button id="saveSettings" class="ghost" style="margin-left:auto">설정 저장</button>
+    </div>
   </div>
 
   <div class="toolbar">
@@ -286,8 +296,11 @@ async function refresh() {
   const s = await api("/api/state");
   $("usage").textContent = s.usage.toLocaleString();
   $("checkHour").value = s.check_hour;
+  $("verifyReal").checked = s.verify_real;
+  $("alertTh").value = s.alert_threshold;
   const ks = $("keyState");
-  ks.textContent = s.has_keys ? "API 키 저장됨 ✓" : "API 키 미설정 — 먼저 저장하세요";
+  const naverOk = s.has_keys ? "네이버 키 ✓" : "네이버 키 미설정";
+  ks.textContent = naverOk + (s.has_telegram ? " · 텔레그램 ✓" : "");
   ks.className = "keystate " + (s.has_keys ? "ok" : "no");
   $("runCheck").disabled = s.checking;
   $("runCheck").textContent = s.checking ? "조회 중…" : "지금 조회";
@@ -360,8 +373,9 @@ async function renderHistory() {
     const e = document.createElement("div"); e.className = "empty"; e.textContent = "아직 조회 이력이 없습니다";
     body.appendChild(e); return;
   }
+  const hasReal = rows.some(h => h.real_rank != null);
   const tbl = document.createElement("table");
-  tbl.innerHTML = "<thead><tr><th>날짜</th><th>순위</th><th>매칭 방식</th></tr></thead>";
+  tbl.innerHTML = "<thead><tr><th>날짜</th><th>순위</th>" + (hasReal ? "<th>실측</th>" : "") + "<th>매칭 방식</th></tr></thead>";
   const tb = document.createElement("tbody");
   rows.forEach((h, idx) => {
     const prev = idx + 1 < rows.length ? rows[idx + 1] : null;
@@ -378,10 +392,16 @@ async function renderHistory() {
         td2.appendChild(sp);
       }
     }
+    tr.append(td1, td2);
+    if (hasReal) {
+      const tdr = document.createElement("td"); tdr.className = "num";
+      tdr.textContent = h.real_rank != null ? h.real_rank + "위" : "—";
+      tr.appendChild(tdr);
+    }
     const td3 = document.createElement("td");
     const chip = document.createElement("span"); chip.className = "chip " + h.method;
     chip.textContent = CHIP_LABEL[h.method]; td3.appendChild(chip);
-    tr.append(td1, td2, td3); tb.appendChild(tr);
+    tr.appendChild(td3); tb.appendChild(tr);
   });
   tbl.appendChild(tb); body.appendChild(tbl);
 }
@@ -409,9 +429,12 @@ $("saveSettings").onclick = async () => {
     body: JSON.stringify({
       client_id: $("cid").value, client_secret: $("csec").value,
       check_hour: parseInt($("checkHour").value, 10) || 9,
+      verify_real: $("verifyReal").checked,
+      alert_threshold: parseInt($("alertTh").value, 10) || 10,
+      telegram_token: $("tgToken").value, telegram_chat_id: $("tgChat").value,
     }),
   });
-  $("cid").value = ""; $("csec").value = "";
+  $("cid").value = ""; $("csec").value = ""; $("tgToken").value = ""; $("tgChat").value = "";
   await pullLogs(); refresh();
 };
 

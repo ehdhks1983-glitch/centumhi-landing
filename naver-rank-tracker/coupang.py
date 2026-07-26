@@ -16,6 +16,8 @@ import urllib.parse
 
 import requests
 
+import browser
+
 SEARCH_URL = "https://www.coupang.com/np/search"
 PAGE_SIZE = 72          # listSize 최대값 — 호출 수 최소화
 MAX_PAGES = 20
@@ -94,19 +96,46 @@ def _id_match(item, ids):
     return False
 
 
-def fetch_page(session, keyword, page):
+class BlockedError(Exception):
+    """쿠팡이 요청 방식 접속을 차단(403)"""
+
+
+def _fetch_requests(session, keyword, page):
     r = session.get(
         SEARCH_URL,
         params={"q": keyword, "page": page, "listSize": PAGE_SIZE},
         headers=HEADERS, timeout=15,
     )
     if r.status_code == 403:
-        raise RuntimeError("쿠팡이 자동 접속을 차단(403) — 시간을 두고 재시도하거나 일반 PC 환경에서 실행하세요")
+        raise BlockedError()
     r.raise_for_status()
     return r.text
 
 
-def check_rank(keyword, product, track_limit):
+def _fetch_browser(keyword, page):
+    qs = urllib.parse.urlencode({"q": keyword, "page": page, "listSize": PAGE_SIZE})
+    return browser.fetch_html(f"{SEARCH_URL}?{qs}")
+
+
+def fetch_page(session, keyword, page, log=None):
+    """기본은 requests. 403 차단이면 실브라우저(Playwright)로 자동 전환.
+    한 번 차단되면 같은 조회에서는 이후 페이지도 바로 브라우저로 간다."""
+    if not getattr(session, "_blocked", False):
+        try:
+            return _fetch_requests(session, keyword, page)
+        except BlockedError:
+            session._blocked = True
+            if log:
+                log("쿠팡 403 차단 감지 — 실브라우저 경로로 전환")
+    if browser.available():
+        return _fetch_browser(keyword, page)
+    raise RuntimeError(
+        "쿠팡이 자동 접속을 차단(403) — playwright를 설치하면 실브라우저로 우회 가능 "
+        "(pip install playwright && playwright install chromium)"
+    )
+
+
+def check_rank(keyword, product, track_limit, log=None):
     """반환: (rank | None, match_method, found_ids | None)
     rank는 광고 제외 순위. found_ids는 이름 매칭 성공 시 승격 저장용 ID 묶음."""
     ids = json.loads(product["ext_ids"]) if product["ext_ids"] else None
@@ -119,7 +148,7 @@ def check_rank(keyword, product, track_limit):
     session = requests.Session()
 
     for page in range(1, MAX_PAGES + 1):
-        page_html = fetch_page(session, keyword, page)
+        page_html = fetch_page(session, keyword, page, log=log)
         items = parse_items(page_html)
         if not items:
             if page == 1:

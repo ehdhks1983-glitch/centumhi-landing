@@ -5,8 +5,13 @@ import re
 import threading
 import time
 
+from datetime import date
+
+import alerts
+import browser
 import coupang
 import db
+import naver_web
 from naver_api import call_api, QuotaExceeded
 
 TAG_RE = re.compile(r"<[^>]+>")
@@ -71,16 +76,33 @@ def run_all_checks(log=print):
         products = db.get_active_products()
         log(f"조회 시작 — 활성 상품 {len(products)}개")
 
+        verify_real = db.get_setting("verify_real", "0") == "1"
+        if verify_real and not browser.available():
+            verify_real = False
+            log("실측 검증 건너뜀 — playwright 미설치 (pip install playwright && playwright install chromium)")
+
+        threshold = int(db.get_setting("alert_threshold", "10"))
+        today = date.today().isoformat()
+        alert_msgs = []
+
         for row in products:
             product = dict(row)  # 같은 실행 안에서 승격된 nvmid를 다음 키워드가 바로 쓰도록
             for kw in db.get_keywords(product["id"]):
                 keyword = kw["keyword"]
                 try:
+                    prev = db.get_prev_rank(kw["id"], today)  # 어제(직전 조회일) 순위 — 급변 비교용
+                    latest = db.get_latest_rank(kw["id"])
+                    already_alerted_today = latest is not None and latest["checked_date"] == today
                     if product["channel"] == "coupang":
-                        rank, method, found = coupang.check_rank(keyword, product, product["track_limit"])
+                        rank, method, found = coupang.check_rank(keyword, product, product["track_limit"], log=log)
                     else:
                         rank, method, found = check_rank(keyword, product, product["track_limit"])
                     db.save_result(kw["id"], rank, method)
+                    if not already_alerted_today:  # 같은 날 재조회는 재알림 안 함
+                        msg = alerts.build_alert(f"{product['product_name']} · {keyword}",
+                                                 prev["rank"] if prev else None, rank, threshold)
+                        if msg:
+                            alert_msgs.append(msg)
                     if found:
                         if product["channel"] == "coupang":
                             ext = json.dumps(found)
@@ -96,6 +118,11 @@ def run_all_checks(log=print):
                         log(f"[{keyword}] {rank}위 ({method})")
                     else:
                         log(f"[{keyword}] {product['track_limit']}위 내 미발견")
+
+                    # 실측 검증 (네이버 하이브리드): API 순위와 실제 노출 순위 대조
+                    if (verify_real and product["channel"] == "naver"
+                            and rank and product["nvmid"]):
+                        _verify_real_rank(kw["id"], keyword, product, rank, log)
                 except QuotaExceeded:
                     log("일일 한도 도달 — 중단, 내일 재개")
                     return  # 남은 큐 포기, 다음날 스케줄러가 처음부터 다시
@@ -104,8 +131,30 @@ def run_all_checks(log=print):
                     continue  # 이 키워드만 건너뛰고 계속
 
         log("조회 완료")
+
+        if alert_msgs:
+            try:
+                if alerts.send("📊 순위 급변 알림\n" + "\n".join(alert_msgs)):
+                    log(f"텔레그램 알림 전송 ({len(alert_msgs)}건)")
+                else:
+                    log(f"순위 급변 {len(alert_msgs)}건 — 텔레그램 미설정으로 알림 생략")
+            except Exception as e:
+                log(f"텔레그램 전송 실패: {e}")
     finally:
         run_lock.release()
+
+
+def _verify_real_rank(keyword_id, keyword, product, api_rank, log):
+    """실브라우저로 실제 노출 순위를 확인해 이력에 병기. 실패해도 조회는 계속."""
+    try:
+        real = naver_web.check_real_rank(keyword, product["nvmid"], product["track_limit"])
+        db.save_real_rank(keyword_id, real)
+        if real:
+            log(f"[{keyword}] 실측 {real}위 (API {api_rank}위, 오차 {real - api_rank:+d})")
+        else:
+            log(f"[{keyword}] 실측: {product['track_limit']}위 내 미발견 (API {api_rank}위)")
+    except Exception as e:
+        log(f"실측 실패 [{keyword}]: {e}")
 
 
 if __name__ == "__main__":

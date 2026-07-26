@@ -27,7 +27,26 @@ python main.py
 | 주의 | API 순위와 실제 노출의 오차 존재 | 과도 사용 시 접속 차단(403) 가능 — 하루 1회 자동 조회 수준은 저강도 |
 
 쿠팡 파싱이 실패하면(페이지 구조 변경) `coupang_debug.html`이 자동 저장된다 —
-이 파일을 보면 어떤 구조로 바뀌었는지 확인 가능.
+이 파일을 보면 어떤 구조로 바뀌었는지 확인 가능. 네이버 실측도 동일하게
+`naver_debug.html` 덤프.
+
+## 선택 기능 (playwright 설치 시 활성화)
+
+```
+pip install playwright && playwright install chromium
+```
+
+- **네이버 실측 검증**: 설정에서 켜면 API 순위 옆에 실제 검색 페이지의 노출
+  순위(광고 제외)를 병기 — API와 실제 노출의 오차를 매일 확인 가능
+- **쿠팡 403 우회**: 쿠팡이 requests 접속을 차단하면 실브라우저로 자동 전환
+
+## 텔레그램 순위 급변 알림
+
+설정에 봇 Token·Chat ID·기준(기본 10위)을 저장하면, 매일 조회 후 전일 대비
+기준 이상 급락/급등하거나 추적범위 밖으로 이탈한 키워드를 모아 1건의
+메시지로 알린다. 같은 날 재조회 시 중복 알림은 가지 않는다.
+(봇 만들기: 텔레그램에서 @BotFather → /newbot → 토큰 발급,
+Chat ID는 @userinfobot에게 아무 메시지나 보내면 알려줌)
 
 ## 콘솔 확인
 
@@ -43,9 +62,12 @@ python tracker.py                # 등록된 상품 전체 조회
 main.py            # 엔트리: APScheduler + uvicorn 웹서버 기동
 webapp.py          # FastAPI 라우트
 static/index.html  # 브라우저 화면
-db.py              # SQLite (channel/ext_ids 포함, 구버전 DB 자동 마이그레이션)
+db.py              # SQLite (channel/ext_ids/real_rank 포함, 구버전 DB 자동 마이그레이션)
 naver_api.py       # 네이버 검색 API + 일일 사용량 카운트
-coupang.py         # 쿠팡 검색 페이지 수집 + 링크 ID 파싱
+naver_web.py       # 네이버 실측 검증 (실제 검색 페이지 노출 순위)
+coupang.py         # 쿠팡 검색 페이지 수집 + 링크 ID 파싱 + 403 브라우저 폴백
+browser.py         # Playwright 실브라우저 헬퍼 (선택 의존성)
+alerts.py          # 텔레그램 순위 급변 알림
 tracker.py         # 채널 분기 + 매칭 + 자동 승격 + 조회 루프
 ```
 

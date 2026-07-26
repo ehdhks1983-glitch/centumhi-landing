@@ -83,6 +83,9 @@ def state():
         "checking": _is_checking(),
         "check_hour": int(db.get_setting("check_hour", "9")),
         "has_keys": bool(db.get_setting("client_id") and db.get_setting("client_secret")),
+        "verify_real": db.get_setting("verify_real", "0") == "1",
+        "alert_threshold": int(db.get_setting("alert_threshold", "10")),
+        "has_telegram": bool(db.get_setting("telegram_token") and db.get_setting("telegram_chat_id")),
     }
 
 
@@ -143,7 +146,8 @@ def toggle_active(product_id: int, active: bool):
 @app.get("/api/history/{keyword_id}")
 def history(keyword_id: int):
     rows = db.get_history(keyword_id)
-    return [{"date": r["checked_date"], "rank": r["rank"], "method": r["match_method"]} for r in rows]
+    return [{"date": r["checked_date"], "rank": r["rank"], "method": r["match_method"],
+             "real_rank": r["real_rank"]} for r in rows]
 
 
 # ---------- 설정 ----------
@@ -152,6 +156,10 @@ class SettingsIn(BaseModel):
     client_id: str = ""
     client_secret: str = ""
     check_hour: int = 9
+    verify_real: bool = False
+    alert_threshold: int = 10
+    telegram_token: str = ""
+    telegram_chat_id: str = ""
 
 
 @app.post("/api/settings")
@@ -160,11 +168,19 @@ def save_settings(body: SettingsIn):
         db.set_setting("client_id", body.client_id.strip())
     if body.client_secret.strip():
         db.set_setting("client_secret", body.client_secret.strip())
+    if body.telegram_token.strip():
+        db.set_setting("telegram_token", body.telegram_token.strip())
+    if body.telegram_chat_id.strip():
+        db.set_setting("telegram_chat_id", body.telegram_chat_id.strip())
+    db.set_setting("verify_real", "1" if body.verify_real else "0")
+    db.set_setting("alert_threshold", str(max(1, min(500, body.alert_threshold))))
     hour = max(0, min(23, body.check_hour))
     db.set_setting("check_hour", str(hour))
     if reschedule_fn:
         reschedule_fn(hour)
-    add_log(f"설정 저장 — 자동 조회 매일 {hour:02d}:00")
+    add_log(f"설정 저장 — 자동 조회 매일 {hour:02d}:00"
+            + (" · 실측 검증 ON" if body.verify_real else "")
+            + f" · 급변 기준 {max(1, min(500, body.alert_threshold))}위")
     return {"ok": True}
 
 

@@ -2,3 +2,5 @@ fastapi>=0.110
 uvicorn>=0.29
 APScheduler>=3.10
 requests>=2.31
+# 선택 기능(네이버 실측 검증 · 쿠팡 403 차단 우회)을 쓰려면:
+#   pip install playwright && playwright install chromium
