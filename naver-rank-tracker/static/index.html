@@ -373,9 +373,11 @@ async function runCheck() {
   } catch (e) { alert(e.message); return; }
   $("runCheck").disabled = true; $("runCheck").textContent = "조회 중…";
   const fast = setInterval(async () => {
-    await pullLogs();
-    const s = await refresh();
-    if (!s.checking) { clearInterval(fast); renderHistory(); }
+    try {
+      await pullLogs();
+      const s = await refresh();
+      if (!s.checking) { clearInterval(fast); renderHistory(); }
+    } catch (e) { /* 일시적 서버 오류 — 다음 틱에서 재시도 */ }
   }, 1000);
 }
 

@@ -25,6 +25,7 @@ def main():
     scheduler.add_job(
         lambda: tracker.run_all_checks(log=webapp.add_log), "cron",
         hour=check_hour, minute=0, id=JOB_ID,
+        coalesce=True, misfire_grace_time=6 * 3600,  # 절전 등으로 놓친 조회는 깨어난 뒤 실행 (6시간 유예)
     )
     scheduler.start()
     webapp.reschedule_fn = lambda h: scheduler.reschedule_job(

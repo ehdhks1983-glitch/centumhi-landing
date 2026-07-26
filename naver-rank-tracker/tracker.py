@@ -1,6 +1,7 @@
 """매칭 알고리즘 + 조회 루프 + 자동 승격 (개발명령서 v1.1 §3, §4, §6)"""
 import html
 import re
+import threading
 import time
 
 import db
@@ -10,6 +11,9 @@ TAG_RE = re.compile(r"<[^>]+>")
 WS_RE = re.compile(r"\s+")
 
 MAX_START = 1000  # API 제약: start 최대 1000
+
+# 스케줄 자동 조회와 수동 조회가 겹쳐 돌지 않도록 하는 전역 잠금
+run_lock = threading.Lock()
 
 
 def normalize(text):
@@ -45,6 +49,8 @@ def check_rank(keyword, product, track_limit):
 
         if len(items) < display:
             break  # 검색 결과 끝 — 더 넘겨봐야 빈 페이지
+        if name_hit and not nvmid:
+            break  # nvmid가 없으면 더 찾을 대상이 없다 — 남은 페이지 호출은 할당량 낭비
 
         time.sleep(0.15)  # 초당 10회 한도 여유
 
@@ -56,30 +62,39 @@ def check_rank(keyword, product, track_limit):
 def run_all_checks(log=print):
     """(활성 상품 × 키워드) 전부 순차 처리. 병렬화 금지 (§7).
     에러 처리(§6): 한도 도달 → 그날 중단 / 그 외 → 로그 남기고 다음 키워드로. 앱은 절대 안 죽는다."""
-    products = db.get_active_products()
-    log(f"조회 시작 — 활성 상품 {len(products)}개")
+    if not run_lock.acquire(blocking=False):
+        log("이미 조회가 진행 중 — 이번 실행은 건너뜀")
+        return
+    try:
+        products = db.get_active_products()
+        log(f"조회 시작 — 활성 상품 {len(products)}개")
 
-    for product in products:
-        for kw in db.get_keywords(product["id"]):
-            keyword = kw["keyword"]
-            try:
-                rank, method, found = check_rank(keyword, product, product["track_limit"])
-                db.save_result(kw["id"], rank, method)
-                if found:
-                    db.promote_nvmid(product["id"], found[1], found[2])  # 자동 승격
-                    log(f"[{keyword}] {rank}위 (이름 매칭 → nvmid 자동 승격)")
-                elif rank:
-                    log(f"[{keyword}] {rank}위 ({method})")
-                else:
-                    log(f"[{keyword}] {product['track_limit']}위 내 미발견")
-            except QuotaExceeded:
-                log("일일 한도 도달 — 중단, 내일 재개")
-                return  # 남은 큐 포기, 다음날 스케줄러가 처음부터 다시
-            except Exception as e:
-                log(f"조회 실패 [{keyword}]: {e}")
-                continue  # 이 키워드만 건너뛰고 계속
+        for row in products:
+            product = dict(row)  # 같은 실행 안에서 승격된 nvmid를 다음 키워드가 바로 쓰도록
+            for kw in db.get_keywords(product["id"]):
+                keyword = kw["keyword"]
+                try:
+                    rank, method, found = check_rank(keyword, product, product["track_limit"])
+                    db.save_result(kw["id"], rank, method)
+                    if found:
+                        db.promote_nvmid(product["id"], found[1], found[2])  # 자동 승격
+                        product["nvmid"] = found[1]
+                        product["mall_name"] = product["mall_name"] or found[2]
+                        log(f"[{keyword}] {rank}위 (이름 매칭 → nvmid 자동 승격)")
+                    elif rank:
+                        log(f"[{keyword}] {rank}위 ({method})")
+                    else:
+                        log(f"[{keyword}] {product['track_limit']}위 내 미발견")
+                except QuotaExceeded:
+                    log("일일 한도 도달 — 중단, 내일 재개")
+                    return  # 남은 큐 포기, 다음날 스케줄러가 처음부터 다시
+                except Exception as e:
+                    log(f"조회 실패 [{keyword}]: {e}")
+                    continue  # 이 키워드만 건너뛰고 계속
 
-    log("조회 완료")
+        log("조회 완료")
+    finally:
+        run_lock.release()
 
 
 if __name__ == "__main__":

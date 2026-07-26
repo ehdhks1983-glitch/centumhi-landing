@@ -20,18 +20,26 @@ INDEX_HTML = Path(__file__).parent / "static" / "index.html"
 
 _log_lock = threading.Lock()
 _logs: list[str] = []
+_log_base = 0          # 상한 초과로 버린 로그 줄 수 — 폴링 커서 보정용
+_MAX_LOGS = 2000       # 장기 실행 서버의 메모리 상한
 _check_thread: threading.Thread | None = None
 
 reschedule_fn = None  # main.py가 스케줄러 재설정 함수를 주입
 
 
 def add_log(msg: str):
+    global _log_base
     with _log_lock:
         _logs.append(f"{time.strftime('%H:%M:%S')}  {msg}")
+        if len(_logs) > _MAX_LOGS:
+            drop = len(_logs) - _MAX_LOGS
+            del _logs[:drop]
+            _log_base += drop
 
 
 def _is_checking() -> bool:
-    return _check_thread is not None and _check_thread.is_alive()
+    # 수동 조회 스레드뿐 아니라 스케줄러발 자동 조회도 잠금으로 감지
+    return (_check_thread is not None and _check_thread.is_alive()) or tracker.run_lock.locked()
 
 
 # ---------- 화면 ----------
@@ -162,4 +170,5 @@ def run_check():
 @app.get("/api/logs")
 def logs(since: int = 0):
     with _log_lock:
-        return {"next": len(_logs), "lines": _logs[since:]}
+        idx = max(0, since - _log_base)
+        return {"next": _log_base + len(_logs), "lines": _logs[idx:]}
