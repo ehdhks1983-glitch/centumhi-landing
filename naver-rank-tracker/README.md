@@ -1,8 +1,7 @@
-# 네이버 순위추적기 v1.1 (웹 버전)
+# 상품 순위추적기 (네이버 · 쿠팡) — 웹 버전
 
-개발명령서 v1.1 기반 · CoupRank Pro와 완전 별도 앱. 데스크톱 GUI 대신
-**웹 UI(FastAPI + 브라우저)** 로 동작한다 — 내 PC에서 실행하다가 그대로
-서버에 올리면 24시간 자동 조회 서비스가 된다.
+개발명령서 v1.1 기반 + 쿠팡 채널 확장. 웹 UI(FastAPI + 브라우저)로 동작하며,
+내 PC에서 실행하다가 그대로 서버에 올리면 24시간 자동 조회 서비스가 된다.
 
 ## 실행
 
@@ -11,38 +10,46 @@ pip install -r requirements.txt
 python main.py
 ```
 
-브라우저에서 **http://localhost:8000** 접속 → 상단에 네이버 개발자센터
-Client ID / Secret 입력 → 설정 저장 → 상품 등록 → 지금 조회.
+브라우저에서 **http://localhost:8000** 접속.
 
+- **네이버 상품**: 상단에 네이버 개발자센터 Client ID / Secret 저장 필요
+- **쿠팡 상품**: API 키 불필요 — 상품 링크만 붙여넣으면 끝
 - 호스트/포트 변경: `HOST=0.0.0.0 PORT=8080 python main.py`
 - 서버가 떠 있는 동안 매일 지정 시각(기본 09:00)에 자동 조회
 
-## 콘솔 확인 (빌드 순서 §9)
+## 채널별 동작 방식
+
+| | 네이버쇼핑 | 쿠팡 |
+|---|---|---|
+| 데이터 출처 | 공식 검색 API (일 25,000회) | 실제 검색 결과 페이지 (저강도 수집) |
+| 정밀 매칭 | 첫 조회에서 nvmid 자동 확보(승격) | **링크 붙여넣기 → 등록 즉시 ID 확보** (링크 없으면 이름 매칭 후 자동 확보) |
+| 순위 기준 | API 반환 순위 | 화면 노출 순위, **광고 제외** |
+| 주의 | API 순위와 실제 노출의 오차 존재 | 과도 사용 시 접속 차단(403) 가능 — 하루 1회 자동 조회 수준은 저강도 |
+
+쿠팡 파싱이 실패하면(페이지 구조 변경) `coupang_debug.html`이 자동 저장된다 —
+이 파일을 보면 어떤 구조로 바뀌었는지 확인 가능.
+
+## 콘솔 확인
 
 ```
-python naver_api.py 검색키워드   # API 응답에 productId/mallName 오는지 눈으로 확인
-python tracker.py                # 등록된 상품 전체 조회를 콘솔에서 실행
+python naver_api.py 검색키워드   # 네이버 API 응답 확인
+python coupang.py 검색키워드     # 쿠팡 1페이지 파싱 확인 (광고 표시 포함)
+python tracker.py                # 등록된 상품 전체 조회
 ```
 
 ## 구조
 
 ```
 main.py            # 엔트리: APScheduler + uvicorn 웹서버 기동
-webapp.py          # FastAPI 라우트 (/api/state, /api/products, /api/check …)
-static/index.html  # 브라우저 화면 (1화면 + 등록 팝업)
-db.py              # SQLite 초기화 + CRUD + settings 헬퍼
-naver_api.py       # API 호출 + 일일 사용량 카운트 (한도 24,000)
-tracker.py         # 매칭 알고리즘 + 조회 루프 + nvmid 자동 승격
-rank_tracker.db    # SQLite DB (자동 생성, git 제외)
+webapp.py          # FastAPI 라우트
+static/index.html  # 브라우저 화면
+db.py              # SQLite (channel/ext_ids 포함, 구버전 DB 자동 마이그레이션)
+naver_api.py       # 네이버 검색 API + 일일 사용량 카운트
+coupang.py         # 쿠팡 검색 페이지 수집 + 링크 ID 파싱
+tracker.py         # 채널 분기 + 매칭 + 자동 승격 + 조회 루프
 ```
-
-## 핵심 동작 — nvmid 자동 승격 (§3)
-
-등록 시 상품명 + (선택)몰명 + 키워드만 입력 (API 호출 0회). 첫 조회에서
-이름(+몰명)으로 매칭되면 그 항목의 `productId`를 `nvmid`로 자동 저장 →
-2회차부터 정밀 매칭. 상품명이 바뀌거나 동명 타셀러가 생겨도 흔들리지 않는다.
 
 ## 보안 주의
 
-`rank_tracker.db`에 API Secret이 저장되므로 외부 서버에 올릴 때는
+`rank_tracker.db`에 네이버 API Secret이 저장되므로 외부 서버에 올릴 때는
 접속 인증(리버스 프록시 Basic Auth 등)을 앞단에 두고 공개 노출하지 말 것.

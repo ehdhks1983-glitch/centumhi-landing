@@ -3,6 +3,7 @@
 브라우저는 static/index.html 하나를 받고, 이후 /api/* 로 통신한다.
 조회는 백그라운드 스레드에서 돌고 로그는 폴링으로 내려준다.
 """
+import json
 import threading
 import time
 from pathlib import Path
@@ -11,6 +12,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
+import coupang
 import db
 import tracker
 
@@ -71,6 +73,8 @@ def state():
             "id": p["id"], "name": p["product_name"], "mall": p["mall_name"],
             "nvmid": p["nvmid"], "link": p["product_link"],
             "track_limit": p["track_limit"], "is_active": bool(p["is_active"]),
+            "channel": p["channel"],
+            "matched": bool(p["ext_ids"] if p["channel"] == "coupang" else p["nvmid"]),
             "keywords": keywords,
         })
     return {
@@ -89,6 +93,7 @@ class ProductIn(BaseModel):
     mall: str = ""
     link: str = ""
     track_limit: int = 100
+    channel: str = "naver"
     keywords: list[str]
 
 
@@ -97,9 +102,26 @@ def create_product(body: ProductIn):
     kws = [k.strip() for k in body.keywords if k.strip()]
     if not kws:
         raise HTTPException(422, "키워드는 1개 이상 필요합니다")
+    if body.channel not in ("naver", "coupang"):
+        raise HTTPException(422, "channel은 naver 또는 coupang")
     limit = max(1, min(1000, body.track_limit))
-    pid = db.add_product(body.name.strip(), body.mall.strip(), body.link.strip(), limit, kws)
-    add_log(f"상품 등록: {body.name.strip()} (키워드 {len(kws)}개, 추적 {limit}위) — 등록 시 API 호출 0회")
+    name, link = body.name.strip(), body.link.strip()
+
+    ext_ids = None
+    if body.channel == "coupang":
+        ids = coupang.parse_product_link(link)
+        if ids:
+            ext_ids = json.dumps(ids)
+
+    pid = db.add_product(name, body.mall.strip(), link, limit, kws,
+                         channel=body.channel, ext_ids=ext_ids)
+    if body.channel == "coupang":
+        if ext_ids:
+            add_log(f"쿠팡 상품 등록: {name} — 링크에서 상품 ID 추출 완료, 첫 조회부터 정밀 매칭")
+        else:
+            add_log(f"쿠팡 상품 등록: {name} — 링크 미입력, 첫 조회는 이름 매칭 후 ID 자동 확보")
+    else:
+        add_log(f"상품 등록: {name} (키워드 {len(kws)}개, 추적 {limit}위) — 등록 시 API 호출 0회")
     return {"id": pid}
 
 
@@ -153,8 +175,10 @@ def run_check():
     global _check_thread
     if _is_checking():
         return {"started": False, "reason": "이미 조회가 진행 중입니다"}
-    if not (db.get_setting("client_id") and db.get_setting("client_secret")):
-        raise HTTPException(400, "API 키 미설정 — 상단 설정에 Client ID/Secret을 저장하세요")
+    # 네이버 채널 상품이 있을 때만 API 키 필요 (쿠팡은 키 불필요)
+    has_naver = any(p["channel"] == "naver" for p in db.get_active_products())
+    if has_naver and not (db.get_setting("client_id") and db.get_setting("client_secret")):
+        raise HTTPException(400, "네이버 API 키 미설정 — 상단 설정에 Client ID/Secret을 저장하세요")
 
     def worker():
         try:

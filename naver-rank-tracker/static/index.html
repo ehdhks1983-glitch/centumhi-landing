@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>네이버 순위추적기</title>
+<title>상품 순위추적기 — 네이버·쿠팡</title>
 <style>
   :root {
     --ground: #F5F7F5; --card: #FFFFFF; --ink: #171D19; --sub: #5E6B62;
@@ -107,6 +107,16 @@
     background: var(--accent-soft); color: var(--accent-deep);
     border-radius: 999px; padding: .1rem .5rem;
   }
+  .ch {
+    font-size: .66rem; font-weight: 800; letter-spacing: .02em;
+    border-radius: 4px; padding: .08rem .38rem;
+  }
+  .ch.naver { background: var(--accent-soft); color: var(--accent-deep); border: 1px solid var(--accent); }
+  .ch.coupang { background: rgba(229,37,40,.1); color: #C81E21; border: 1px solid #E52528; }
+  :root[data-theme="dark"] .ch.coupang { color: #FF8082; background: rgba(229,37,40,.18); }
+  .seg { display: flex; gap: 1rem; padding: .2rem 0; }
+  .seg label { display: inline-flex; align-items: center; gap: .35rem; font-size: .9rem; color: var(--ink); font-weight: 500; cursor: pointer; }
+  .seg input { accent-color: var(--accent); }
   .kwrow {
     display: flex; align-items: center; gap: .6rem; width: 100%;
     padding: .5rem .75rem; border: 0; border-top: 1px solid var(--line);
@@ -170,8 +180,8 @@
 <body>
 <div class="app">
   <header>
-    <h1><em>N</em> 순위추적기</h1>
-    <span class="ver">v1.1 WEB</span>
+    <h1>상품 <em>순위추적기</em></h1>
+    <span class="ver">네이버 · 쿠팡</span>
     <span class="spacer"></span>
     <span class="stat">오늘 API 사용량 <b id="usage" class="mono">0</b><span>/ 24,000</span></span>
   </header>
@@ -207,9 +217,16 @@
 <dialog id="regDlg">
   <div class="dlg-head">상품 등록 — API 호출 없이 저장, 첫 조회 때 자동 정밀 매칭</div>
   <div class="dlg-body">
+    <div class="field">
+      <label>채널</label>
+      <div class="seg">
+        <label><input type="radio" name="fCh" value="naver" checked> 네이버쇼핑</label>
+        <label><input type="radio" name="fCh" value="coupang"> 쿠팡</label>
+      </div>
+    </div>
     <div class="field"><label for="fName">상품명 *</label><input id="fName"></div>
-    <div class="field"><label for="fMall">몰명 <span class="opt">(선택 — 동명 타셀러 구분)</span></label><input id="fMall"></div>
-    <div class="field"><label for="fLink">상품 링크 <span class="opt">(선택)</span></label><input id="fLink"></div>
+    <div class="field"><label for="fMall">몰명 <span class="opt">(선택 — 동명 타셀러 구분, 네이버 전용)</span></label><input id="fMall"></div>
+    <div class="field"><label for="fLink">상품 링크 <span class="opt" id="linkHint">(선택)</span></label><input id="fLink"></div>
     <div class="field">
       <label for="fLimit">추적 범위</label>
       <select id="fLimit">
@@ -263,7 +280,7 @@ async function pullLogs() {
 }
 
 /* ── 상태 렌더링 ── */
-const CHIP_LABEL = { nvmid: "nvmid 정밀", name: "이름 매칭", not_found: "미발견" };
+const CHIP_LABEL = { nvmid: "nvmid 정밀", id: "ID 정밀", name: "이름 매칭", not_found: "미발견" };
 
 async function refresh() {
   const s = await api("/api/state");
@@ -285,10 +302,14 @@ async function refresh() {
   for (const p of s.products) {
     const card = document.createElement("div"); card.className = "product";
     const head = document.createElement("div"); head.className = "product-head";
+    const ch = document.createElement("span"); ch.className = "ch " + p.channel;
+    ch.textContent = p.channel === "coupang" ? "쿠팡" : "네이버";
+    head.appendChild(ch);
     const nm = document.createElement("span"); nm.className = "pname"; nm.textContent = p.name;
     head.appendChild(nm);
     if (p.mall) { const m = document.createElement("span"); m.className = "mall"; m.textContent = p.mall; head.appendChild(m); }
-    if (p.nvmid) { const b = document.createElement("span"); b.className = "badge-nvmid"; b.textContent = "nvmid 확보"; head.appendChild(b); }
+    if (p.matched) { const b = document.createElement("span"); b.className = "badge-nvmid";
+      b.textContent = p.channel === "coupang" ? "ID 확보" : "nvmid 확보"; head.appendChild(b); }
     const del = document.createElement("button"); del.className = "del"; del.textContent = "삭제";
     del.onclick = async () => {
       if (!confirm(`"${p.name}" 상품과 이력을 모두 삭제할까요?`)) return;
@@ -395,6 +416,13 @@ $("saveSettings").onclick = async () => {
 };
 
 /* ── 등록 모달 ── */
+function currentChannel() {
+  return document.querySelector('input[name="fCh"]:checked').value;
+}
+document.querySelectorAll('input[name="fCh"]').forEach(r => r.onchange = () => {
+  $("linkHint").textContent = currentChannel() === "coupang"
+    ? "(권장 — 붙여넣으면 첫 조회부터 ID 정밀 매칭)" : "(선택)";
+});
 $("openReg").onclick = () => { $("formErr").textContent = ""; $("regDlg").showModal(); };
 $("regCancel").onclick = () => $("regDlg").close();
 $("regSave").onclick = async () => {
@@ -407,6 +435,7 @@ $("regSave").onclick = async () => {
       body: JSON.stringify({
         name, mall: $("fMall").value, link: $("fLink").value,
         track_limit: parseInt($("fLimit").value, 10), keywords: kws,
+        channel: currentChannel(),
       }),
     });
   } catch (e) { $("formErr").textContent = e.message; return; }

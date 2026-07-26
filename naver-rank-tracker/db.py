@@ -11,10 +11,12 @@ CREATE TABLE IF NOT EXISTS products (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     product_name  TEXT NOT NULL,
     mall_name     TEXT,
-    nvmid         TEXT,
+    nvmid         TEXT,                              -- 네이버: 첫 조회 성공 시 자동 기록
     product_link  TEXT,
     track_limit   INTEGER NOT NULL DEFAULT 100,
     is_active     INTEGER NOT NULL DEFAULT 1,
+    channel       TEXT NOT NULL DEFAULT 'naver',     -- 'naver' | 'coupang'
+    ext_ids       TEXT,                              -- 쿠팡: {"productId","itemId","vendorItemId"} JSON
     created_at    TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
@@ -58,6 +60,12 @@ def get_conn():
 def init_db():
     with get_conn() as conn:
         conn.executescript(SCHEMA)
+        # v1.1 DB → 쿠팡 지원 마이그레이션 (이미 있으면 통과)
+        cols = {r["name"] for r in conn.execute("PRAGMA table_info(products)")}
+        if "channel" not in cols:
+            conn.execute("ALTER TABLE products ADD COLUMN channel TEXT NOT NULL DEFAULT 'naver'")
+        if "ext_ids" not in cols:
+            conn.execute("ALTER TABLE products ADD COLUMN ext_ids TEXT")
 
 
 # ---------- settings ----------
@@ -99,12 +107,13 @@ def increment_today_usage():
 
 # ---------- products / keywords ----------
 
-def add_product(product_name, mall_name=None, product_link=None, track_limit=100, keywords=()):
+def add_product(product_name, mall_name=None, product_link=None, track_limit=100, keywords=(),
+                channel="naver", ext_ids=None):
     with get_conn() as conn:
         cur = conn.execute(
-            "INSERT INTO products(product_name, mall_name, product_link, track_limit) "
-            "VALUES(?, ?, ?, ?)",
-            (product_name, mall_name or None, product_link or None, track_limit),
+            "INSERT INTO products(product_name, mall_name, product_link, track_limit, channel, ext_ids) "
+            "VALUES(?, ?, ?, ?, ?, ?)",
+            (product_name, mall_name or None, product_link or None, track_limit, channel, ext_ids),
         )
         product_id = cur.lastrowid
         for kw in keywords:
@@ -154,6 +163,12 @@ def promote_nvmid(product_id, nvmid, mall_name=None):
                 "UPDATE products SET mall_name = ? WHERE id = ? AND (mall_name IS NULL OR mall_name = '')",
                 (mall_name, product_id),
             )
+
+
+def promote_ext_ids(product_id, ext_ids_json):
+    """쿠팡: 이름 매칭 성공 시 상품 ID 묶음 자동 확보"""
+    with get_conn() as conn:
+        conn.execute("UPDATE products SET ext_ids = ? WHERE id = ?", (ext_ids_json, product_id))
 
 
 # ---------- rank_history ----------

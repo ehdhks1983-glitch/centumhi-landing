@@ -1,9 +1,11 @@
 """매칭 알고리즘 + 조회 루프 + 자동 승격 (개발명령서 v1.1 §3, §4, §6)"""
 import html
+import json
 import re
 import threading
 import time
 
+import coupang
 import db
 from naver_api import call_api, QuotaExceeded
 
@@ -74,13 +76,22 @@ def run_all_checks(log=print):
             for kw in db.get_keywords(product["id"]):
                 keyword = kw["keyword"]
                 try:
-                    rank, method, found = check_rank(keyword, product, product["track_limit"])
+                    if product["channel"] == "coupang":
+                        rank, method, found = coupang.check_rank(keyword, product, product["track_limit"])
+                    else:
+                        rank, method, found = check_rank(keyword, product, product["track_limit"])
                     db.save_result(kw["id"], rank, method)
                     if found:
-                        db.promote_nvmid(product["id"], found[1], found[2])  # 자동 승격
-                        product["nvmid"] = found[1]
-                        product["mall_name"] = product["mall_name"] or found[2]
-                        log(f"[{keyword}] {rank}위 (이름 매칭 → nvmid 자동 승격)")
+                        if product["channel"] == "coupang":
+                            ext = json.dumps(found)
+                            db.promote_ext_ids(product["id"], ext)  # 자동 승격 (쿠팡)
+                            product["ext_ids"] = ext
+                            log(f"[{keyword}] {rank}위 (이름 매칭 → 상품 ID 자동 확보)")
+                        else:
+                            db.promote_nvmid(product["id"], found[1], found[2])  # 자동 승격 (네이버)
+                            product["nvmid"] = found[1]
+                            product["mall_name"] = product["mall_name"] or found[2]
+                            log(f"[{keyword}] {rank}위 (이름 매칭 → nvmid 자동 승격)")
                     elif rank:
                         log(f"[{keyword}] {rank}위 ({method})")
                     else:
