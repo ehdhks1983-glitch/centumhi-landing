@@ -865,8 +865,22 @@ footer{border-top:1px solid var(--line); padding:36px 0 110px; font-size:12px; c
     box.dataset.ready = '1';
     var img = document.createElement('img');
     img.className = 'thumb'; img.loading = 'lazy'; img.alt = box.getAttribute('data-title') || '영상';
-    img.src = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
-    img.srcset = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg 480w, https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg 1280w';
+    var YT = 'https://i.ytimg.com/vi/' + id + '/';
+    // 고화질 썸네일(maxresdefault)은 HD로 올린 영상에만 존재합니다.
+    // 없으면 유튜브가 회색 대체 이미지(120x90 등)를 주므로, 크기를 보고 안전한 썸네일로 되돌립니다.
+    var fellBack = false;
+    var fallback = function(){
+      if (fellBack) return; fellBack = true;
+      img.srcset = ''; img.sizes = '';
+      img.src = YT + 'hqdefault.jpg';
+    };
+    img.addEventListener('load', function(){
+      if (!fellBack && img.naturalWidth > 0 && img.naturalWidth < 400) fallback();
+    });
+    img.addEventListener('error', fallback);
+    img.sizes = '(max-width:760px) 100vw, 420px';
+    img.src = YT + 'hqdefault.jpg';
+    img.srcset = YT + 'mqdefault.jpg 320w, ' + YT + 'hqdefault.jpg 480w, ' + YT + 'maxresdefault.jpg 1280w';
     var ov = document.createElement('div'); ov.className = 'play';
     var tri = document.createElement('div'); tri.className = 'tri';
     box.appendChild(img); box.appendChild(ov); box.appendChild(tri);
