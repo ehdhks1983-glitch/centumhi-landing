@@ -312,6 +312,9 @@ h1 em{font-style:normal; color:var(--accent2)}
 .edu-price{display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 9px; margin-top:auto; margin-bottom:15px}
 .edu-price b{font-size:28px; font-weight:900; font-variant-numeric:tabular-nums; letter-spacing:-.04em}
 .edu-price span{font-size:12.5px; color:var(--ink3); font-weight:700}
+.vat-note{display:block; margin-top:8px; font-size:12.5px; line-height:1.5; color:var(--ink3); font-weight:800; letter-spacing:0}
+.pay-val.price::after{content:"VAT 별도"; display:block; margin-top:3px; font-size:10.5px; line-height:1; color:var(--ink3); font-weight:800; letter-spacing:0}
+.edu-price b::after{content:"VAT 별도"; display:block; margin-top:3px; font-size:10.5px; line-height:1; color:var(--ink3); font-weight:800; letter-spacing:0}
 .edu-cta{display:block; text-align:center; border:1px solid var(--line2); border-radius:11px; padding:13px;
   font-size:14px; font-weight:800; transition:filter .18s}
 .edu.main .edu-cta{background:var(--kakao); color:var(--kakao-ink); border-color:var(--kakao)}
@@ -644,7 +647,7 @@ footer{border-top:1px solid var(--line); padding:36px 0 110px; font-size:12px; c
         <div>
           <div class="pack-tag">프로그램 8종 풀패키지</div>
           <h3 style="font-size:clamp(26px,4.6vw,44px);margin-bottom:16px">353만원어치를,<br><span style="color:var(--accent2)">119만원</span>에.</h3>
-          <p class="pack-desc" style="font-size:16px"><b style="color:var(--ink)">8명 전부 + 원격 설치까지</b> 한 번에. 정가 353만 원 구성을 지금은 119만 원에. 채널을 여러 개 굴리시거나 대행·마케팅을 하시는 분이라면 이쪽이 확실히 남습니다.</p>
+          <p class="pack-desc" style="font-size:16px"><b style="color:var(--ink)">8명 전부 + 원격 설치까지</b> 한 번에. 정가 353만 원 구성을 지금은 119만 원(VAT 별도)에. 채널을 여러 개 굴리시거나 대행·마케팅을 하시는 분이라면 이쪽이 확실히 남습니다.</p>
           <ul class="pack-list">
             <li>블로그·서로이웃·티스토리·스레드·움짤·상세페이지·카페·컷대장 <b>8종 전부</b></li>
             <li>원격 설치 지원 2회 (2시간 + 2시간)</li>
@@ -654,7 +657,7 @@ footer{border-top:1px solid var(--line); padding:36px 0 110px; font-size:12px; c
         </div>
         <div class="pack-price">
           <div class="pp-strike">정가 <s>3,530,000원</s></div>
-          <div class="pp-main">1,190,000<small>원</small></div>
+          <div class="pp-main">1,190,000<small>원</small><span class="vat-note">VAT 별도 · 최종 결제금액 1,309,000원</span></div>
           <div class="pp-note">66% 할인 + 원격 설치 2회 포함</div>
           <div class="pp-deadline">이 가격은 <b>8월 31일까지</b></div>
           <a class="pp-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">패키지 상담하기 →</a>
@@ -680,6 +683,7 @@ footer{border-top:1px solid var(--line); padding:36px 0 110px; font-size:12px; c
             <li>신규 봇 <b>평생 우선·무료</b> 제공</li>
           </ul>
           <div class="lp-price"><s>2,490,000원</s><b>1,990,000원</b></div>
+          <span class="vat-note">VAT 별도 · 최종 결제금액 2,189,000원</span>
           <p class="vcap" style="margin-top:0">컴맹도 OK · 켜면 끝</p>
           <a class="cta-main" style="margin-top:18px" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">노트북 패키지 상담하기 →</a>
         </div>
@@ -801,7 +805,7 @@ footer{border-top:1px solid var(--line); padding:36px 0 110px; font-size:12px; c
       <details><summary>월 구독인가요? 추가 비용이 있나요?</summary><p>아니요. 한 번 구매하면 평생 사용합니다. 다만 AI 기능(글·이미지·목소리 생성)은 본인 명의의 API 키를 연결해 쓰기 때문에, 사용량에 따라 구글·오픈AI 쪽에 소액이 발생할 수 있습니다. 중간 마진 없이 원가 그대로입니다.</p></details>
       <details><summary>컴퓨터를 잘 못 하는데 쓸 수 있나요?</summary><p>설치 가이드와 구매자 전용 오픈채팅으로 도와드립니다. 그래도 어려우시면 원격 설치가 포함된 패키지, 4주 교육 과정, 또는 켜기만 하면 되는 노트북 풀패키지를 보세요.</p></details>
       <details><summary>어떤 환경에서 쓰나요?</summary><p>윈도우 PC 기준으로 작동합니다. 사양이나 설치 환경이 걱정되시면 구매 전에 카카오톡으로 문의해 주세요. 확인해 드립니다.</p></details>
-      <details><summary>결제는 어떻게 하나요?</summary><p>카카오톡 채널로 문의 주시면 결제 방법을 1:1로 안내해 드립니다. 어떤 직원이 맞을지 모르겠으면 하시는 일을 말씀해 주세요.</p></details>
+      <details><summary>결제는 어떻게 하나요?</summary><p>계좌이체와 카드 결제를 지원합니다. 페이지에 표시된 판매가는 VAT 별도이며 결제 시 부가세 10%가 추가됩니다. 현재는 카카오톡 채널에서 결제 방법을 1:1로 안내해 드립니다.</p></details>
     </div>
   </div>
 </section>
@@ -821,8 +825,12 @@ footer{border-top:1px solid var(--line); padding:36px 0 110px; font-size:12px; c
       <a href="#laptop">노트북 패키지</a><a href="#edu">교육 과정</a>
       <a href="https://cafe.naver.com/mp3downs1" target="_blank" rel="noopener">네이버 카페</a>
       <a href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">카카오톡 상담</a>
+      <a href="terms.html">이용약관</a><a href="privacy.html">개인정보처리방침</a>
     </div>
     센텀하이 · 곰대리<br>
+    상호: 한량컴퍼니 · 대표: 이광석 · 사업자등록번호: 102-17-93934<br>
+    통신판매업 신고번호: 제 2026-인천계양-0354 호 · 전화: 1533-8781 · 이메일: suk39100@naver.com<br>
+    주소: 인천광역시 계양구 안남로573번길 34, 4층 D6호(효성동, 미추홀빌딩)<br>
     프로그램은 윈도우 PC에서 작동하며, AI 기능은 이용자 명의의 API 키로 동작합니다.<br>
     게시된 후기와 화면은 실제 이용자 사례이며, 성과는 업종·운영 방식에 따라 다를 수 있습니다.<br>
     각 플랫폼의 이용약관을 지키는 범위에서 사용해 주세요.
