@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>쿠팡진입점수 AI</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">AI</div>
+    <span>쿠팡진입점수 AI</span>
+  </div>
+  <div class="quota-badge" id="quotaBadge">무료 3/3</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="0">🛒 쿠팡분석</button>
+  <button class="tab" data-tab="1">🏭 도매매칭</button>
+  <button class="tab" data-tab="2">💰 마진계산</button>
+  <button class="tab" data-tab="3">📋 등록전략</button>
+</div>
+
+<!-- ── TAB 0: 쿠팡 분석 ── -->
+<div class="panel active" id="panel0">
+  <div id="pageStatus"></div>
+
+  <div class="input-group">
+    <label class="input-label">검색 키워드 (또는 쿠팡 페이지에서 자동 추출)</label>
+    <div class="input-row">
+      <input class="field" type="text" id="keywordInput" placeholder="예: 미니 마사지볼, 무선충전기...">
+    </div>
+  </div>
+  <button class="run-btn" id="runBtn" onclick="runAnalysis()">🔍 분석 시작</button>
+
+  <div id="coupangOutput"></div>
+</div>
+
+<!-- ── TAB 1: 도매처 매칭 ── -->
+<div class="panel" id="panel1">
+  <div class="input-group">
+    <label class="input-label">상품명 검색</label>
+    <div class="input-row">
+      <input class="field" type="text" id="wsKeyword" placeholder="예: 마사지볼, 텀블러...">
+      <button class="small-btn" onclick="runWholesale()">검색</button>
+    </div>
+  </div>
+  <div id="wsOutput">
+    <div class="empty"><div class="empty-icon">🏭</div><p>분석 탭에서 분석을 실행하거나<br>상품명을 직접 입력하세요.</p></div>
+  </div>
+</div>
+
+<!-- ── TAB 2: 마진 계산 ── -->
+<div class="panel" id="panel2">
+  <div class="margin-rows">
+    <div class="m-row"><span class="m-lbl">판매가 (원)</span><input class="m-inp" type="number" id="mp" value="19900" oninput="calcMargin()"></div>
+    <div class="m-row"><span class="m-lbl">도매 원가 (원)</span><input class="m-inp" type="number" id="mc" value="8000" oninput="calcMargin()"></div>
+    <div class="m-row"><span class="m-lbl">쿠팡 수수료율 (%)</span><input class="m-inp" type="number" id="mf" value="12" oninput="calcMargin()"></div>
+    <div class="m-row"><span class="m-lbl">배송비 (원)</span><input class="m-inp" type="number" id="ms" value="3000" oninput="calcMargin()"></div>
+    <div class="m-row"><span class="m-lbl">포장비 (원)</span><input class="m-inp" type="number" id="mk" value="500" oninput="calcMargin()"></div>
+    <div class="m-row"><span class="m-lbl">광고비 예상 (원)</span><input class="m-inp" type="number" id="ma" value="1500" oninput="calcMargin()"></div>
+    <div class="m-row"><span class="m-lbl">반품/CS 리스크 (%)</span><input class="m-inp" type="number" id="mr" value="2" oninput="calcMargin()"></div>
+  </div>
+  <div id="marginOut"></div>
+</div>
+
+<!-- ── TAB 3: 등록 전략 ── -->
+<div class="panel" id="panel3">
+  <div id="stratOut">
+    <div class="empty"><div class="empty-icon">📋</div><p>분석 탭에서 먼저 분석을 실행하면<br>등록 전략이 자동 생성됩니다.</p></div>
+  </div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

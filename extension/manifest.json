@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "쿠팡진입점수 AI",
+  "version": "1.0.0",
+  "description": "쿠팡 잘팔리는 상품을 분석하고 도매꾹·도매매 원가를 매칭해 진입가능점수를 계산합니다.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.coupang.com/*",
+    "https://coupang.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.coupang.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

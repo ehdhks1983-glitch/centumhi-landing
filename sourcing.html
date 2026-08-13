@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>쿠팡진입점수 AI | 역소싱 분석기 - 팔릴 상품을 먼저 찾는다</title>
+<meta name="description" content="쿠팡 잘팔리는 상품을 찾고, 도매꾹·도매매에서 원가를 자동 매칭. 예상마진과 진입가능점수를 즉시 계산하는 셀러용 의사결정 도구.">
+<meta property="og:title" content="쿠팡진입점수 AI | 역소싱 분석기">
+<meta property="og:description" content="팔릴 상품을 먼저 찾고, 원가 자동 매칭, 진입가능점수 즉시 계산">
+<meta property="og:type" content="website">
+<style>
+:root{
+  --bg:#060e1c;
+  --bg2:#091328;
+  --card:#0d1b35;
+  --card2:#0a1528;
+  --line:#1e3460;
+  --line2:rgba(59,130,246,.3);
+  --text:#f0f6ff;
+  --muted:#7a92bc;
+  --orange:#ff7a00;
+  --orange2:#ffaa00;
+  --yellow:#ffe500;
+  --blue:#2f80ff;
+  --green:#22d67a;
+  --red:#ff4444;
+  --purple:#9b5de5;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  overflow-x:hidden;
+  word-break:keep-all;
+}
+body::before{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:-2;
+  background:
+    radial-gradient(circle at 8% 8%,rgba(47,128,255,.2),transparent 28%),
+    radial-gradient(circle at 90% 12%,rgba(255,122,0,.14),transparent 30%),
+    radial-gradient(circle at 50% 90%,rgba(34,214,122,.1),transparent 35%),
+    linear-gradient(180deg,#060e1c 0%,#040a14 100%);
+}
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.18;
+  background-image:linear-gradient(rgba(59,130,246,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.18) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:linear-gradient(to bottom,black,transparent 70%);
+}
+a{color:inherit;text-decoration:none;}
+button,a{font-family:inherit;}
+.container{max-width:1140px;margin:0 auto;padding:0 18px;}
+
+/* NAV */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;height:62px;
+  border-bottom:1px solid rgba(59,130,246,.2);
+  background:rgba(6,14,28,.9);
+  backdrop-filter:blur(20px);
+}
+.nav-in{
+  max-width:1160px;height:62px;margin:0 auto;padding:0 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-.02em;}
+.brand-mark{
+  width:34px;height:34px;border-radius:10px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--orange2),var(--orange));
+  color:#050e1c;font-weight:900;font-size:.9rem;
+  box-shadow:0 0 24px rgba(255,122,0,.4);
+}
+.nav-links{display:flex;align-items:center;gap:14px;color:#8aa5cc;font-size:.84rem;font-weight:700;}
+.nav-badge{
+  background:linear-gradient(135deg,var(--orange2),var(--orange));
+  color:#050e1c;font-size:.7rem;font-weight:900;
+  padding:3px 9px;border-radius:999px;
+}
+
+/* HERO */
+.hero{padding:130px 0 80px;text-align:center;}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--orange2);font-size:.72rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid rgba(255,170,0,.25);border-radius:999px;padding:5px 14px;
+  margin-bottom:20px;
+}
+.hero-title{
+  font-size:clamp(2rem,6.5vw,3.8rem);
+  line-height:1.12;letter-spacing:-.05em;font-weight:950;
+  margin-bottom:20px;
+}
+.grad{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--orange2),var(--orange),#ff4f00);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.grad-green{
+  font-style:normal;
+  background:linear-gradient(135deg,#22d67a,#00b894);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-sub{color:var(--muted);font-size:clamp(.95rem,2.5vw,1.12rem);max-width:640px;margin:0 auto 36px;}
+.hero-ctas{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--orange2),var(--orange));
+  color:#050e1c;font-weight:900;font-size:1rem;
+  border:none;border-radius:999px;padding:14px 28px;cursor:pointer;
+  box-shadow:0 0 36px rgba(255,122,0,.4);
+  transition:transform .15s,box-shadow .15s;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 40px rgba(255,122,0,.55);}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--text);font-weight:800;font-size:.95rem;
+  border:1.5px solid rgba(59,130,246,.35);border-radius:999px;padding:13px 24px;cursor:pointer;
+  transition:border-color .15s,background .15s;
+}
+.btn-secondary:hover{border-color:rgba(59,130,246,.6);background:rgba(47,128,255,.08);}
+
+/* FLOW DIAGRAM */
+.flow-wrap{
+  display:flex;align-items:center;justify-content:center;gap:0;
+  flex-wrap:wrap;margin-bottom:0;
+}
+.flow-step{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:14px 16px;min-width:110px;
+  font-size:.78rem;color:var(--muted);font-weight:700;text-align:center;
+}
+.flow-step .icon{font-size:1.5rem;}
+.flow-step strong{color:var(--text);font-size:.82rem;}
+.flow-arrow{color:rgba(59,130,246,.4);font-size:1.2rem;padding:0 4px;}
+
+/* DEMO APP */
+.demo-section{padding:80px 0;}
+.demo-wrap{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:20px;overflow:hidden;
+}
+.demo-tabs{
+  display:flex;border-bottom:1px solid var(--line);
+  background:rgba(6,14,28,.6);
+}
+.tab-btn{
+  flex:1;padding:16px 10px;font-size:.84rem;font-weight:800;
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  border-bottom:2px solid transparent;transition:color .15s,border-color .15s;
+  position:relative;
+}
+.tab-btn.active{color:var(--orange2);border-bottom-color:var(--orange2);}
+.tab-btn:hover:not(.active){color:var(--text);}
+.tab-panel{display:none;padding:28px;}
+.tab-panel.active{display:block;}
+
+/* INPUT FORM */
+.input-group{margin-bottom:20px;}
+.input-label{font-size:.82rem;font-weight:800;color:var(--muted);margin-bottom:8px;display:block;}
+.input-row{display:flex;gap:10px;}
+.input-field{
+  flex:1;background:rgba(6,14,28,.7);border:1.5px solid var(--line);
+  border-radius:12px;padding:12px 16px;color:var(--text);font-size:.92rem;
+  font-family:inherit;outline:none;transition:border-color .15s;
+}
+.input-field:focus{border-color:rgba(59,130,246,.5);}
+.input-field::placeholder{color:rgba(122,146,188,.5);}
+.radio-group{display:flex;gap:10px;flex-wrap:wrap;}
+.radio-btn{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(6,14,28,.6);border:1.5px solid var(--line);
+  border-radius:10px;padding:9px 14px;cursor:pointer;
+  font-size:.83rem;font-weight:700;color:var(--muted);
+  transition:all .15s;
+}
+.radio-btn input{display:none;}
+.radio-btn.selected,.radio-btn:has(input:checked){
+  border-color:rgba(255,170,0,.5);color:var(--orange2);
+  background:rgba(255,170,0,.06);
+}
+.run-btn{
+  width:100%;padding:15px;margin-top:8px;
+  background:linear-gradient(135deg,var(--orange2),var(--orange));
+  color:#050e1c;font-weight:900;font-size:1rem;
+  border:none;border-radius:14px;cursor:pointer;
+  box-shadow:0 0 30px rgba(255,122,0,.3);
+  transition:transform .15s,box-shadow .15s;
+}
+.run-btn:hover{transform:translateY(-1px);box-shadow:0 4px 36px rgba(255,122,0,.45);}
+.run-btn:active{transform:translateY(0);}
+
+/* RESULT CARDS */
+.result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:24px;}
+.result-card{
+  background:rgba(6,14,28,.7);border:1px solid var(--line);
+  border-radius:14px;padding:16px;
+}
+.result-card .label{font-size:.74rem;font-weight:700;color:var(--muted);margin-bottom:6px;}
+.result-card .value{font-size:1.3rem;font-weight:950;letter-spacing:-.03em;}
+.result-card .sub{font-size:.74rem;color:var(--muted);margin-top:4px;}
+.val-green{color:var(--green);}
+.val-orange{color:var(--orange2);}
+.val-red{color:var(--red);}
+.val-blue{color:var(--blue);}
+.val-white{color:var(--text);}
+
+/* SCORE GAUGE */
+.score-wrap{
+  background:rgba(6,14,28,.7);border:1px solid var(--line);
+  border-radius:16px;padding:24px;margin-top:16px;
+}
+.score-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.score-big{font-size:3rem;font-weight:950;letter-spacing:-.05em;}
+.score-verdict{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 18px;border-radius:999px;font-weight:900;font-size:.9rem;
+}
+.verdict-good{background:rgba(34,214,122,.15);color:var(--green);border:1px solid rgba(34,214,122,.3);}
+.verdict-caution{background:rgba(255,170,0,.12);color:var(--orange2);border:1px solid rgba(255,170,0,.3);}
+.verdict-bad{background:rgba(255,68,68,.12);color:var(--red);border:1px solid rgba(255,68,68,.3);}
+.score-bar-wrap{background:rgba(255,255,255,.06);border-radius:999px;height:10px;overflow:hidden;margin-bottom:14px;}
+.score-bar{height:100%;border-radius:999px;transition:width .8s ease;}
+.score-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.score-item{display:flex;align-items:center;justify-content:space-between;font-size:.8rem;}
+.score-item-label{color:var(--muted);}
+.score-item-val{font-weight:800;color:var(--text);}
+
+/* AI COMMENT */
+.ai-comment{
+  background:rgba(47,128,255,.06);border:1px solid rgba(47,128,255,.2);
+  border-radius:14px;padding:16px 18px;margin-top:14px;
+  font-size:.88rem;line-height:1.7;
+}
+.ai-comment-header{
+  display:flex;align-items:center;gap:8px;
+  font-size:.75rem;font-weight:800;color:var(--blue);
+  margin-bottom:8px;letter-spacing:.05em;
+}
+
+/* PRODUCTS LIST */
+.product-list{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.product-item{
+  background:rgba(6,14,28,.7);border:1px solid var(--line);
+  border-radius:14px;padding:14px 16px;
+  display:flex;align-items:center;gap:14px;
+}
+.product-rank{
+  width:28px;height:28px;border-radius:8px;
+  background:rgba(255,170,0,.12);color:var(--orange2);
+  font-weight:900;font-size:.82rem;
+  display:grid;place-items:center;flex-shrink:0;
+}
+.product-info{flex:1;min-width:0;}
+.product-name{font-size:.88rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.product-meta{display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;}
+.product-meta span{font-size:.75rem;color:var(--muted);}
+.product-meta .price{color:var(--text);font-weight:800;}
+.product-meta .rocket{color:var(--blue);}
+.product-meta .reviews{color:var(--orange2);}
+.entry-score-badge{
+  padding:5px 12px;border-radius:999px;
+  font-size:.78rem;font-weight:900;flex-shrink:0;
+}
+
+/* WHOLESALE TABLE */
+.wholesale-list{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.wholesale-item{
+  background:rgba(6,14,28,.7);border:1px solid var(--line);
+  border-radius:14px;padding:14px 16px;
+}
+.wholesale-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.wholesale-src{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.75rem;font-weight:900;padding:4px 10px;
+  border-radius:999px;
+}
+.src-domekug{background:rgba(255,170,0,.12);color:var(--orange2);border:1px solid rgba(255,170,0,.25);}
+.src-domemae{background:rgba(47,128,255,.1);color:var(--blue);border:1px solid rgba(47,128,255,.25);}
+.wholesale-name{font-size:.88rem;font-weight:700;margin-bottom:8px;}
+.wholesale-stats{display:flex;gap:14px;flex-wrap:wrap;}
+.wholesale-stat{font-size:.78rem;}
+.wholesale-stat .wkey{color:var(--muted);}
+.wholesale-stat .wval{font-weight:800;color:var(--text);margin-left:4px;}
+.match-badge{
+  padding:4px 10px;border-radius:999px;
+  font-size:.74rem;font-weight:900;
+}
+.match-high{background:rgba(34,214,122,.12);color:var(--green);border:1px solid rgba(34,214,122,.25);}
+.match-mid{background:rgba(255,170,0,.1);color:var(--orange2);border:1px solid rgba(255,170,0,.2);}
+
+/* MARGIN TABLE */
+.margin-table{width:100%;border-collapse:collapse;margin-top:16px;}
+.margin-table td{padding:11px 14px;border-bottom:1px solid rgba(30,52,96,.5);font-size:.88rem;}
+.margin-table td:first-child{color:var(--muted);font-weight:700;}
+.margin-table td:last-child{text-align:right;font-weight:800;}
+.margin-table tr.total td{border-bottom:none;border-top:2px solid var(--line);padding-top:14px;}
+.margin-table tr.total td:first-child{color:var(--text);font-size:.95rem;}
+.margin-table tr.total td:last-child{font-size:1.15rem;color:var(--green);}
+.margin-input-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(30,52,96,.5);}
+.margin-input-row:last-child{border-bottom:none;}
+.margin-input-label{color:var(--muted);font-size:.86rem;font-weight:700;}
+.margin-num-input{
+  background:rgba(6,14,28,.8);border:1px solid var(--line);
+  border-radius:8px;padding:7px 12px;
+  color:var(--text);font-size:.88rem;font-weight:800;
+  font-family:inherit;width:130px;text-align:right;outline:none;
+}
+.margin-num-input:focus{border-color:rgba(59,130,246,.45);}
+
+/* STRATEGY SECTION */
+.strategy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;}
+.strategy-card{
+  background:rgba(6,14,28,.7);border:1px solid var(--line);
+  border-radius:14px;padding:16px;
+}
+.strategy-card h4{font-size:.8rem;font-weight:900;color:var(--orange2);margin-bottom:10px;letter-spacing:.05em;text-transform:uppercase;}
+.strategy-card p,.strategy-tag-list{font-size:.85rem;color:var(--text);line-height:1.6;}
+.strategy-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.strategy-tag{
+  background:rgba(47,128,255,.1);border:1px solid rgba(47,128,255,.2);
+  color:var(--text);font-size:.75rem;font-weight:700;
+  padding:4px 10px;border-radius:999px;
+}
+.recommended-price{font-size:1.6rem;font-weight:950;color:var(--green);}
+.strategy-list{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.strategy-list li{font-size:.83rem;display:flex;gap:8px;align-items:flex-start;}
+.strategy-list li::before{content:'▸';color:var(--orange2);flex-shrink:0;}
+
+/* FEATURES */
+.features-sec{padding:90px 0;}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:48px;}
+.feature-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:28px;transition:border-color .2s,transform .2s;
+}
+.feature-card:hover{border-color:rgba(255,170,0,.3);transform:translateY(-3px);}
+.feature-icon{
+  width:48px;height:48px;border-radius:14px;
+  display:grid;place-items:center;font-size:1.4rem;
+  margin-bottom:16px;
+}
+.feature-icon.orange{background:rgba(255,170,0,.12);border:1px solid rgba(255,170,0,.2);}
+.feature-icon.blue{background:rgba(47,128,255,.1);border:1px solid rgba(47,128,255,.2);}
+.feature-icon.green{background:rgba(34,214,122,.1);border:1px solid rgba(34,214,122,.2);}
+.feature-icon.purple{background:rgba(155,93,229,.1);border:1px solid rgba(155,93,229,.2);}
+.feature-card h3{font-size:1.05rem;font-weight:850;margin-bottom:8px;}
+.feature-card p{font-size:.85rem;color:var(--muted);line-height:1.65;}
+
+/* SCORE BREAKDOWN */
+.score-sec{padding:90px 0;}
+.score-items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:40px;}
+.score-item-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;
+}
+.score-point-badge{
+  width:44px;height:44px;border-radius:12px;
+  display:grid;place-items:center;
+  font-weight:950;font-size:.9rem;flex-shrink:0;
+}
+.sp-orange{background:rgba(255,170,0,.15);color:var(--orange2);}
+.sp-blue{background:rgba(47,128,255,.12);color:var(--blue);}
+.sp-green{background:rgba(34,214,122,.12);color:var(--green);}
+.sp-red{background:rgba(255,68,68,.12);color:var(--red);}
+.sp-purple{background:rgba(155,93,229,.12);color:var(--purple);}
+.score-item-card h4{font-size:.9rem;font-weight:850;margin-bottom:4px;}
+.score-item-card p{font-size:.78rem;color:var(--muted);line-height:1.55;}
+
+/* PRICING */
+.pricing-sec{padding:90px 0;}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-top:48px;}
+.pricing-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:20px;padding:28px;position:relative;overflow:hidden;
+}
+.pricing-card.featured{
+  border-color:rgba(255,170,0,.4);
+  background:linear-gradient(160deg,rgba(255,170,0,.06),rgba(13,27,53,.95));
+}
+.pricing-card.featured::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--orange2),var(--orange));
+}
+.pricing-badge{
+  display:inline-flex;padding:4px 12px;border-radius:999px;
+  font-size:.72rem;font-weight:900;margin-bottom:14px;
+}
+.pb-free{background:rgba(122,146,188,.12);color:var(--muted);}
+.pb-pro{background:rgba(255,170,0,.15);color:var(--orange2);}
+.pb-elite{background:rgba(155,93,229,.12);color:var(--purple);}
+.pricing-price{font-size:2.2rem;font-weight:950;letter-spacing:-.04em;margin-bottom:4px;}
+.pricing-period{font-size:.82rem;color:var(--muted);}
+.pricing-divider{border:none;border-top:1px solid var(--line);margin:18px 0;}
+.pricing-features{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.pricing-features li{font-size:.85rem;display:flex;gap:9px;align-items:flex-start;}
+.pricing-features li::before{content:'✓';color:var(--green);font-weight:900;flex-shrink:0;}
+.pricing-features li.off{opacity:.4;}
+.pricing-features li.off::before{content:'✕';color:var(--muted);}
+.pricing-btn{
+  width:100%;margin-top:22px;padding:13px;
+  border-radius:12px;border:none;
+  font-weight:900;font-size:.92rem;cursor:pointer;
+  transition:all .15s;
+}
+.pricing-btn-primary{
+  background:linear-gradient(135deg,var(--orange2),var(--orange));
+  color:#050e1c;box-shadow:0 0 24px rgba(255,122,0,.3);
+}
+.pricing-btn-primary:hover{box-shadow:0 4px 32px rgba(255,122,0,.45);}
+.pricing-btn-secondary{
+  background:rgba(255,255,255,.06);color:var(--text);
+  border:1.5px solid var(--line) !important;
+}
+.pricing-btn-secondary:hover{background:rgba(255,255,255,.1);}
+
+/* SEC TITLES */
+.sec-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--orange2);font-size:.72rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase;
+  margin-bottom:12px;
+}
+.sec-title{font-size:clamp(1.7rem,5vw,2.9rem);line-height:1.18;letter-spacing:-.045em;font-weight:950;}
+.sec-sub{margin-top:14px;color:var(--muted);font-size:clamp(.9rem,2.3vw,1.02rem);}
+.sec-head{margin-bottom:0;text-align:center;}
+
+/* VERDICT BANNER */
+.verdict-banner{
+  border-radius:16px;padding:24px 28px;margin-top:20px;
+  display:flex;align-items:center;gap:16px;
+}
+.verdict-banner.good{background:rgba(34,214,122,.07);border:1.5px solid rgba(34,214,122,.25);}
+.verdict-banner.caution{background:rgba(255,170,0,.07);border:1.5px solid rgba(255,170,0,.25);}
+.verdict-banner.bad{background:rgba(255,68,68,.07);border:1.5px solid rgba(255,68,68,.25);}
+.verdict-icon{font-size:2rem;flex-shrink:0;}
+.verdict-text h3{font-size:1.05rem;font-weight:850;margin-bottom:4px;}
+.verdict-text p{font-size:.84rem;color:var(--muted);}
+
+/* LOADING */
+.loading-overlay{
+  display:none;position:absolute;inset:0;
+  background:rgba(6,14,28,.85);backdrop-filter:blur(4px);
+  border-radius:20px;
+  flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  z-index:10;
+}
+.loading-overlay.show{display:flex;}
+.spinner{
+  width:40px;height:40px;border-radius:50%;
+  border:3px solid rgba(255,170,0,.15);
+  border-top-color:var(--orange2);
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:.88rem;color:var(--muted);font-weight:700;}
+
+/* FOOTER */
+.footer{padding:48px 0;border-top:1px solid rgba(30,52,96,.6);text-align:center;}
+.footer-text{font-size:.8rem;color:var(--muted);}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .demo-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .tab-btn{font-size:.75rem;padding:14px 8px;white-space:nowrap;}
+  .strategy-grid{grid-template-columns:1fr;}
+  .score-breakdown{grid-template-columns:1fr;}
+  .flow-wrap{gap:6px;}
+  .flow-arrow{display:none;}
+  .flow-step{min-width:80px;padding:10px 10px;font-size:.72rem;}
+  .result-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:480px){
+  .result-grid{grid-template-columns:1fr 1fr;}
+  .pricing-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-in">
+    <div class="brand">
+      <div class="brand-mark">AI</div>
+      <span>쿠팡진입점수 AI</span>
+    </div>
+    <div class="nav-links">
+      <a href="#demo">분석기</a>
+      <a href="#features">기능</a>
+      <a href="#scoring">점수 구조</a>
+      <a href="#pricing" class="nav-badge">요금제</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-tag">
+      <span>🎯</span> 셀러용 역소싱 의사결정 도구
+    </div>
+    <h1 class="hero-title">
+      팔릴 상품을 먼저 찾고<br>
+      <em class="grad">진입 여부를 AI가 판단</em>한다
+    </h1>
+    <p class="hero-sub">
+      쿠팡 잘팔리는 상품 → 도매꾹·도매매 원가 자동 매칭 → 예상마진·진입가능점수 즉시 계산.<br>
+      직접 소싱하지 않아도 "팔릴 가능성 있는 상품 후보"를 받는다.
+    </p>
+    <div class="hero-ctas">
+      <a href="#demo" class="btn-primary">
+        <span>🔍</span> 지금 무료 분석하기
+      </a>
+      <a href="#features" class="btn-secondary">
+        <span>▶</span> 기능 살펴보기
+      </a>
+    </div>
+
+    <!-- FLOW -->
+    <div class="flow-wrap">
+      <div class="flow-step"><div class="icon">🛒</div><strong>쿠팡 입력</strong>링크·키워드</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="icon">📊</div><strong>경쟁 분석</strong>리뷰·가격·로켓</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="icon">🏭</div><strong>도매 매칭</strong>도매꾹·도매매</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="icon">💰</div><strong>마진 계산</strong>수수료·배송비</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="icon">🎯</div><strong>진입점수</strong>AI 판정</div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO APP -->
+<section class="demo-section" id="demo">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:32px;">
+      <div class="sec-tag">🧪 분석기 데모</div>
+      <h2 class="sec-title">지금 바로 분석해보세요</h2>
+      <p class="sec-sub">링크 또는 키워드 입력만으로 진입가능점수가 나옵니다.</p>
+    </div>
+    <div class="demo-wrap" style="position:relative;">
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">쿠팡 상품 분석 중...</div>
+      </div>
+
+      <div class="demo-tabs">
+        <button class="tab-btn active" onclick="switchTab(0,this)">🛒 쿠팡 분석</button>
+        <button class="tab-btn" onclick="switchTab(1,this)">🏭 도매처 매칭</button>
+        <button class="tab-btn" onclick="switchTab(2,this)">💰 마진 계산</button>
+        <button class="tab-btn" onclick="switchTab(3,this)">📋 등록 전략</button>
+      </div>
+
+      <!-- TAB 1: 쿠팡 분석 -->
+      <div class="tab-panel active" id="panel0">
+        <div class="input-group">
+          <label class="input-label">입력 방식</label>
+          <div class="radio-group" id="inputTypeGroup">
+            <label class="radio-btn selected" onclick="selectInputType(this,'link')">
+              <input type="radio" name="inputType" value="link" checked>🔗 쿠팡 링크
+            </label>
+            <label class="radio-btn" onclick="selectInputType(this,'keyword')">
+              <input type="radio" name="inputType" value="keyword">🔍 키워드 검색
+            </label>
+            <label class="radio-btn" onclick="selectInputType(this,'best')">
+              <input type="radio" name="inputType" value="best">🏆 베스트 역소싱
+            </label>
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label" id="mainInputLabel">쿠팡 상품 링크</label>
+          <div class="input-row">
+            <input class="input-field" type="text" id="mainInput"
+              placeholder="https://www.coupang.com/vp/products/..." />
+          </div>
+        </div>
+        <button class="run-btn" onclick="runAnalysis()">🔍 분석 시작</button>
+
+        <div id="coupangResult" style="display:none;">
+          <div class="result-grid" id="metricsGrid"></div>
+          <div id="scoreBlock"></div>
+          <div id="productListBlock"></div>
+        </div>
+      </div>
+
+      <!-- TAB 2: 도매처 매칭 -->
+      <div class="tab-panel" id="panel1">
+        <div style="margin-bottom:16px;">
+          <p style="font-size:.85rem;color:var(--muted);">쿠팡 분석 탭에서 먼저 분석을 실행하거나, 상품명을 직접 입력해 도매처를 검색하세요.</p>
+        </div>
+        <div class="input-group">
+          <label class="input-label">상품명 검색</label>
+          <div class="input-row">
+            <input class="input-field" type="text" id="wholesaleSearch"
+              placeholder="예: 미니 마사지볼, 무선충전기, 텀블러..." />
+            <button class="btn-primary" style="padding:12px 20px;border-radius:12px;white-space:nowrap;font-size:.88rem;" onclick="runWholesaleSearch()">검색</button>
+          </div>
+        </div>
+        <div id="wholesaleResult"></div>
+      </div>
+
+      <!-- TAB 3: 마진 계산 -->
+      <div class="tab-panel" id="panel2">
+        <div style="background:rgba(6,14,28,.7);border:1px solid var(--line);border-radius:14px;overflow:hidden;">
+          <div class="margin-input-row">
+            <span class="margin-input-label">쿠팡 판매가</span>
+            <input class="margin-num-input" type="number" id="m_price" value="19900" oninput="calcMargin()">
+          </div>
+          <div class="margin-input-row">
+            <span class="margin-input-label">도매 원가</span>
+            <input class="margin-num-input" type="number" id="m_cost" value="8000" oninput="calcMargin()">
+          </div>
+          <div class="margin-input-row">
+            <span class="margin-input-label">쿠팡 수수료율 (%)</span>
+            <input class="margin-num-input" type="number" id="m_fee_rate" value="12" oninput="calcMargin()">
+          </div>
+          <div class="margin-input-row">
+            <span class="margin-input-label">배송비</span>
+            <input class="margin-num-input" type="number" id="m_ship" value="3000" oninput="calcMargin()">
+          </div>
+          <div class="margin-input-row">
+            <span class="margin-input-label">포장비</span>
+            <input class="margin-num-input" type="number" id="m_pack" value="500" oninput="calcMargin()">
+          </div>
+          <div class="margin-input-row">
+            <span class="margin-input-label">광고비 예상</span>
+            <input class="margin-num-input" type="number" id="m_ad" value="1500" oninput="calcMargin()">
+          </div>
+          <div class="margin-input-row">
+            <span class="margin-input-label">반품/CS 리스크 (%)</span>
+            <input class="margin-num-input" type="number" id="m_return" value="2" oninput="calcMargin()">
+          </div>
+        </div>
+        <div id="marginResult"></div>
+      </div>
+
+      <!-- TAB 4: 등록 전략 -->
+      <div class="tab-panel" id="panel3">
+        <div id="strategyResult">
+          <div style="text-align:center;padding:32px;color:var(--muted);">
+            <div style="font-size:2.5rem;margin-bottom:12px;">📋</div>
+            <p style="font-size:.88rem;">쿠팡 분석 탭에서 먼저 분석을 실행하면<br>등록 전략이 자동 생성됩니다.</p>
+            <button class="btn-primary" style="margin-top:16px;padding:11px 22px;font-size:.88rem;" onclick="loadSampleStrategy()">샘플 전략 보기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-sec" id="features">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-tag">⚡ 핵심 기능</div>
+      <h2 class="sec-title">가격 비교기가 아닌<br><em class="grad">셀러용 의사결정 도구</em></h2>
+      <p class="sec-sub">팔릴 상품인지, 진입할 수 있는지를 수치로 알려줍니다.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon orange">🛒</div>
+        <h3>쿠팡 베스트 역소싱</h3>
+        <p>쿠팡 베스트 상품 기준으로 도매처에서 비슷한 상품을 자동 검색. 직접 소싱하지 않아도 "팔릴 가능성 있는 상품 후보"를 받습니다.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon blue">📊</div>
+        <h3>진입가능점수 산출</h3>
+        <p>마진율·리뷰 경쟁강도·판매자수·로켓 여부·도매 매칭도 등 7가지 항목을 100점 만점으로 자동 계산합니다.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon green">🏭</div>
+        <h3>도매처 자동 매칭</h3>
+        <p>도매꾹·도매매에서 상품명 유사도 기준으로 원가·최소구매수량·배송비를 자동 추출하고 비교합니다.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon purple">💰</div>
+        <h3>예상마진 자동 계산</h3>
+        <p>수수료·배송비·포장비·광고비·반품 리스크를 모두 반영한 순마진율을 즉시 계산합니다.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon orange">✍️</div>
+        <h3>상품명 최적화</h3>
+        <p>쿠팡 상위 상품명을 분석해서 등록용 최적 상품명을 자동 생성합니다. SEO와 검색 노출을 동시에 고려합니다.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon blue">🖼️</div>
+        <h3>썸네일·상세페이지 전략</h3>
+        <p>상위 상품 썸네일의 색상·구도·문구 패턴을 분석해서 차별화 방향을 AI가 제안합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCORING BREAKDOWN -->
+<section class="score-sec" id="scoring" style="background:linear-gradient(180deg,rgba(13,25,52,.5),rgba(6,14,28,.3));border-top:1px solid rgba(30,52,96,.5);border-bottom:1px solid rgba(30,52,96,.5);">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-tag">🎯 점수 구조</div>
+      <h2 class="sec-title">진입가능점수 <em class="grad">100점 만점</em> 구조</h2>
+      <p class="sec-sub">7가지 항목을 가중치 기반으로 평가해 진입 여부를 판정합니다.</p>
+    </div>
+    <div class="score-items-grid" style="margin-top:40px;">
+      <div class="score-item-card">
+        <div class="score-point-badge sp-orange">25점</div>
+        <div>
+          <h4>예상 마진율</h4>
+          <p>순마진 25% 이상이면 만점. 수수료·배송비·광고비 모두 반영한 실제 이익 기준.</p>
+        </div>
+      </div>
+      <div class="score-item-card">
+        <div class="score-point-badge sp-blue">20점</div>
+        <div>
+          <h4>리뷰 경쟁 강도</h4>
+          <p>상위 10개 평균 리뷰수가 낮을수록 진입 유리. 500개 이하면 고점, 2000개 이상이면 0점.</p>
+        </div>
+      </div>
+      <div class="score-item-card">
+        <div class="score-point-badge sp-green">15점</div>
+        <div>
+          <h4>판매자 수</h4>
+          <p>경쟁 판매자 수가 적을수록 유리. 5명 이하 만점, 30명 이상 0점.</p>
+        </div>
+      </div>
+      <div class="score-item-card">
+        <div class="score-point-badge sp-red">15점</div>
+        <div>
+          <h4>로켓·쿠팡 직접판매</h4>
+          <p>로켓배송·쿠팡 자체 판매가 없을수록 진입 여지가 큽니다.</p>
+        </div>
+      </div>
+      <div class="score-item-card">
+        <div class="score-point-badge sp-orange">10점</div>
+        <div>
+          <h4>가격 경쟁 여유</h4>
+          <p>내 예상 판매가가 시장 평균보다 10% 이상 낮은 여유가 있으면 고점.</p>
+        </div>
+      </div>
+      <div class="score-item-card">
+        <div class="score-point-badge sp-blue">10점</div>
+        <div>
+          <h4>도매처 매칭 정확도</h4>
+          <p>도매꾹·도매매에서 유사 상품이 얼마나 정확히 매칭되는지 측정.</p>
+        </div>
+      </div>
+      <div class="score-item-card">
+        <div class="score-point-badge sp-purple">5점</div>
+        <div>
+          <h4>상품 차별화 가능성</h4>
+          <p>세트 구성·색상 다양화·번들링 등 차별화 여지가 있는지 평가.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verdict table -->
+    <div style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;">
+      <div style="background:rgba(34,214,122,.07);border:1px solid rgba(34,214,122,.25);border-radius:16px;padding:22px;text-align:center;">
+        <div style="font-size:1.8rem;font-weight:950;color:var(--green);margin-bottom:6px;">80점+</div>
+        <div style="font-size:.85rem;font-weight:800;color:var(--green);">진입 추천</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:6px;">지금 바로 소싱 진행 가능</div>
+      </div>
+      <div style="background:rgba(47,128,255,.07);border:1px solid rgba(47,128,255,.25);border-radius:16px;padding:22px;text-align:center;">
+        <div style="font-size:1.8rem;font-weight:950;color:var(--blue);margin-bottom:6px;">65~79</div>
+        <div style="font-size:.85rem;font-weight:800;color:var(--blue);">테스트 진입</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:6px;">소량으로 테스트 후 확장</div>
+      </div>
+      <div style="background:rgba(255,170,0,.07);border:1px solid rgba(255,170,0,.25);border-radius:16px;padding:22px;text-align:center;">
+        <div style="font-size:1.8rem;font-weight:950;color:var(--orange2);margin-bottom:6px;">50~64</div>
+        <div style="font-size:.85rem;font-weight:800;color:var(--orange2);">신중 검토</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:6px;">차별화 전략 보완 필요</div>
+      </div>
+      <div style="background:rgba(255,68,68,.07);border:1px solid rgba(255,68,68,.25);border-radius:16px;padding:22px;text-align:center;">
+        <div style="font-size:1.8rem;font-weight:950;color:var(--red);margin-bottom:6px;">50점↓</div>
+        <div style="font-size:.85rem;font-weight:800;color:var(--red);">진입 비추천</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:6px;">다른 상품을 찾으세요</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-sec" id="pricing">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-tag">💳 요금제</div>
+      <h2 class="sec-title">무료로 시작해<br><em class="grad">한 달에 커피 한 잔</em>으로 운영</h2>
+      <p class="sec-sub">분석 1회로 소싱 실패 1번을 막으면 이미 본전입니다.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- FREE -->
+      <div class="pricing-card">
+        <div class="pricing-badge pb-free">무료</div>
+        <div class="pricing-price">₩0</div>
+        <div class="pricing-period">영원히 무료</div>
+        <hr class="pricing-divider">
+        <ul class="pricing-features">
+          <li>하루 3회 분석</li>
+          <li>쿠팡 링크 분석</li>
+          <li>기본 마진 계산</li>
+          <li>진입가능점수 확인</li>
+          <li class="off">도매처 자동 매칭</li>
+          <li class="off">AI 등록 전략</li>
+          <li class="off">CSV 저장</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-secondary">무료로 시작</button>
+      </div>
+
+      <!-- PRO -->
+      <div class="pricing-card featured">
+        <div class="pricing-badge pb-pro">프로 · 인기</div>
+        <div class="pricing-price" style="color:var(--orange2);">₩29,000</div>
+        <div class="pricing-period">/ 월 (연간 결제 시 ₩23,000)</div>
+        <hr class="pricing-divider">
+        <ul class="pricing-features">
+          <li>무제한 분석</li>
+          <li>쿠팡 베스트 자동 탐색</li>
+          <li>도매꾹·도매매 자동 매칭</li>
+          <li>진입가능점수 전체 항목</li>
+          <li>상품명 자동 생성</li>
+          <li>썸네일·상세페이지 전략</li>
+          <li>CSV 저장</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-primary">프로 시작하기</button>
+      </div>
+
+      <!-- ELITE -->
+      <div class="pricing-card">
+        <div class="pricing-badge pb-elite">고급형</div>
+        <div class="pricing-price" style="color:var(--purple);">₩99,000</div>
+        <div class="pricing-period">/ 월</div>
+        <hr class="pricing-divider">
+        <ul class="pricing-features">
+          <li>프로 전체 포함</li>
+          <li>카테고리별 베스트 자동 리포트</li>
+          <li>매일 소싱 후보 20개 제공</li>
+          <li>경쟁강도 낮은 상품 알림</li>
+          <li>상품 등록용 카피 자동 생성</li>
+          <li>상세페이지 이미지 프롬프트</li>
+          <li>전담 소싱 컨설팅 1회/월</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-secondary">고급형 문의</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
+      <div class="brand-mark" style="width:28px;height:28px;font-size:.78rem;">AI</div>
+      <span style="font-weight:850;font-size:.92rem;">쿠팡진입점수 AI</span>
+    </div>
+    <p class="footer-text">셀러용 역소싱 의사결정 도구 · 팔릴 상품을 먼저 찾는다</p>
+    <p class="footer-text" style="margin-top:6px;font-size:.73rem;opacity:.6;">
+      본 서비스는 공개된 정보를 기반으로 분석하며, 실제 판매 성과를 보장하지 않습니다.
+    </p>
+  </div>
+</footer>
+
+<script>
+// ─── STATE ───────────────────────────────────────────
+let currentAnalysis = null;
+
+// ─── TAB SWITCHER ─────────────────────────────────────
+function switchTab(idx, btn) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.tab-panel').forEach((p,i) => {
+    p.classList.toggle('active', i === idx);
+  });
+  if(idx === 2) calcMargin();
+}
+
+// ─── INPUT TYPE ───────────────────────────────────────
+function selectInputType(el, type) {
+  document.querySelectorAll('#inputTypeGroup .radio-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  const label = document.getElementById('mainInputLabel');
+  const input = document.getElementById('mainInput');
+  if(type === 'link') {
+    label.textContent = '쿠팡 상품 링크';
+    input.placeholder = 'https://www.coupang.com/vp/products/...';
+  } else if(type === 'keyword') {
+    label.textContent = '검색 키워드';
+    input.placeholder = '예: 미니 마사지볼, 무선충전기, 텀블러...';
+  } else {
+    label.textContent = '카테고리 선택';
+    input.placeholder = '예: 생활용품, 주방용품, 스포츠...';
+  }
+}
+
+// ─── MOCK DATA ────────────────────────────────────────
+const MOCK_DATA = {
+  keyword: '휴대용 미니 마사지볼',
+  avgPrice: 14900,
+  minPrice: 9900,
+  maxPrice: 24900,
+  avgReviews: 312,
+  sellerCount: 6,
+  hasRocket: false,
+  rocketRatio: 0.17,
+  products: [
+    { rank:1, name:'휴대용 지압 마사지볼 목 어깨 근막이완', price:14900, reviews:892, rocket:false },
+    { rank:2, name:'미니 마사지볼 세트 2개입 실리콘', price:12900, reviews:445, rocket:true },
+    { rank:3, name:'지압볼 발바닥 종아리 셀프마사지', price:9900, reviews:231, rocket:false },
+    { rank:4, name:'마사지볼 딱딱이 스트레칭 피로회복', price:16900, reviews:187, rocket:false },
+    { rank:5, name:'휴대용 근막이완 마사지볼 블랙 화이트', price:19900, reviews:89, rocket:false },
+  ],
+  score: 78,
+  scoreBreakdown: {
+    margin: 20,
+    reviews: 16,
+    sellers: 13,
+    rocket: 12,
+    price: 7,
+    match: 7,
+    diff: 3,
+  },
+  wholesale: [
+    { src:'domekug', name:'미니 실리콘 지압 마사지볼 (홈쇼핑 동일)', price:4800, minQty:10, ship:3000, match:92 },
+    { src:'domekug', name:'휴대용 마사지볼 2종 세트 OEM 가능', price:6200, minQty:20, ship:3000, match:78 },
+    { src:'domemae', name:'지압볼 근막이완용 딱딱이 단가', price:3900, minQty:50, ship:2500, match:71 },
+  ],
+  costRecommend: 4800,
+};
+
+// ─── ANALYSIS ─────────────────────────────────────────
+function runAnalysis() {
+  const overlay = document.getElementById('loadingOverlay');
+  const steps = ['쿠팡 상품 수집 중...','경쟁 분석 중...','도매처 매칭 중...','진입점수 계산 중...'];
+  let step = 0;
+  overlay.classList.add('show');
+  const txt = document.getElementById('loadingText');
+  const iv = setInterval(() => {
+    txt.textContent = steps[step % steps.length];
+    step++;
+  }, 600);
+  setTimeout(() => {
+    clearInterval(iv);
+    overlay.classList.remove('show');
+    currentAnalysis = MOCK_DATA;
+    renderCoupangResult(MOCK_DATA);
+    document.getElementById('coupangResult').style.display = 'block';
+    // auto-populate margin
+    document.getElementById('m_price').value = MOCK_DATA.avgPrice;
+    document.getElementById('m_cost').value = MOCK_DATA.costRecommend;
+    calcMargin();
+    renderStrategy(MOCK_DATA);
+  }, 2800);
+}
+
+function renderCoupangResult(d) {
+  // metrics
+  const mg = document.getElementById('metricsGrid');
+  mg.innerHTML = `
+    <div class="result-card">
+      <div class="label">평균 판매가</div>
+      <div class="value val-white">₩${d.avgPrice.toLocaleString()}</div>
+      <div class="sub">최저 ₩${d.minPrice.toLocaleString()} ~ 최고 ₩${d.maxPrice.toLocaleString()}</div>
+    </div>
+    <div class="result-card">
+      <div class="label">상위 리뷰 평균</div>
+      <div class="value val-orange">${d.avgReviews.toLocaleString()}개</div>
+      <div class="sub">상위 5개 기준</div>
+    </div>
+    <div class="result-card">
+      <div class="label">판매자 수</div>
+      <div class="value val-green">${d.sellerCount}명</div>
+      <div class="sub">경쟁 판매자</div>
+    </div>
+    <div class="result-card">
+      <div class="label">로켓 경쟁</div>
+      <div class="value ${d.rocketRatio < 0.3 ? 'val-green' : 'val-red'}">${d.rocketRatio < 0.3 ? '낮음' : '높음'}</div>
+      <div class="sub">로켓 비중 ${Math.round(d.rocketRatio*100)}%</div>
+    </div>
+  `;
+
+  // score block
+  const scorePct = d.score;
+  const barColor = scorePct >= 80 ? 'linear-gradient(90deg,#22d67a,#00b894)'
+    : scorePct >= 65 ? 'linear-gradient(90deg,#2f80ff,#1a6dff)'
+    : scorePct >= 50 ? 'linear-gradient(90deg,#ffaa00,#ff7a00)'
+    : 'linear-gradient(90deg,#ff4444,#cc2222)';
+  const verdictClass = scorePct >= 80 ? 'verdict-good' : scorePct >= 65 ? '' : scorePct >= 50 ? 'verdict-caution' : 'verdict-bad';
+  const verdictText = scorePct >= 80 ? '진입 추천' : scorePct >= 65 ? '테스트 진입' : scorePct >= 50 ? '신중 검토' : '진입 비추천';
+  const verdictEmoji = scorePct >= 80 ? '✅' : scorePct >= 65 ? '🔵' : scorePct >= 50 ? '⚠️' : '❌';
+  const bk = d.scoreBreakdown;
+
+  document.getElementById('scoreBlock').innerHTML = `
+    <div class="score-wrap" style="margin-top:16px;">
+      <div class="score-header">
+        <div>
+          <div style="font-size:.74rem;font-weight:700;color:var(--muted);margin-bottom:4px;">진입가능점수</div>
+          <div class="score-big" style="color:${scorePct>=80?'var(--green)':scorePct>=65?'var(--blue)':scorePct>=50?'var(--orange2)':'var(--red)'};">${scorePct}점</div>
+        </div>
+        <span class="score-verdict ${scorePct>=80?'verdict-good':scorePct>=65?'':scorePct>=50?'verdict-caution':'verdict-bad'}" style="${scorePct>=65&&scorePct<80?'background:rgba(47,128,255,.12);color:var(--blue);border:1px solid rgba(47,128,255,.28);':''}">
+          ${verdictEmoji} ${verdictText}
+        </span>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar" style="width:${scorePct}%;background:${barColor};"></div>
+      </div>
+      <div class="score-breakdown">
+        <div class="score-item"><span class="score-item-label">예상 마진율</span><span class="score-item-val">${bk.margin}/25</span></div>
+        <div class="score-item"><span class="score-item-label">리뷰 경쟁 강도</span><span class="score-item-val">${bk.reviews}/20</span></div>
+        <div class="score-item"><span class="score-item-label">판매자 수</span><span class="score-item-val">${bk.sellers}/15</span></div>
+        <div class="score-item"><span class="score-item-label">로켓·쿠팡 직접판매</span><span class="score-item-val">${bk.rocket}/15</span></div>
+        <div class="score-item"><span class="score-item-label">가격 경쟁 여유</span><span class="score-item-val">${bk.price}/10</span></div>
+        <div class="score-item"><span class="score-item-label">도매처 매칭 정확도</span><span class="score-item-val">${bk.match}/10</span></div>
+        <div class="score-item"><span class="score-item-label">차별화 가능성</span><span class="score-item-val">${bk.diff}/5</span></div>
+      </div>
+    </div>
+    <div class="ai-comment">
+      <div class="ai-comment-header">🤖 AI 코멘트</div>
+      마진은 괜찮지만 상위 3개 상품 리뷰가 상당합니다. <strong>썸네일 차별화</strong>와 <strong>1+1 세트 구성</strong>으로 진입하는 것이 좋습니다. 로켓 비중이 낮아 일반 셀러가 진입할 여지가 충분합니다.
+    </div>
+  `;
+
+  // product list
+  const pl = d.products.map(p => `
+    <div class="product-item">
+      <div class="product-rank">${p.rank}</div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-meta">
+          <span class="price">₩${p.price.toLocaleString()}</span>
+          <span class="reviews">⭐ ${p.reviews}리뷰</span>
+          ${p.rocket ? '<span class="rocket">🚀 로켓</span>' : '<span>일반판매</span>'}
+        </div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('productListBlock').innerHTML = `
+    <div style="font-size:.8rem;font-weight:800;color:var(--muted);margin:20px 0 8px;">상위 경쟁 상품 (${d.products.length}개)</div>
+    <div class="product-list">${pl}</div>
+  `;
+
+  // also populate wholesale tab
+  renderWholesaleItems(d.wholesale);
+}
+
+// ─── WHOLESALE ────────────────────────────────────────
+function runWholesaleSearch() {
+  renderWholesaleItems(MOCK_DATA.wholesale);
+}
+
+function renderWholesaleItems(items) {
+  const el = document.getElementById('wholesaleResult');
+  const html = items.map(w => `
+    <div class="wholesale-item">
+      <div class="wholesale-header">
+        <span class="wholesale-src ${w.src==='domekug'?'src-domekug':'src-domemae'}">
+          ${w.src==='domekug'?'🟡 도매꾹':'🔵 도매매'}
+        </span>
+        <span class="match-badge ${w.match>=85?'match-high':'match-mid'}">유사도 ${w.match}%</span>
+      </div>
+      <div class="wholesale-name">${w.name}</div>
+      <div class="wholesale-stats">
+        <div class="wholesale-stat"><span class="wkey">원가</span><span class="wval" style="color:var(--green);">₩${w.price.toLocaleString()}</span></div>
+        <div class="wholesale-stat"><span class="wkey">최소구매</span><span class="wval">${w.minQty}개</span></div>
+        <div class="wholesale-stat"><span class="wkey">배송비</span><span class="wval">₩${w.ship.toLocaleString()}</span></div>
+        <div class="wholesale-stat"><span class="wkey">총 원가(최소)</span><span class="wval" style="color:var(--orange2);">₩${(w.price*w.minQty+w.ship).toLocaleString()}</span></div>
+      </div>
+    </div>
+  `).join('');
+  el.innerHTML = `
+    <div style="font-size:.8rem;font-weight:800;color:var(--muted);margin:0 0 10px;">도매처 매칭 결과 (${items.length}개)</div>
+    <div class="wholesale-list">${html}</div>
+  `;
+}
+
+// ─── MARGIN CALC ─────────────────────────────────────
+function calcMargin() {
+  const price = parseFloat(document.getElementById('m_price').value)||0;
+  const cost = parseFloat(document.getElementById('m_cost').value)||0;
+  const feeRate = parseFloat(document.getElementById('m_fee_rate').value)||0;
+  const ship = parseFloat(document.getElementById('m_ship').value)||0;
+  const pack = parseFloat(document.getElementById('m_pack').value)||0;
+  const ad = parseFloat(document.getElementById('m_ad').value)||0;
+  const returnRate = parseFloat(document.getElementById('m_return').value)||0;
+
+  const fee = Math.round(price * feeRate / 100);
+  const returnCost = Math.round(price * returnRate / 100);
+  const totalCost = cost + fee + ship + pack + ad + returnCost;
+  const netMargin = price - totalCost;
+  const marginRate = price > 0 ? (netMargin/price*100).toFixed(1) : 0;
+  const breakeven = price > 0 && (price-cost-fee-ship-pack) > 0
+    ? Math.round((price-cost-fee-ship-pack) / (price/100)) : 0;
+
+  const marginColor = marginRate >= 25 ? 'var(--green)' : marginRate >= 15 ? 'var(--orange2)' : 'var(--red)';
+
+  document.getElementById('marginResult').innerHTML = `
+    <table class="margin-table" style="margin-top:20px;">
+      <tr><td>판매가</td><td style="color:var(--text);">₩${price.toLocaleString()}</td></tr>
+      <tr><td>도매 원가</td><td style="color:var(--red);">−₩${cost.toLocaleString()}</td></tr>
+      <tr><td>쿠팡 수수료 (${feeRate}%)</td><td style="color:var(--red);">−₩${fee.toLocaleString()}</td></tr>
+      <tr><td>배송비</td><td style="color:var(--red);">−₩${ship.toLocaleString()}</td></tr>
+      <tr><td>포장비</td><td style="color:var(--red);">−₩${pack.toLocaleString()}</td></tr>
+      <tr><td>광고비 예상</td><td style="color:var(--red);">−₩${ad.toLocaleString()}</td></tr>
+      <tr><td>반품/CS 리스크 (${returnRate}%)</td><td style="color:var(--red);">−₩${returnCost.toLocaleString()}</td></tr>
+      <tr class="total">
+        <td>예상 순마진</td>
+        <td style="color:${marginColor};">₩${netMargin.toLocaleString()} <span style="font-size:.8rem;opacity:.7;">(${marginRate}%)</span></td>
+      </tr>
+    </table>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;">
+      <div class="result-card">
+        <div class="label">마진율</div>
+        <div class="value" style="color:${marginColor};">${marginRate}%</div>
+        <div class="sub">${marginRate>=25?'✅ 좋음':marginRate>=15?'⚠️ 보통':'❌ 낮음'}</div>
+      </div>
+      <div class="result-card">
+        <div class="label">손익분기 광고비</div>
+        <div class="value val-blue">₩${Math.max(0,price-totalCost+ad).toLocaleString()}</div>
+        <div class="sub">이 이상 쓰면 적자</div>
+      </div>
+    </div>
+  `;
+}
+
+// ─── STRATEGY ────────────────────────────────────────
+function loadSampleStrategy() {
+  renderStrategy(MOCK_DATA);
+}
+
+function renderStrategy(d) {
+  document.getElementById('strategyResult').innerHTML = `
+    <div class="strategy-grid">
+      <div class="strategy-card">
+        <h4>추천 판매가</h4>
+        <div class="recommended-price">₩14,900</div>
+        <p style="font-size:.8rem;color:var(--muted);margin-top:6px;">시장 평균과 동일. 1+1 구성 시 ₩24,900으로 단가 올리기 추천.</p>
+      </div>
+      <div class="strategy-card">
+        <h4>추천 상품명</h4>
+        <p style="font-size:.82rem;line-height:1.7;">휴대용 지압 마사지볼 목 어깨 종아리 근막 이완 셀프 마사지볼</p>
+        <div class="strategy-tags">
+          <span class="strategy-tag">SEO 최적화</span>
+          <span class="strategy-tag">검색키워드 포함</span>
+        </div>
+      </div>
+      <div class="strategy-card">
+        <h4>썸네일 전략</h4>
+        <ul class="strategy-list">
+          <li>상위 상품 대부분 검은색 → 흰색 또는 파스텔 컬러 사용</li>
+          <li>사용 부위(어깨·목) 실제 사진 삽입</li>
+          <li>"근막이완" 강조 문구 좌상단 배치</li>
+          <li>세트 구성 강조 시 수량 뱃지 추가</li>
+        </ul>
+      </div>
+      <div class="strategy-card">
+        <h4>상세페이지 구성</h4>
+        <ul class="strategy-list">
+          <li>첫 이미지: "30초 만에 뭉친 근육 풀기"</li>
+          <li>핵심 소구: 휴대성, 딱딱한 소재, 다양한 부위</li>
+          <li>FAQ: "딱딱해서 괜찮나요?" 답변 필수</li>
+          <li>세트 구성 (1+1, 파우치 포함) 제안</li>
+        </ul>
+      </div>
+      <div class="strategy-card" style="grid-column:1/-1;">
+        <h4>진입 전략 요약</h4>
+        <ul class="strategy-list">
+          <li>초기 10~20개 소량 테스트 → 리뷰 3~5개 확보 후 광고 시작</li>
+          <li>로켓비중이 낮아 일반 셀러 노출 유리 → 초기 광고비 절약 가능</li>
+          <li>색상 차별화(파스텔/화이트)로 썸네일 클릭률 개선</li>
+          <li>1+1 구성으로 평균주문금액 높이면 마진율 30%+ 가능</li>
+          <li>위험 요소: 상위 1위 상품 리뷰 892개로 단시간 역전 어려움. 가격 경쟁보다 차별화 먼저.</li>
+        </ul>
+      </div>
+    </div>
+  `;
+}
+
+// ─── INIT ─────────────────────────────────────────────
+calcMargin();
+</script>
+</body>
+</html>
