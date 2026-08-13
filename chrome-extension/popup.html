@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사장님 콘텐츠비서</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+  <!-- ─── Screen 1: Home ─── -->
+  <div id="screen-home" class="screen active">
+    <header class="header">
+      <div class="header-logo">✍️</div>
+      <div class="header-text">
+        <h1 class="header-title">사장님 콘텐츠비서</h1>
+        <p class="header-sub">링크 하나로 오늘 홍보 끝</p>
+      </div>
+      <button id="settings-btn" class="icon-btn" title="설정">⚙️</button>
+    </header>
+
+    <main class="main">
+      <div class="field-group">
+        <label class="field-label">네이버 플레이스 링크를 넣어주세요</label>
+        <div class="input-row">
+          <input
+            type="url"
+            id="place-url"
+            class="url-input"
+            placeholder="https://naver.me/xxxx"
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <button id="paste-btn" class="paste-btn" title="클립보드에서 붙여넣기">붙여넣기</button>
+        </div>
+        <p id="page-status" class="page-status"></p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">톤 선택 <span class="optional-badge">선택</span></label>
+        <div class="tone-grid">
+          <label class="tone-option">
+            <input type="checkbox" name="tone" value="friendly">
+            <span class="tone-label-text">😊 더 친근하게</span>
+          </label>
+          <label class="tone-option">
+            <input type="checkbox" name="tone" value="professional">
+            <span class="tone-label-text">💼 더 전문적으로</span>
+          </label>
+          <label class="tone-option">
+            <input type="checkbox" name="tone" value="reservation">
+            <span class="tone-label-text">📅 예약 유도 중심</span>
+          </label>
+          <label class="tone-option">
+            <input type="checkbox" name="tone" value="visit">
+            <span class="tone-label-text">📍 방문 유도 중심</span>
+          </label>
+        </div>
+      </div>
+
+      <button id="generate-btn" class="generate-btn">
+        <span class="btn-icon">🚀</span>
+        오늘 홍보하기
+      </button>
+
+      <div id="error-msg" class="error-msg hidden"></div>
+    </main>
+
+    <footer class="footer">
+      <button id="history-btn" class="footer-link hidden">📋 마지막 결과 보기</button>
+      <button id="open-settings-link" class="footer-link">설정</button>
+    </footer>
+  </div>
+
+  <!-- ─── Screen 2: Loading ─── -->
+  <div id="screen-loading" class="screen">
+    <div class="loading-wrap">
+      <div class="spinner"></div>
+      <h2 class="loading-title">콘텐츠 생성 중...</h2>
+
+      <div class="steps-list">
+        <div class="step-item" id="step-1">
+          <span class="step-icon">🔍</span>
+          <div class="step-info">
+            <span class="step-name">플레이스 정보 추출</span>
+            <span class="step-badge">대기</span>
+          </div>
+        </div>
+        <div class="step-item" id="step-2">
+          <span class="step-icon">🤖</span>
+          <div class="step-info">
+            <span class="step-name">AI 분석 · 주제 선정</span>
+            <span class="step-badge">대기</span>
+          </div>
+        </div>
+        <div class="step-item" id="step-3">
+          <span class="step-icon">✍️</span>
+          <div class="step-info">
+            <span class="step-name">콘텐츠 6종 생성</span>
+            <span class="step-badge">대기</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="loading-note">보통 20~40초 소요됩니다</p>
+    </div>
+  </div>
+
+  <!-- ─── Screen 3: Results ─── -->
+  <div id="screen-results" class="screen">
+    <div class="results-top">
+      <button id="back-btn" class="back-btn">← 다시 입력</button>
+      <span id="result-business-name" class="result-biz-name"></span>
+    </div>
+
+    <div class="topic-card">
+      <p class="topic-eyebrow">오늘의 홍보 주제</p>
+      <p id="result-topic" class="topic-text"></p>
+    </div>
+
+    <div class="tabs-nav" id="tabs-nav">
+      <button class="tab-btn active" data-tab="place_post">📍 플레이스</button>
+      <button class="tab-btn" data-tab="blog">📝 블로그</button>
+      <button class="tab-btn" data-tab="instagram">📸 인스타</button>
+      <button class="tab-btn" data-tab="threads">🧵 쓰레드</button>
+      <button class="tab-btn" data-tab="shorts">🎬 쇼츠</button>
+      <button class="tab-btn" data-tab="kakao">💬 카톡</button>
+      <button class="tab-btn" data-tab="card_news">🗂️ 카드뉴스</button>
+    </div>
+
+    <div id="tab-content" class="tab-content"></div>
+
+    <div class="bonus-bar">
+      <button class="bonus-btn" id="bonus-titles-btn">제목 후보 10개</button>
+      <button class="bonus-btn" id="bonus-hashtags-btn">해시태그 20개</button>
+    </div>
+
+    <div id="bonus-panel" class="bonus-panel hidden"></div>
+  </div>
+
+  <!-- ─── Screen 4: Settings ─── -->
+  <div id="screen-settings" class="screen">
+    <div class="settings-top">
+      <button id="settings-back-btn" class="back-btn">← 돌아가기</button>
+      <h2 class="settings-title">설정</h2>
+    </div>
+
+    <div class="settings-body">
+      <div class="field-group">
+        <label class="field-label">백엔드 API 주소</label>
+        <input
+          type="url"
+          id="api-base-input"
+          class="url-input"
+          placeholder="http://localhost:3000/api"
+        >
+        <p class="field-hint">사장님 콘텐츠비서 백엔드 서버 주소를 입력하세요</p>
+      </div>
+
+      <button id="save-settings-btn" class="generate-btn" style="margin-top:12px">저장</button>
+      <div id="settings-msg" class="page-status success hidden" style="margin-top:8px">설정이 저장되었습니다 ✓</div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

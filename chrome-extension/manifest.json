@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "사장님 콘텐츠비서",
+  "short_name": "콘텐츠비서",
+  "version": "1.0.0",
+  "description": "네이버 플레이스 링크 하나로 오늘의 홍보 콘텐츠를 자동 생성합니다",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "사장님 콘텐츠비서",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs",
+    "scripting",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "https://map.naver.com/*",
+    "https://naver.me/*",
+    "https://place.naver.com/*",
+    "https://m.place.naver.com/*"
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
