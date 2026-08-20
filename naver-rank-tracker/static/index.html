@@ -11,6 +11,7 @@
     --accent-soft: #E4F7EC; --warn: #D9482B; --warn-soft: #FBEAE5;
     --console-bg: #10221A; --console-ink: #A8D8BC; --chip-name: #EEF2EF;
     --btn-ink: #FFFFFF;
+    --chart-s1: #02893F; --chart-s2: #3B6FD4;
     --shadow: 0 1px 3px rgba(23,29,25,.08);
   }
   @media (prefers-color-scheme: dark) {
@@ -20,6 +21,7 @@
       --accent-soft: #12301F; --warn: #F0684A; --warn-soft: #3A1D15;
       --console-bg: #0A1710; --console-ink: #8FCBA6; --chip-name: #1E2620;
       --btn-ink: #08130C;
+      --chart-s1: #1E9E56; --chart-s2: #5C85D6;
       --shadow: 0 1px 3px rgba(0,0,0,.4);
     }
   }
@@ -29,6 +31,7 @@
     --accent-soft: #12301F; --warn: #F0684A; --warn-soft: #3A1D15;
     --console-bg: #0A1710; --console-ink: #8FCBA6; --chip-name: #1E2620;
     --btn-ink: #08130C;
+    --chart-s1: #1E9E56; --chart-s2: #5C85D6;
     --shadow: 0 1px 3px rgba(0,0,0,.4);
   }
   :root[data-theme="light"] {
@@ -37,6 +40,7 @@
     --accent-soft: #E4F7EC; --warn: #D9482B; --warn-soft: #FBEAE5;
     --console-bg: #10221A; --console-ink: #A8D8BC; --chip-name: #EEF2EF;
     --btn-ink: #FFFFFF;
+    --chart-s1: #02893F; --chart-s2: #3B6FD4;
     --shadow: 0 1px 3px rgba(23,29,25,.08);
   }
 
@@ -136,6 +140,19 @@
 
   .history-title { padding: .55rem .9rem .1rem; font-size: .85rem; color: var(--sub); }
   .history-title b { color: var(--ink); }
+
+  /* ── 추이 차트 ── */
+  .chart-wrap { position: relative; padding: .3rem .9rem 0; }
+  .chart-wrap svg { display: block; width: 100%; }
+  .chart-legend { display: flex; gap: 1rem; padding: .15rem .9rem 0; font-size: .72rem; color: var(--sub); }
+  .chart-legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: .3rem; vertical-align: -1px; }
+  .chart-tip {
+    position: absolute; pointer-events: none; display: none; z-index: 5;
+    background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+    box-shadow: var(--shadow); padding: .35rem .55rem; font-size: .72rem; white-space: nowrap;
+  }
+  .chart-tip .d { color: var(--sub); }
+  .chart-tip b { font-variant-numeric: tabular-nums; }
   table { width: 100%; border-collapse: collapse; font-size: .85rem; }
   th, td { padding: .45rem .9rem; text-align: left; border-top: 1px solid var(--line); }
   th { font-size: .72rem; letter-spacing: .06em; color: var(--sub); border-top: 0; }
@@ -217,6 +234,7 @@
     <section class="card">
       <div class="panel-head">순위 이력</div>
       <div class="history-title" id="historyTitle">키워드를 선택하세요</div>
+      <div id="chartArea"></div>
       <div id="historyBody"><div class="empty">—</div></div>
     </section>
   </div>
@@ -357,9 +375,129 @@ async function refresh() {
   return s;
 }
 
+/* ── 순위 추이 차트 (인라인 SVG, 순위축 반전: 1위가 위) ── */
+const SVGNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs) {
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  return n;
+}
+function cssVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function renderChart(rowsDesc) {
+  const area = $("chartArea");
+  area.textContent = "";
+  const rows = [...rowsDesc].reverse(); // 날짜 오름차순
+  const withRank = rows.filter(r => r.rank != null || r.real_rank != null);
+  if (rows.length < 2 || withRank.length < 2) return; // 점 하나로는 추이가 아님
+
+  const hasReal = rows.some(r => r.real_rank != null);
+  const s1 = cssVar("--chart-s1"), s2 = cssVar("--chart-s2");
+  const inkSub = cssVar("--sub"), line = cssVar("--line"), card = cssVar("--card");
+
+  const wrap = document.createElement("div"); wrap.className = "chart-wrap";
+  const W = Math.max(280, (area.clientWidth || area.parentElement.clientWidth || 480) - 30);
+  const H = 150, L = 38, R = 12, T = 12, B = 22;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img",
+                          "aria-label": "순위 추이 차트" });
+
+  const ranks = [];
+  rows.forEach(r => { if (r.rank != null) ranks.push(r.rank); if (r.real_rank != null) ranks.push(r.real_rank); });
+  let lo = Math.min(...ranks), hi = Math.max(...ranks);
+  if (lo === hi) { lo -= 1; hi += 1; }
+  const pad = Math.max(1, Math.round((hi - lo) * 0.12));
+  lo = Math.max(1, lo - pad); hi = hi + pad;
+
+  const x = i => rows.length === 1 ? L : L + (W - L - R) * i / (rows.length - 1);
+  const y = rank => T + (H - T - B) * (rank - lo) / (hi - lo); // 반전: 작은 순위(좋음)가 위
+
+  // 그리드(가로 3줄) + 축 레이블 — 눈에 안 띄게
+  for (let g = 0; g < 3; g++) {
+    const rv = Math.round(lo + (hi - lo) * g / 2);
+    const gy = y(rv);
+    svg.appendChild(el("line", { x1: L, x2: W - R, y1: gy, y2: gy, stroke: line, "stroke-width": 1 }));
+    const t = el("text", { x: L - 5, y: gy + 3.5, "text-anchor": "end", "font-size": 10, fill: inkSub });
+    t.textContent = rv + "위"; svg.appendChild(t);
+  }
+  // X 레이블: 처음/끝 (MM-DD)
+  [[0, "start"], [rows.length - 1, "end"]].forEach(([i, anchor]) => {
+    const t = el("text", { x: x(i), y: H - 6, "text-anchor": anchor, "font-size": 10, fill: inkSub });
+    t.textContent = rows[i].date.slice(5); svg.appendChild(t);
+  });
+
+  // 선 그리기 — 미발견(null)은 선을 끊는다
+  function drawSeries(key, color) {
+    let d = "", pen = false;
+    rows.forEach((r, i) => {
+      if (r[key] == null) { pen = false; return; }
+      d += (pen ? "L" : "M") + x(i).toFixed(1) + " " + y(r[key]).toFixed(1) + " ";
+      pen = true;
+    });
+    if (d) svg.appendChild(el("path", { d, fill: "none", stroke: color, "stroke-width": 2,
+                                        "stroke-linejoin": "round", "stroke-linecap": "round" }));
+    rows.forEach((r, i) => {
+      if (r[key] == null) return;
+      svg.appendChild(el("circle", { cx: x(i), cy: y(r[key]), r: 3.5, fill: color,
+                                     stroke: card, "stroke-width": 2 }));
+    });
+  }
+  drawSeries("rank", s1);
+  if (hasReal) drawSeries("real_rank", s2);
+
+  // 호버: 세로 크로스헤어 + 툴팁
+  const cross = el("line", { y1: T, y2: H - B, stroke: inkSub, "stroke-width": 1,
+                             "stroke-dasharray": "3 3", visibility: "hidden" });
+  svg.appendChild(cross);
+  const tip = document.createElement("div"); tip.className = "chart-tip";
+  const overlay = el("rect", { x: L, y: T, width: W - L - R, height: H - T - B, fill: "transparent" });
+  overlay.addEventListener("mousemove", ev => {
+    const box = svg.getBoundingClientRect();
+    const px = (ev.clientX - box.left) * (W / box.width);
+    const i = Math.max(0, Math.min(rows.length - 1, Math.round((px - L) / ((W - L - R) / (rows.length - 1)))));
+    const r = rows[i];
+    cross.setAttribute("x1", x(i)); cross.setAttribute("x2", x(i));
+    cross.setAttribute("visibility", "visible");
+    tip.innerHTML = "";
+    const d = document.createElement("span"); d.className = "d"; d.textContent = r.date;
+    tip.appendChild(d); tip.appendChild(document.createElement("br"));
+    tip.appendChild(document.createTextNode("순위 "));
+    const b1 = document.createElement("b"); b1.textContent = r.rank != null ? r.rank + "위" : "미발견";
+    tip.appendChild(b1);
+    if (hasReal) {
+      tip.appendChild(document.createTextNode(" · 실측 "));
+      const b2 = document.createElement("b"); b2.textContent = r.real_rank != null ? r.real_rank + "위" : "—";
+      tip.appendChild(b2);
+    }
+    tip.style.display = "block";
+    const tipX = Math.min(x(i) / W * box.width + 10, box.width - 130);
+    tip.style.left = tipX + "px"; tip.style.top = "6px";
+  });
+  overlay.addEventListener("mouseleave", () => {
+    cross.setAttribute("visibility", "hidden"); tip.style.display = "none";
+  });
+  svg.appendChild(overlay);
+
+  wrap.appendChild(svg); wrap.appendChild(tip);
+  area.appendChild(wrap);
+
+  if (hasReal) { // 2계열일 때만 범례
+    const lg = document.createElement("div"); lg.className = "chart-legend";
+    [["API 순위", s1], ["실측 순위", s2]].forEach(([name, c]) => {
+      const item = document.createElement("span");
+      const sw = document.createElement("span"); sw.className = "sw"; sw.style.background = c;
+      item.appendChild(sw); item.appendChild(document.createTextNode(name));
+      lg.appendChild(item);
+    });
+    area.appendChild(lg);
+  }
+}
+
 async function renderHistory() {
   const body = $("historyBody"), title = $("historyTitle");
   body.textContent = "";
+  $("chartArea").textContent = "";
   if (!selectedKw) {
     title.textContent = "키워드를 선택하세요";
     const e = document.createElement("div"); e.className = "empty"; e.textContent = "—";
@@ -373,6 +511,7 @@ async function renderHistory() {
     const e = document.createElement("div"); e.className = "empty"; e.textContent = "아직 조회 이력이 없습니다";
     body.appendChild(e); return;
   }
+  renderChart(rows);
   const hasReal = rows.some(h => h.real_rank != null);
   const tbl = document.createElement("table");
   tbl.innerHTML = "<thead><tr><th>날짜</th><th>순위</th>" + (hasReal ? "<th>실측</th>" : "") + "<th>매칭 방식</th></tr></thead>";

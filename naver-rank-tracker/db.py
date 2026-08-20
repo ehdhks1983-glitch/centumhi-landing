@@ -4,7 +4,9 @@ import sqlite3
 from contextlib import contextmanager
 from datetime import date
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rank_tracker.db")
+# 서버 배포 시 RANKTRACKER_DB로 볼륨 경로 지정 가능 (예: /data/rank_tracker.db)
+DB_PATH = os.environ.get("RANKTRACKER_DB") or os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "rank_tracker.db")
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS products (

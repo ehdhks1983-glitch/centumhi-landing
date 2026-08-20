@@ -69,9 +69,18 @@ coupang.py         # 쿠팡 검색 페이지 수집 + 링크 ID 파싱 + 403 브
 browser.py         # Playwright 실브라우저 헬퍼 (선택 의존성)
 alerts.py          # 텔레그램 순위 급변 알림
 tracker.py         # 채널 분기 + 매칭 + 자동 승격 + 조회 루프
+Dockerfile         # 서버 배포용 (DEPLOY.md 참고)
+tests/run_all.py   # 검증 스크립트 일괄 실행 (7개 스위트)
 ```
 
-## 보안 주의
+## 서버 배포 (24시간 자동 조회)
 
-`rank_tracker.db`에 네이버 API Secret이 저장되므로 외부 서버에 올릴 때는
-접속 인증(리버스 프록시 Basic Auth 등)을 앞단에 두고 공개 노출하지 말 것.
+`DEPLOY.md` 참고. 요약: Dockerfile 포함되어 있고, 환경변수 `WEB_PASSWORD`를
+설정하면 접속 비밀번호가 걸린다 (**공개 서버에서는 필수** — DB에 API Secret이
+저장되므로 비밀번호 없이 공개 노출 금지). 데이터 볼륨은 `/data`
+(`RANKTRACKER_DB=/data/rank_tracker.db`).
+
+## 화면
+
+키워드를 클릭하면 순위 추이 라인 차트(1위가 위, 미발견 날은 선 끊김,
+실측 검증 사용 시 API/실측 2계열)와 상세 이력 테이블이 표시된다.

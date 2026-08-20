@@ -1,0 +1,6 @@
+rank_tracker.db
+*_debug.html
+__pycache__
+tests/__pycache__
+.gitignore
+HANDOVER.md

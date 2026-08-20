@@ -3,13 +3,16 @@
 브라우저는 static/index.html 하나를 받고, 이후 /api/* 로 통신한다.
 조회는 백그라운드 스레드에서 돌고 로그는 폴링으로 내려준다.
 """
+import base64
 import json
+import os
+import secrets
 import threading
 import time
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
 
 import coupang
@@ -17,6 +20,28 @@ import db
 import tracker
 
 app = FastAPI(title="네이버 순위추적기", docs_url=None, redoc_url=None)
+
+
+# ── 접속 비밀번호 (서버 배포용) ──
+# 환경변수 WEB_PASSWORD를 설정하면 모든 요청에 HTTP Basic 인증을 요구한다.
+# 미설정 시(로컬 사용) 인증 없음. 사용자명은 아무거나, 비밀번호만 검사.
+@app.middleware("http")
+async def basic_auth(request: Request, call_next):
+    password = os.environ.get("WEB_PASSWORD")
+    if password:
+        header = request.headers.get("authorization", "")
+        ok = False
+        if header.startswith("Basic "):
+            try:
+                decoded = base64.b64decode(header[6:]).decode("utf-8")
+                supplied = decoded.split(":", 1)[1] if ":" in decoded else ""
+                ok = secrets.compare_digest(supplied, password)
+            except Exception:
+                ok = False
+        if not ok:
+            return Response(status_code=401, content="인증 필요",
+                            headers={"WWW-Authenticate": 'Basic realm="rank-tracker"'})
+    return await call_next(request)
 
 INDEX_HTML = Path(__file__).parent / "static" / "index.html"
 
