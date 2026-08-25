@@ -3,7 +3,7 @@ import os, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SUITES = ["verify_v11.py", "test_web2.py", "test_multichannel.py",
-          "test_stage1.py", "test_stage2.py", "test_stage3.py", "test_stage4.py"]
+          "test_stage1.py", "test_stage2.py", "test_stage3.py", "test_stage4.py", "test_stage5.py"]
 
 failed = []
 for s in SUITES:

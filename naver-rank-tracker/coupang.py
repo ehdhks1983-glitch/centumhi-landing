@@ -60,31 +60,98 @@ def parse_product_link(link):
 
 # ---------- 검색 결과 파싱 ----------
 
-LI_OPEN_RE = re.compile(r'<li[^>]*\bclass="([^"]*search-product[^"]*)"[^>]*>')
-NAME_RE = re.compile(r'<div class="name">(.*?)</div>', re.S)
+# 항목 앵커: data-product-id는 쿠팡이 추적 용도로 오래 유지해온 가장 안정적인 표식.
+# 클래스명(search-product 등)이 바뀌어도 이 속성 기준이면 계속 인식된다.
+ITEM_ANCHOR_RE = re.compile(r'<(?:li|div|a)\b[^>]*\bdata-product-id="(\d+)"[^>]*>', re.I)
+ATTR_RE = {
+    "itemId": re.compile(r'data-item-id="(\d+)"', re.I),
+    "vendorItemId": re.compile(r'data-vendor-item-id="(\d+)"', re.I),
+}
+# 상품명 후보 — 위에서부터 먼저 걸리는 것을 사용
+NAME_PATTERNS = [
+    re.compile(r'<div[^>]*class="[^"]*\bname\b[^"]*"[^>]*>(.*?)</div>', re.S | re.I),
+    re.compile(r'<(?:div|span)[^>]*class="[^"]*product[-_]?name[^"]*"[^>]*>(.*?)</(?:div|span)>', re.S | re.I),
+    re.compile(r'<img[^>]*\balt="([^"]{4,})"', re.I),
+]
+AD_MARKERS = ("ad-badge", "admark", "adbadge", "sdw-ad", 'data-is-ad="true"', "advertise")
+WINDOW = 6000  # 한 항목 블록으로 볼 최대 길이
 
 
-def _attr(tag, name):
-    m = re.search(name + r'="(\d+)"', tag)
+def _find_id(key, tag, block):
+    """ID 속성은 앵커 태그에 있을 수도, 바로 안쪽 태그에 있을 수도 있다."""
+    m = ATTR_RE[key].search(tag) or ATTR_RE[key].search(block[:600])
     return m.group(1) if m else None
 
 
-def parse_items(page_html):
-    """검색 결과 li 목록 → [{productId, itemId, vendorItemId, title, is_ad}]"""
-    items = []
-    for m in LI_OPEN_RE.finditer(page_html):
-        tag, cls = m.group(0), m.group(1)
-        end = page_html.find("</li>", m.end())
-        block = page_html[m.end(): end if end != -1 else m.end() + 4000]
-        name_m = NAME_RE.search(block)
+def _find_title(block):
+    for pat in NAME_PATTERNS:
+        m = pat.search(block)
+        if m and m.group(1).strip():
+            return m.group(1)
+    return ""
+
+
+def _parse_by_markup(page_html):
+    """1차 전략: data-product-id 앵커 기준 파싱"""
+    anchors = [(m.start(), m.end(), m.group(0), m.group(1))
+               for m in ITEM_ANCHOR_RE.finditer(page_html)]
+    items, seen = [], set()
+
+    for idx, (a_start, a_end, tag, pid) in enumerate(anchors):
+        if pid in seen:      # 같은 상품의 중첩 태그(li 안의 a 등)는 한 번만
+            continue
+        seen.add(pid)
+        # 블록 끝 = 다른 상품 앵커가 시작되는 지점 (없으면 WINDOW까지)
+        stop = a_end + WINDOW
+        for nxt_start, _, _, nxt_pid in anchors[idx + 1:]:
+            if nxt_pid != pid:
+                stop = min(stop, nxt_start)
+                break
+        block = page_html[a_end:stop]
+        probe = (tag + block[:1500]).lower()
         items.append({
-            "productId": _attr(tag, "data-product-id"),
-            "itemId": _attr(tag, "data-item-id"),
-            "vendorItemId": _attr(tag, "data-vendor-item-id"),
-            "title": name_m.group(1) if name_m else "",
-            # 광고 판별: li 클래스 또는 블록 내 광고 뱃지 마크업
-            "is_ad": ("search-product__ad-badge" in cls) or ("ad-badge" in block) or ("AdMark" in block),
+            "productId": pid,
+            "itemId": _find_id("itemId", tag, block),
+            "vendorItemId": _find_id("vendorItemId", tag, block),
+            "title": _find_title(block),
+            "is_ad": any(mk in probe for mk in AD_MARKERS),
         })
+    return items
+
+JSON_OBJ_RE = re.compile(r'\{[^{}]*"productId"\s*:\s*"?\d+"?[^{}]*\}')
+
+
+def _parse_by_json(page_html):
+    """2차 전략: 페이지에 내장된 JSON에서 상품 목록 추출 (마크업이 완전히 바뀐 경우 대비)"""
+    items, seen = [], set()
+    for m in JSON_OBJ_RE.finditer(page_html):
+        chunk = m.group(0)
+        try:
+            obj = json.loads(chunk)
+        except ValueError:
+            continue
+        pid = str(obj.get("productId") or "")
+        if not pid.isdigit() or pid in seen:
+            continue
+        title = obj.get("productName") or obj.get("productTitle") or obj.get("name") or ""
+        if not title:
+            continue
+        seen.add(pid)
+        items.append({
+            "productId": pid,
+            "itemId": str(obj["itemId"]) if str(obj.get("itemId", "")).isdigit() else None,
+            "vendorItemId": str(obj["vendorItemId"]) if str(obj.get("vendorItemId", "")).isdigit() else None,
+            "title": title,
+            "is_ad": bool(obj.get("isAd") or obj.get("adId") or obj.get("advertise")),
+        })
+    return items
+
+
+def parse_items(page_html):
+    """검색 결과 → [{productId, itemId, vendorItemId, title, is_ad}] (노출 순서 유지)"""
+    items = _parse_by_markup(page_html)
+    if not items:
+        items = _parse_by_json(page_html)   # 마크업 구조 변경 시 대비 경로
     return items
 
 
@@ -135,6 +202,20 @@ def fetch_page(session, keyword, page, log=None):
     )
 
 
+def _diagnose(page_html):
+    """덤프만 보고 헤매지 않도록, 페이지 성격을 한 줄로 알려준다."""
+    low = page_html.lower()
+    if len(page_html) < 3000:
+        return "응답이 비정상적으로 짧음 (차단 안내 페이지 가능성)"
+    if "captcha" in low or "보안문자" in page_html or "자동입력" in page_html:
+        return "캡차/봇 차단 화면 — 시간을 두고 재시도하거나 playwright 설치 후 재시도"
+    if "login" in low and "search-product" not in low:
+        return "로그인 요구 화면"
+    if "검색결과가 없" in page_html or "결과를 찾을 수 없" in page_html:
+        return "해당 키워드의 검색 결과 자체가 없음"
+    return "페이지 구조 변경 가능성 — 덤프 파일을 개발자에게 전달"
+
+
 def check_rank(keyword, product, track_limit, log=None):
     """반환: (rank | None, match_method, found_ids | None)
     rank는 광고 제외 순위. found_ids는 이름 매칭 성공 시 승격 저장용 ID 묶음."""
@@ -154,7 +235,7 @@ def check_rank(keyword, product, track_limit, log=None):
             if page == 1:
                 with open(DEBUG_DUMP, "w", encoding="utf-8") as f:
                     f.write(page_html)
-                raise RuntimeError(f"쿠팡 검색 결과 파싱 실패 — 페이지 구조 변경 가능성. {DEBUG_DUMP} 확인")
+                raise RuntimeError(f"쿠팡 검색 결과 파싱 실패 — {_diagnose(page_html)} ({DEBUG_DUMP} 확인)")
             break  # 마지막 페이지 너머
 
         for it in items:

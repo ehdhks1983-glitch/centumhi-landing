@@ -19,31 +19,29 @@ MAX_PAGES = 25
 DEBUG_DUMP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "naver_debug.html")
 
 NEXT_RE = re.compile(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', re.S)
+SCRIPT_RE = re.compile(r'<script[^>]*>(.*?)</script>', re.S)
+
+# 상품 노드의 ID/제목 키 후보 — 네이버가 키 이름을 바꿔도 하나만 맞으면 인식
+ID_KEYS = ("id", "nvMid", "mallProductId", "productId")
+TITLE_KEYS = ("productTitle", "productName", "title")
+AD_KEYS = ("adId", "adcrUrl", "isAdProduct")
 
 
-def parse_items(page_html):
-    """__NEXT_DATA__ JSON에서 노출 순서대로 상품 목록 추출.
-    반환: [{nvmid, title, is_ad}] | None(구조 파악 실패)"""
-    m = NEXT_RE.search(page_html)
-    if not m:
-        return None
-    try:
-        data = json.loads(m.group(1))
-    except ValueError:
-        return None
-
+def _collect(data):
+    """JSON 트리를 순회하며 노출 순서대로 상품 노드 추출"""
     items = []
 
     def walk(node):
         if isinstance(node, dict):
-            # 상품 노드: id + 상품명 필드를 함께 가진 dict
-            if "id" in node and ("productTitle" in node or "productName" in node):
+            id_key = next((k for k in ID_KEYS if node.get(k)), None)
+            title_key = next((k for k in TITLE_KEYS if node.get(k)), None)
+            if id_key and title_key:
                 items.append({
-                    "nvmid": str(node["id"]),
-                    "title": node.get("productTitle") or node.get("productName") or "",
-                    "is_ad": bool(node.get("adId")),
+                    "nvmid": str(node[id_key]),
+                    "title": str(node[title_key]),
+                    "is_ad": any(node.get(k) for k in AD_KEYS),
                 })
-                return
+                return  # 상품 노드 안쪽은 더 파고들지 않는다
             for v in node.values():
                 walk(v)
         elif isinstance(node, list):
@@ -52,6 +50,33 @@ def parse_items(page_html):
 
     walk(data)
     return items
+
+
+def parse_items(page_html):
+    """페이지에서 노출 순서대로 상품 목록 추출.
+    1차: __NEXT_DATA__ / 2차: 다른 script 내 JSON. 둘 다 실패하면 None."""
+    m = NEXT_RE.search(page_html)
+    if m:
+        try:
+            items = _collect(json.loads(m.group(1)))
+            if items:
+                return items
+        except ValueError:
+            pass
+
+    # 2차: __NEXT_DATA__가 없거나 구조가 바뀐 경우 — 다른 스크립트의 JSON 덩어리를 훑는다
+    for sm in SCRIPT_RE.finditer(page_html):
+        body = sm.group(1)
+        brace = body.find("{")
+        if brace == -1 or len(body) < 50:
+            continue
+        try:
+            items = _collect(json.loads(body[brace:body.rindex("}") + 1]))
+        except (ValueError, IndexError):
+            continue
+        if items:
+            return items
+    return None
 
 
 def check_real_rank(keyword, nvmid, track_limit, fetch=None):
