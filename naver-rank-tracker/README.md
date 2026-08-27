@@ -96,7 +96,7 @@ browser.py         # Playwright 실브라우저 헬퍼 (선택 의존성)
 alerts.py          # 텔레그램 순위 급변 알림
 tracker.py         # 채널 분기 + 매칭 + 자동 승격 + 조회 루프
 Dockerfile         # 서버 배포용 (DEPLOY.md 참고)
-tests/run_all.py   # 검증 스크립트 일괄 실행 (7개 스위트)
+tests/run_all.py   # 검증 스크립트 일괄 실행 (9개 스위트 109건)
 ```
 
 ## 서버 배포 (24시간 자동 조회)
