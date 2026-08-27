@@ -118,6 +118,23 @@
   .ch.naver { background: var(--accent-soft); color: var(--accent-deep); border: 1px solid var(--accent); }
   .ch.coupang { background: rgba(229,37,40,.1); color: #C81E21; border: 1px solid #E52528; }
   :root[data-theme="dark"] .ch.coupang { color: #FF8082; background: rgba(229,37,40,.18); }
+  .linkbar { display: flex; gap: .45rem; }
+  .linkbar input { flex: 1; min-width: 0; }
+  .linkbar button { white-space: nowrap; }
+  .hint { font-size: .76rem; color: var(--sub); margin-top: .3rem; }
+  .hint.err { color: var(--warn); }
+  .chips { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .chip-kw {
+    font: inherit; font-size: .82rem; cursor: pointer; user-select: none;
+    border: 1px solid var(--line); border-radius: 999px; padding: .25rem .7rem;
+    background: var(--card); color: var(--sub);
+  }
+  .chip-kw:hover { border-color: var(--accent); }
+  .chip-kw[aria-pressed="true"] {
+    background: var(--accent); border-color: var(--accent); color: var(--btn-ink); font-weight: 600;
+  }
+  .chip-kw::before { content: "＋ "; }
+  .chip-kw[aria-pressed="true"]::before { content: "✓ "; }
   .seg { display: flex; gap: 1rem; padding: .2rem 0; }
   .seg label { display: inline-flex; align-items: center; gap: .35rem; font-size: .9rem; color: var(--ink); font-weight: 500; cursor: pointer; }
   .seg input { accent-color: var(--accent); }
@@ -243,29 +260,51 @@
 </div>
 
 <dialog id="regDlg">
-  <div class="dlg-head">상품 등록 — API 호출 없이 저장, 첫 조회 때 자동 정밀 매칭</div>
+  <div class="dlg-head">상품 등록 — 링크만 붙여넣으면 나머지는 자동으로 채워집니다</div>
   <div class="dlg-body">
     <div class="field">
-      <label>채널</label>
-      <div class="seg">
-        <label><input type="radio" name="fCh" value="naver" checked> 네이버쇼핑</label>
-        <label><input type="radio" name="fCh" value="coupang"> 쿠팡</label>
+      <label for="fLink">상품 링크</label>
+      <div class="linkbar">
+        <input id="fLink" placeholder="쿠팡 또는 네이버 상품 페이지 주소를 붙여넣으세요">
+        <button id="btnInspect" class="primary">불러오기</button>
       </div>
+      <div class="hint" id="linkHint">링크를 넣고 불러오기를 누르면 상품명·채널·키워드 후보가 자동으로 채워집니다.</div>
     </div>
-    <div class="field"><label for="fName">상품명 *</label><input id="fName"></div>
-    <div class="field"><label for="fMall">몰명 <span class="opt">(선택 — 동명 타셀러 구분, 네이버 전용)</span></label><input id="fMall"></div>
-    <div class="field"><label for="fLink">상품 링크 <span class="opt" id="linkHint">(선택)</span></label><input id="fLink"></div>
-    <div class="field">
-      <label for="fLimit">추적 범위</label>
-      <select id="fLimit">
-        <option value="100">100위까지 (API 1회)</option>
-        <option value="200">200위까지 (API 2회)</option>
-        <option value="300">300위까지 (API 3회)</option>
-        <option value="400" selected>400위까지 (API 4회)</option>
-        <option value="1000">1000위까지 (API 10회)</option>
-      </select>
+
+    <div class="field" id="kwField" hidden>
+      <label>추적할 키워드 <span class="opt">— 클릭해서 켜고 끄세요</span></label>
+      <div class="chips" id="kwChips"></div>
     </div>
-    <div class="field"><label for="fKw">키워드 * <span class="opt">(줄바꿈 또는 쉼표로 구분)</span></label><textarea id="fKw"></textarea></div>
+
+    <details id="manualBox">
+      <summary style="cursor:pointer; font-size:.82rem; color:var(--sub)">직접 입력 / 수정하기</summary>
+      <div style="display:flex; flex-direction:column; gap:.7rem; padding-top:.7rem">
+        <div class="field">
+          <label>채널</label>
+          <div class="seg">
+            <label><input type="radio" name="fCh" value="naver" checked> 네이버쇼핑</label>
+            <label><input type="radio" name="fCh" value="coupang"> 쿠팡</label>
+          </div>
+        </div>
+        <div class="field"><label for="fName">상품명 *</label><input id="fName"></div>
+        <div class="field"><label for="fMall">몰명 <span class="opt">(선택 — 동명 타셀러 구분)</span></label><input id="fMall"></div>
+        <div class="field">
+          <label for="fLimit">추적 범위</label>
+          <select id="fLimit">
+            <option value="100">100위까지</option>
+            <option value="200">200위까지</option>
+            <option value="300">300위까지</option>
+            <option value="400" selected>400위까지</option>
+            <option value="1000">1000위까지</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fKw">키워드 추가 <span class="opt">(줄바꿈 또는 쉼표로 구분)</span></label>
+          <textarea id="fKw" placeholder="위 후보에 없는 키워드를 직접 넣을 수 있습니다"></textarea>
+        </div>
+      </div>
+    </details>
+
     <div class="form-err" id="formErr"></div>
   </div>
   <div class="dlg-foot">
@@ -577,31 +616,115 @@ $("saveSettings").onclick = async () => {
   await pullLogs(); refresh();
 };
 
-/* ── 등록 모달 ── */
+/* ── 등록 모달: 링크 → 자동 채움 → 키워드 클릭 ── */
+let inspected = { nvmid: "" };
+
 function currentChannel() {
   return document.querySelector('input[name="fCh"]:checked').value;
 }
-document.querySelectorAll('input[name="fCh"]').forEach(r => r.onchange = () => {
-  $("linkHint").textContent = currentChannel() === "coupang"
-    ? "(권장 — 붙여넣으면 첫 조회부터 ID 정밀 매칭)" : "(선택)";
-});
-$("openReg").onclick = () => { $("formErr").textContent = ""; $("regDlg").showModal(); };
+
+function renderChips(list) {
+  const box = $("kwChips");
+  box.textContent = "";
+  for (const item of list) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip-kw";
+    b.textContent = item.keyword;
+    b.setAttribute("aria-pressed", item.recommended ? "true" : "false");
+    b.onclick = () => b.setAttribute("aria-pressed",
+      b.getAttribute("aria-pressed") === "true" ? "false" : "true");
+    box.appendChild(b);
+  }
+  $("kwField").hidden = list.length === 0;
+}
+
+function selectedChips() {
+  return [...document.querySelectorAll('#kwChips .chip-kw[aria-pressed="true"]')]
+    .map(b => b.textContent.trim());
+}
+
+function resetForm() {
+  ["fLink", "fName", "fMall", "fKw"].forEach(id => $(id).value = "");
+  $("kwChips").textContent = ""; $("kwField").hidden = true;
+  $("formErr").textContent = "";
+  $("manualBox").open = false;
+  inspected = { nvmid: "" };
+  setHint("링크를 넣고 불러오기를 누르면 상품명·채널·키워드 후보가 자동으로 채워집니다.", false);
+}
+
+function setHint(text, isError) {
+  const h = $("linkHint");
+  h.textContent = text;
+  h.className = "hint" + (isError ? " err" : "");
+}
+
+async function inspectLink() {
+  const link = $("fLink").value.trim();
+  if (!link) { setHint("상품 링크를 먼저 붙여넣어 주세요.", true); return; }
+  const btn = $("btnInspect");
+  btn.disabled = true; btn.textContent = "불러오는 중…";
+  setHint("상품 페이지를 확인하고 있습니다…", false);
+  try {
+    const r = await api("/api/inspect", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ link }),
+    });
+    if (r.channel) {
+      const radio = document.querySelector(`input[name="fCh"][value="${r.channel}"]`);
+      if (radio) radio.checked = true;
+    }
+    if (r.name) $("fName").value = r.name;
+    if (r.mall) $("fMall").value = r.mall;
+    inspected.nvmid = r.nvmid || "";
+    renderChips(r.keywords || []);
+
+    if (r.ok) {
+      const chName = r.channel === "coupang" ? "쿠팡" : "네이버";
+      const idNote = (r.ext_ids || r.nvmid) ? " · 상품 ID 확보 → 첫 조회부터 정밀 매칭"
+                                            : " · 상품 ID는 첫 조회 때 자동 확보";
+      setHint(`${chName} 상품 인식 완료${idNote}. 추적할 키워드를 클릭해 고르세요.`, false);
+    } else {
+      $("manualBox").open = true;
+      setHint((r.error || "상품 정보를 가져오지 못했습니다") + " — 아래에서 직접 입력해 주세요.", true);
+    }
+  } catch (e) {
+    $("manualBox").open = true;
+    setHint("불러오기 실패: " + e.message + " — 아래에서 직접 입력해 주세요.", true);
+  } finally {
+    btn.disabled = false; btn.textContent = "불러오기";
+  }
+}
+
+$("btnInspect").onclick = inspectLink;
+$("fLink").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); inspectLink(); } });
+
+$("openReg").onclick = () => { resetForm(); $("regDlg").showModal(); $("fLink").focus(); };
 $("regCancel").onclick = () => $("regDlg").close();
+
 $("regSave").onclick = async () => {
   const name = $("fName").value.trim();
-  const kws = $("fKw").value.replace(/,/g, "\n").split("\n").map(x => x.trim()).filter(Boolean);
-  if (!name || !kws.length) { $("formErr").textContent = "상품명과 키워드는 필수입니다"; return; }
+  const typed = $("fKw").value.replace(/,/g, "\n").split("\n").map(x => x.trim()).filter(Boolean);
+  const kws = [...new Set([...selectedChips(), ...typed])];
+  if (!name) {
+    $("manualBox").open = true;
+    $("formErr").textContent = "상품명이 비어 있습니다 — 링크를 불러오거나 직접 입력해 주세요";
+    return;
+  }
+  if (!kws.length) {
+    $("formErr").textContent = "추적할 키워드를 하나 이상 선택하거나 입력해 주세요";
+    return;
+  }
   try {
     await api("/api/products", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name, mall: $("fMall").value, link: $("fLink").value,
         track_limit: parseInt($("fLimit").value, 10), keywords: kws,
-        channel: currentChannel(),
+        channel: currentChannel(), nvmid: inspected.nvmid,
       }),
     });
   } catch (e) { $("formErr").textContent = e.message; return; }
-  ["fName", "fMall", "fLink", "fKw"].forEach(id => $(id).value = "");
   $("regDlg").close();
   await pullLogs(); refresh();
 };

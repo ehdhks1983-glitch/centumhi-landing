@@ -17,6 +17,7 @@ from pydantic import BaseModel, Field
 
 import coupang
 import db
+import extract
 import tracker
 
 app = FastAPI(title="네이버 순위추적기", docs_url=None, redoc_url=None)
@@ -122,6 +123,7 @@ class ProductIn(BaseModel):
     link: str = ""
     track_limit: int = 100
     channel: str = "naver"
+    nvmid: str = ""
     keywords: list[str]
 
 
@@ -143,6 +145,8 @@ def create_product(body: ProductIn):
 
     pid = db.add_product(name, body.mall.strip(), link, limit, kws,
                          channel=body.channel, ext_ids=ext_ids)
+    if body.channel == "naver" and body.nvmid.strip().isdigit():
+        db.promote_nvmid(pid, body.nvmid.strip())   # 카탈로그 링크로 nvmid를 이미 확보한 경우
     if body.channel == "coupang":
         if ext_ids:
             add_log(f"쿠팡 상품 등록: {name} — 링크에서 상품 ID 추출 완료, 첫 조회부터 정밀 매칭")
@@ -151,6 +155,19 @@ def create_product(body: ProductIn):
     else:
         add_log(f"상품 등록: {name} (키워드 {len(kws)}개, 추적 {limit}위) — 등록 시 API 호출 0회")
     return {"id": pid}
+
+
+class InspectIn(BaseModel):
+    link: str = Field(min_length=4)
+
+
+@app.post("/api/inspect")
+def inspect(body: InspectIn):
+    """링크 한 줄 → 상품명·몰명·ID·키워드 후보를 한 번에 준비 (등록 전 단계)"""
+    result = extract.inspect_link(body.link)
+    if result.get("name"):
+        add_log(f"링크 분석: {result['name'][:40]} — 키워드 후보 {len(result['keywords'])}개 제안")
+    return result
 
 
 @app.delete("/api/products/{product_id}")
