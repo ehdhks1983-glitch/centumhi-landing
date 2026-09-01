@@ -3,6 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKKMGV2LY0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-BKKMGV2LY0');
+</script>
 <title>곰대리 — 1·3·6·12개월 자동화 구독과 교육</title>
 <meta name="description" content="블로그·영상·SNS 자동화 8종을 1개월 구독, 3·6개월 기간권, 12개월 이용권으로 선택하세요. 셀프 설치부터 원격·출장·4주 교육까지 필요한 만큼 고를 수 있습니다.">
 <link rel="canonical" href="https://www.centumhi.co.kr/">
@@ -217,6 +225,88 @@ h1 em,.hero-sub em{font-style:normal; color:var(--accent2)}
   .payment-method-guide{grid-template-columns:1fr}
   .offer-row{align-items:flex-start; flex-direction:column}
   .offer-value,.offer-note{justify-content:flex-start; text-align:left}
+}
+
+/* ===== 전체 가격표 ===== */
+.price-overview{scroll-margin-top:calc(var(--nav-h) + 16px); margin:0 0 26px; padding:24px;
+  border:1px solid rgba(231,200,137,.34); border-radius:20px;
+  background:linear-gradient(145deg,rgba(231,200,137,.1),rgba(178,116,247,.05) 52%,rgba(255,255,255,.018));
+  box-shadow:0 18px 44px rgba(0,0,0,.2)}
+.price-overview-head{display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:18px}
+.price-overview-kicker{margin-bottom:5px; color:var(--gold); font-size:11px; font-weight:900; letter-spacing:.12em}
+.price-overview-head h3{margin:0; color:var(--ink); font-size:clamp(24px,3vw,36px); font-weight:950; letter-spacing:-.055em; line-height:1.14}
+.price-overview-head p{max-width:720px; margin:8px 0 0; color:var(--ink2); font-size:13px; line-height:1.65}
+.price-overview-jump{display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:10px 14px; flex:none;
+  border:1px solid var(--gold-line); border-radius:11px; background:var(--gold-soft); color:var(--gold); font-size:12px; font-weight:900}
+.price-overview-jump:hover{background:rgba(231,200,137,.19)}
+.price-legend{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:18px}
+.price-legend span{padding:6px 9px; border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.025);
+  color:var(--ink3); font-size:10.5px; font-weight:800}
+.price-legend b{color:var(--ink); font-weight:900}
+.price-table-group + .price-table-group{margin-top:20px}
+.price-table-title{display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin:0 2px 9px}
+.price-table-title h4{margin:0; color:var(--ink); font-size:16px; font-weight:950; letter-spacing:-.035em}
+.price-table-title p{margin:0; color:var(--ink3); font-size:10.5px; font-weight:750; text-align:right}
+.price-table-wrap{overflow:hidden; border:1px solid var(--line2); border-radius:14px; background:rgba(10,7,15,.42)}
+.full-price-table{width:100%; border-collapse:collapse; table-layout:fixed; font-variant-numeric:tabular-nums}
+.full-price-table th,.full-price-table td{padding:12px 10px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); vertical-align:middle}
+.full-price-table tr:last-child th,.full-price-table tr:last-child td{border-bottom:0}
+.full-price-table th:last-child,.full-price-table td:last-child{border-right:0}
+.full-price-table thead th{background:rgba(255,255,255,.045); color:var(--ink2); font-size:11px; font-weight:900; text-align:center}
+.full-price-table thead th:first-child{width:27%; text-align:left}
+.full-price-table thead th span{display:block; margin-top:3px; color:var(--ink3); font-size:9.5px; font-weight:750}
+.full-price-table tbody th{background:rgba(255,255,255,.018); color:var(--ink); text-align:left}
+.full-price-table tbody th a{display:block; font-size:13px; font-weight:900; line-height:1.35}
+.full-price-table tbody th a:hover{color:var(--accent-ink)}
+.full-price-table tbody th small{display:block; margin-top:3px; color:var(--ink3); font-size:9.5px; font-weight:700; line-height:1.35}
+.full-price-table td{text-align:right}
+.full-price-table td strong{display:block; color:var(--ink); font-size:13px; font-weight:900; white-space:nowrap}
+.full-price-table td small{display:block; margin-top:3px; color:var(--ink3); font-size:9.5px; font-weight:750; line-height:1.35}
+.full-price-table td .price-save{color:#A9F0D0}
+.full-price-table .is-best-term{background:rgba(231,200,137,.07)}
+.price-status{display:inline-flex; margin-top:5px; padding:2px 6px; border:1px solid rgba(251,106,136,.28); border-radius:999px;
+  background:var(--red-soft); color:#FF91AA; font-size:8.5px; font-weight:900; line-height:1.35}
+.education-price-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); overflow:hidden;
+  border:1px solid var(--line2); border-radius:14px; background:rgba(10,7,15,.42)}
+.education-price-item{display:flex; min-height:132px; padding:15px; border-right:1px solid var(--line); flex-direction:column}
+.education-price-item:last-child{border-right:0}
+.education-price-item span{color:var(--accent-ink); font-size:9.5px; font-weight:900; letter-spacing:.06em}
+.education-price-item b{margin-top:5px; color:var(--ink); font-size:13px; font-weight:900; line-height:1.35}
+.education-price-item small{margin-top:4px; color:var(--ink3); font-size:10px; font-weight:700; line-height:1.45}
+.education-price-item strong{margin-top:auto; padding-top:12px; color:var(--gold); font-size:18px; font-weight:950; font-variant-numeric:tabular-nums}
+.free-price-strip{display:flex; align-items:center; justify-content:space-between; gap:14px; margin-top:14px; padding:13px 15px;
+  border:1px solid rgba(121,225,182,.28); border-radius:12px; background:rgba(121,225,182,.07)}
+.free-price-strip span{color:var(--ink2); font-size:11px; line-height:1.5}
+.free-price-strip b{color:#A9F0D0; font-weight:900}
+.free-price-strip strong{color:#A9F0D0; font-size:18px; font-weight:950; white-space:nowrap}
+@media(max-width:820px){
+  .price-overview{padding:20px 16px}
+  .price-overview-head{align-items:stretch; flex-direction:column}
+  .price-overview-jump{align-self:flex-start}
+  .full-price-table,.full-price-table tbody,.full-price-table tr,.full-price-table th,.full-price-table td{display:block; width:100%}
+  .full-price-table thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+  .full-price-table tbody tr{padding:12px 13px}
+  .full-price-table tbody tr + tr{border-top:1px solid var(--line2)}
+  .full-price-table tbody th,.full-price-table tbody td{padding:0; border:0; background:transparent}
+  .full-price-table tbody th{margin-bottom:9px; padding-bottom:9px; border-bottom:1px solid var(--line)}
+  .full-price-table td{display:grid; grid-template-columns:92px minmax(0,1fr); align-items:center; gap:10px; min-height:34px; text-align:right}
+  .full-price-table td::before{content:attr(data-label); color:var(--ink3); font-size:10px; font-weight:850; text-align:left}
+  .full-price-table td strong,.full-price-table td small{grid-column:2}
+  .full-price-table td small{margin-top:-3px}
+  .full-price-table .is-best-term{margin-inline:-7px; padding-inline:7px; border-radius:7px; background:rgba(231,200,137,.07)}
+  .education-price-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .education-price-item{border-bottom:1px solid var(--line)}
+  .education-price-item:nth-child(2){border-right:0}
+  .education-price-item:nth-child(n+3){border-bottom:0}
+}
+@media(max-width:460px){
+  .price-table-title{align-items:flex-start; flex-direction:column; gap:3px}
+  .price-table-title p{text-align:left}
+  .education-price-grid{grid-template-columns:1fr}
+  .education-price-item{min-height:0; border-right:0; border-bottom:1px solid var(--line)!important}
+  .education-price-item:last-child{border-bottom:0!important}
+  .education-price-item strong{margin-top:10px; padding-top:0}
+  .free-price-strip{align-items:flex-start; flex-direction:column}
 }
 
 /* ===== 요금제 · 목적형 패키지 4종 ===== */
@@ -646,6 +736,29 @@ body > footer{border-top:1px solid var(--line); padding:36px 0 calc(110px + env(
   font-weight:900; font-size:15px; padding:14px; border-radius:12px}
 @media(max-width:760px){ .dock{display:block} }
 
+.kakao-float{position:fixed; z-index:72; top:50%; right:14px; width:76px; min-height:132px; padding:12px 8px;
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px;
+  border:1px solid rgba(255,255,255,.34); border-radius:18px; background:var(--kakao); color:var(--kakao-ink);
+  box-shadow:0 16px 38px rgba(0,0,0,.38); text-align:center; transform:translateY(-50%);
+  transition:filter .18s,transform .18s,box-shadow .18s}
+.kakao-float:hover{filter:brightness(1.03); transform:translateY(calc(-50% - 2px)); box-shadow:0 20px 46px rgba(0,0,0,.46)}
+.kakao-float-icon{display:grid; place-items:center; width:38px; height:38px; border-radius:50%;
+  background:#191600; color:var(--kakao); font-size:13px; font-weight:950; letter-spacing:-.05em}
+.kakao-float-copy b{display:block; font-size:12px; font-weight:950; line-height:1.35}
+.kakao-float-copy small{display:none}
+@media(min-width:1380px){
+  .kakao-float{width:166px; min-height:64px; padding:10px 13px; align-items:center; flex-direction:row; text-align:left}
+  .kakao-float-copy b{font-size:13px}
+  .kakao-float-copy small{display:block; margin-top:2px; font-size:9.5px; font-weight:800; line-height:1.3; opacity:.72}
+}
+@media(max-width:760px){
+  .kakao-float{top:auto; right:14px; bottom:calc(78px + env(safe-area-inset-bottom)); width:auto; min-height:46px; padding:8px 13px 8px 9px;
+    flex-direction:row; gap:7px; border-radius:999px; transform:none; box-shadow:0 10px 28px rgba(0,0,0,.42)}
+  .kakao-float:hover{transform:translateY(-2px)}
+  .kakao-float-icon{width:30px; height:30px; font-size:11px}
+  .kakao-float-copy b{font-size:12px; white-space:nowrap}
+}
+
 .copy-toast{position:fixed; left:50%; bottom:24px; z-index:120; width:max-content; max-width:calc(100vw - 32px);
   padding:11px 15px; border:1px solid rgba(121,225,182,.35); border-radius:11px; background:#171F1C; color:#C6F6DF;
   box-shadow:0 14px 40px rgba(0,0,0,.4); font-size:12.5px; font-weight:800; text-align:center;
@@ -702,14 +815,14 @@ dialog.lb::backdrop{background:transparent}
   <div class="nav-in">
     <a class="logo" href="#top"><div class="logo-mark">곰</div><div class="logo-txt"><b>곰대리</b><span>BY 센텀하이</span></div></a>
     <div class="nav-menu">
-      <a href="#package">요금제</a><a href="#free-tools">무료 도구 3종</a><a href="#roster">직원 소개</a><a href="#proof">실제 결과</a>
+      <a href="#all-prices">전체 가격표</a><a href="#free-tools">무료 도구 3종</a><a href="#roster">직원 소개</a><a href="#proof">실제 결과</a>
       <a href="#safe">안심 보장</a><a href="#edu">설치·교육</a><a href="#faq">FAQ</a>
     </div>
     <button class="hamb" id="hamb" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="drawer"><i></i></button>
     <a class="btn-kakao" data-trial-download="google-drive" href="https://drive.google.com/file/d/1HchKelxFOT_h2KK4d5TOTw4Iw0FRc_kh/view?usp=drive_link" target="_blank" rel="noopener">무료 7일 체험판 받기</a>
   </div>
   <div class="drawer" id="drawer" hidden>
-    <a href="#package">요금제</a><a href="#free-tools">무료 도구 3종</a><a href="#roster">직원 소개</a><a href="#proof">실제 결과</a>
+    <a href="#all-prices">전체 가격표</a><a href="#free-tools">무료 도구 3종</a><a href="#roster">직원 소개</a><a href="#proof">실제 결과</a>
     <a href="#safe">안심 안내</a><a href="#edu">설치·교육</a><a href="#faq">자주 묻는 질문</a>
   </div>
 </nav>
@@ -793,6 +906,139 @@ dialog.lb::backdrop{background:transparent}
       <div class="payment-method-guide" aria-label="기간별 결제수단"><span><b>1개월 정기구독</b> · 카드 등록·자동결제</span><span><b>3·6·12개월 기간권</b> · 네이버페이·카카오페이·앱카드·카드</span></div>
       <p class="term-status" id="term-status" aria-live="polite"><b>1개월</b> 가격을 보고 있습니다. 래피드 정기구독은 카드 결제만 지원합니다.</p>
     </div>
+
+    <section class="price-overview rv" id="all-prices" aria-labelledby="all-prices-title">
+      <div class="price-overview-head">
+        <div>
+          <div class="price-overview-kicker">ALL PRICES AT A GLANCE</div>
+          <h3 id="all-prices-title">전체 가격표</h3>
+          <p>패키지·개별 프로그램·교육비를 한 번에 비교하세요. 기간권의 절감액은 1개월 요금을 같은 기간 동안 납부했을 때와 비교한 금액입니다.</p>
+        </div>
+        <a class="price-overview-jump" href="#edu">교육 상세 내용 보기 →</a>
+      </div>
+      <div class="price-legend" aria-label="가격표 공통 조건">
+        <span><b>모든 금액 VAT 포함</b></span><span>기본 1인·1PC</span><span>1개월은 매월 자동결제</span><span>3·6·12개월은 1회 결제·자동갱신 없음</span>
+      </div>
+
+      <div class="price-table-group">
+        <div class="price-table-title"><h4>패키지 4종</h4><p>여러 프로그램을 함께 쓸수록 유리한 구성</p></div>
+        <div class="price-table-wrap">
+          <table class="full-price-table">
+            <thead><tr><th scope="col">상품</th><th scope="col">1개월<span>월 구독</span></th><th scope="col">3개월<span>기간권</span></th><th scope="col">6개월<span>기간권</span></th><th scope="col" class="is-best-term">12개월<span>가장 큰 절감</span></th></tr></thead>
+            <tbody>
+              <tr>
+                <th scope="row"><a href="#pack-blog">블로그 성장팩</a><small>블로그대리+서이추대리 · 2종</small></th>
+                <td data-label="1개월"><strong>55,000원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>154,000원</strong><small class="price-save">11,000원 절감</small></td>
+                <td data-label="6개월"><strong>290,000원</strong><small class="price-save">40,000원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>515,000원</strong><small class="price-save">145,000원 절감</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#pack-content">블로그 콘텐츠팩</a><small>블로그+서이추+컷대장 · 3종</small></th>
+                <td data-label="1개월"><strong>99,000원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>276,000원</strong><small class="price-save">21,000원 절감</small></td>
+                <td data-label="6개월"><strong>522,000원</strong><small class="price-save">72,000원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>925,000원</strong><small class="price-save">263,000원 절감</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#pack-multi">멀티채널 운영팩</a><small>글 채널 운영 프로그램 · 6종</small></th>
+                <td data-label="1개월"><strong>119,000원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>332,000원</strong><small class="price-save">25,000원 절감</small></td>
+                <td data-label="6개월"><strong>628,000원</strong><small class="price-save">86,000원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>1,090,000원</strong><small class="price-save">338,000원 절감</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#pack-all">통합 8종팩</a><small>유료 프로그램 전체 · 8종</small><span class="price-status">직접 결제 준비 중</span></th>
+                <td data-label="1개월"><strong>159,000원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>444,000원</strong><small class="price-save">33,000원 절감</small></td>
+                <td data-label="6개월"><strong>840,000원</strong><small class="price-save">114,000원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>1,490,000원</strong><small class="price-save">418,000원 절감</small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="price-table-group">
+        <div class="price-table-title"><h4>개별 프로그램 8종</h4><p>필요한 업무 하나만 골라 이용</p></div>
+        <div class="price-table-wrap">
+          <table class="full-price-table">
+            <thead><tr><th scope="col">프로그램</th><th scope="col">1개월<span>월 구독</span></th><th scope="col">3개월<span>기간권</span></th><th scope="col">6개월<span>기간권</span></th><th scope="col" class="is-best-term">12개월<span>가장 큰 절감</span></th></tr></thead>
+            <tbody>
+              <tr>
+                <th scope="row"><a href="#card-blog">블로그대리</a><small>AI 글·이미지·예약 발행</small></th>
+                <td data-label="1개월"><strong>49,000원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>137,000원</strong><small class="price-save">10,000원 절감</small></td>
+                <td data-label="6개월"><strong>259,000원</strong><small class="price-save">35,000원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>490,000원</strong><small class="price-save">98,000원 절감</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#card-cut">컷대장</a><small>쇼츠·롱폼·상품 영상 제작</small></th>
+                <td data-label="1개월"><strong>59,000원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>165,000원</strong><small class="price-save">12,000원 절감</small></td>
+                <td data-label="6개월"><strong>312,000원</strong><small class="price-save">42,000원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>590,000원</strong><small class="price-save">118,000원 절감</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#card-detail">상세대리</a><small>상품 상세페이지 8컷 제작</small><span class="price-status">직접 결제 준비 중</span></th>
+                <td data-label="1개월"><strong>19,000원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>53,000원</strong><small class="price-save">4,000원 절감</small></td>
+                <td data-label="6개월"><strong>100,000원</strong><small class="price-save">14,000원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>190,000원</strong><small class="price-save">38,000원 절감</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#card-cafe">카페대리</a><small>카페 글·댓글·좋아요</small></th>
+                <td data-label="1개월"><strong>39,000원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>109,000원</strong><small class="price-save">8,000원 절감</small></td>
+                <td data-label="6개월"><strong>206,000원</strong><small class="price-save">28,000원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>390,000원</strong><small class="price-save">78,000원 절감</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#card-tistory">티스토리대리</a><small>SEO·제휴글 자동 발행</small></th>
+                <td data-label="1개월"><strong>29,000원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>81,000원</strong><small class="price-save">6,000원 절감</small></td>
+                <td data-label="6개월"><strong>153,000원</strong><small class="price-save">21,000원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>290,000원</strong><small class="price-save">58,000원 절감</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#card-thread">스레드대리</a><small>글·댓글·좋아요·팔로우</small></th>
+                <td data-label="1개월"><strong>39,000원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>109,000원</strong><small class="price-save">8,000원 절감</small></td>
+                <td data-label="6개월"><strong>206,000원</strong><small class="price-save">28,000원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>390,000원</strong><small class="price-save">78,000원 절감</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#card-gif">움짤대리</a><small>GIF·WEBP·화면 녹화</small></th>
+                <td data-label="1개월"><strong>9,900원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>28,000원</strong><small class="price-save">1,700원 절감</small></td>
+                <td data-label="6개월"><strong>52,000원</strong><small class="price-save">7,400원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>99,000원</strong><small class="price-save">19,800원 절감</small></td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="#card-seoichu">서이추대리</a><small>서이추·댓글·내 글 답글</small></th>
+                <td data-label="1개월"><strong>14,900원</strong><small>매월 자동결제</small></td>
+                <td data-label="3개월"><strong>42,000원</strong><small class="price-save">2,700원 절감</small></td>
+                <td data-label="6개월"><strong>79,000원</strong><small class="price-save">10,400원 절감</small></td>
+                <td data-label="12개월" class="is-best-term"><strong>99,000원</strong><small class="price-save">79,800원 절감</small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="price-table-group">
+        <div class="price-table-title"><h4>설치·교육 서비스</h4><p>프로그램 이용료와 별도 · VAT 포함 최종가</p></div>
+        <div class="education-price-grid">
+          <a class="education-price-item" href="#edu"><span>원격 · 1회</span><b>원격 설치·사용 교육</b><small>화면 공유 · 총 3시간</small><strong>100,000원</strong></a>
+          <a class="education-price-item" href="#edu"><span>출장 · 1회</span><b>출장 방문 교육</b><small>협의 장소 · 총 3시간</small><strong>200,000원</strong></a>
+          <a class="education-price-item" href="#edu"><span>1:1 원격 · 4주</span><b>1:1 원격 4주 과정</b><small>주 1회×3시간 · 총 12시간</small><strong>400,000원</strong></a>
+          <a class="education-price-item" href="#edu"><span>인천 대면 · 4주</span><b>인천 교육장 4주 과정</b><small>주 1회×3시간 · 총 12시간</small><strong>500,000원</strong></a>
+        </div>
+      </div>
+
+      <a class="free-price-strip" href="#free-tools"><span><b>구독 없이 쓰는 무료 도구 3종</b> · 키워드 관제탑+이미지 누끼+이미지공작소</span><strong>모두 0원</strong></a>
+    </section>
+
     <div class="pk-grid rv">
       <div class="pk" id="pack-blog">
         <div class="pk-badge">블로그 기본 추천</div>
@@ -1389,6 +1635,9 @@ dialog.lb::backdrop{background:transparent}
   </div>
 </footer>
 
+<a class="kakao-float" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener" aria-label="카카오톡으로 상품과 교육 문의하기">
+  <span class="kakao-float-icon" aria-hidden="true">톡</span><span class="kakao-float-copy"><b>카카오톡<br>문의하기</b><small>상품·교육 빠른 상담</small></span>
+</a>
 <div class="dock"><a data-trial-download="google-drive" href="https://drive.google.com/file/d/1HchKelxFOT_h2KK4d5TOTw4Iw0FRc_kh/view?usp=drive_link" target="_blank" rel="noopener">무료 7일 체험판 받기 →</a></div>
 
 <div class="copy-toast" id="copy-toast" role="status" aria-live="polite"></div>
