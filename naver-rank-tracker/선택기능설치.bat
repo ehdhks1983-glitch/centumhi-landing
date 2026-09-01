@@ -1,9 +1,20 @@
 @echo off
-chcp 65001 >nul
 cd /d "%~dp0"
-if exist .venv call .venv\Scripts\activate.bat
-echo 선택기능^(네이버 실측 검증 + 쿠팡 차단 우회^)용 실브라우저를 설치합니다...
+if not exist ".venv\Scripts\activate.bat" (
+    echo.
+    echo   Run the START file first, then come back.
+    echo.
+    pause
+    exit /b 1
+)
+call ".venv\Scripts\activate.bat"
+echo.
+echo   Installing real browser for Naver verification / Coupang bypass...
+echo   This downloads about 150MB and takes a few minutes.
+echo.
 pip install playwright
 playwright install chromium
-echo 완료. 진단.bat 로 정상 설치를 확인하세요.
+echo.
+echo   Done. Run the CHECK file to confirm.
+echo.
 pause

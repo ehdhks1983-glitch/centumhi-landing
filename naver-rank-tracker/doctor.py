@@ -136,8 +136,12 @@ def check_telegram(send_test):
 
 
 def main():
+    import os as _os
+    here = _os.path.dirname(_os.path.abspath(__file__))
     print("=" * 56)
     print(" 상품 순위추적기 실환경 자가진단")
+    print("=" * 56)
+    print(f" 설치 위치 : {here}")
     print("=" * 56)
     check_python()
     if not check_deps():
