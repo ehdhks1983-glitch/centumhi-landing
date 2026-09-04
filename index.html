@@ -4,12 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKKMGV2LY0"></script>
+
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-BKKMGV2LY0');
+if (location.protocol === 'https:' && /^(www\.)?centumhi\.co\.kr$/.test(location.hostname)) {
+  var gaScript = document.createElement('script');
+  gaScript.async = true;
+  gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-BKKMGV2LY0';
+  document.head.appendChild(gaScript);
+}
 </script>
 <title>곰대리 — 1·3·6·12개월 자동화 구독과 교육</title>
 <meta name="description" content="블로그·영상·SNS 자동화 8종을 1개월 구독, 3·6개월 기간권, 12개월 이용권으로 선택하세요. 셀프 설치부터 원격·출장·4주 교육까지 필요한 만큼 고를 수 있습니다.">
@@ -807,6 +813,7 @@ dialog.lb::backdrop{background:transparent}
   .card:hover,.hr-chip:hover,.guide-item:hover,.decision-card:hover,.cta-main:hover,.pp-cta:hover,.btn-kakao:hover,.free-suite-cta:hover{transform:none}
 }
 </style>
+<link rel="stylesheet" href="conversion-enhancements.css?v=20260905-2">
 </head>
 <body>
 <a class="skip-link" href="#main">본문 바로가기</a>
@@ -833,15 +840,16 @@ dialog.lb::backdrop{background:transparent}
     <div class="hero-grid">
       <div>
         <div class="eyebrow">곰대리 · Windows 업무 자동화</div>
-        <h1>필요한 자동화만 선택하고,<br><em>기간은 내 일에 맞게.</em></h1>
+        <h1>매일 반복하는 일,<br><em>곰대리에게 맡기세요.</em></h1>
         <p class="hero-sub">블로그·영상·SNS 반복 업무를 대신하는 <em>8개의 자동화 직원</em>입니다.</p>
-        <p class="hero-lede">1개월 구독부터 3·6개월 기간권, 12개월 이용권까지 선택하세요. Windows PC에서 실행되며, 7일 체험은 1인 1회·카드 등록 없이 시작하고 자동 유료전환 없이 끝납니다.</p>
+        <p class="hero-lede">영상 제작부터 블로그 발행, 이웃 관리와 상품 이미지까지.<br>필요한 프로그램 하나만 쓰거나, 함께 쓸 도구를 패키지로 고르세요.</p>
         <div class="hero-cta">
           <a class="cta-main" data-trial-download="mindhub-server" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">무료 7일 체험판 받기</a>
-          <a class="cta-ghost" href="#package">내게 맞는 요금제 고르기</a>
+          <a class="cta-ghost" href="#roster">8종 기능·가격 보기</a>
         </div>
         <div class="reassure"><i>7일 무료 체험 · 1인 1회</i><b>카드 등록 없음 · 자동 유료전환 없음</b></div>
-        <div class="start-path"><span class="start-path-mark" aria-hidden="true">01</span><div class="start-path-copy"><i>처음이라면</i><b>가장 손이 많이 가는 일 하나부터</b><span>한 가지를 먼저 체험하고, 필요해질 때 패키지로 넓히세요.</span></div></div>
+        <p class="install-note">Windows PC 전용 · 곰대리 프로그램은 <b>마인드허브</b>에서 설치·실행합니다. <a href="#trial-guide">체험 시작 방법 →</a></p>
+        <div class="hub-shortcuts" aria-label="상품 유형 바로가기"><a href="#package">패키지 비교</a><a href="#free-tools">무료 도구 3종</a><a href="#edu">1:1 교육</a></div>
         <div class="trust">
           <a href="https://cafe.naver.com/mp3downs1" target="_blank" rel="noopener"><b>네이버 카페</b>&nbsp;이용 후기 확인</a><span>✓ Windows PC 전용</span>
           <span><b>무료</b> 실무 도구 3종</span><span>✓ VAT 포함 · 1인 1PC · AI 사용료 별도</span>
@@ -851,7 +859,7 @@ dialog.lb::backdrop{background:transparent}
         <div class="vbox" data-yt="t7dd8-KHcT4" data-title="곰대리 작동 영상"></div>
         <p class="vcap">실제 작동 화면 — 주제 입력부터 결과물 완성까지 확인하세요</p>
         <div class="hero-roster">
-          <span class="hr-label">지금 뽑을 수 있는 직원</span>
+          <span class="hr-label">유료 프로그램 8종 · 원하는 기능으로 바로가기</span>
           <div class="hr-chips">
             <a href="#card-blog" class="hr-chip">블로그</a>
             <a href="#card-cut" class="hr-chip">컷대장</a>
@@ -865,13 +873,209 @@ dialog.lb::backdrop{background:transparent}
         </div>
       </div>
     </div>
-    <div class="wins rv" aria-label="이용 순서">
-      <div class="win"><b>1. 먼저 7일 체험</b><span>카드 등록 없이 내 PC에서 직접 써봅니다.</span></div>
-      <div class="win"><b>2. 맞는 기간 선택</b><span>1개월 월 구독 또는 3·6개월 기간권, 12개월 이용권 중에서 고릅니다.</span></div>
-      <div class="win"><b>3. 결과물은 그대로</b><span>이용을 멈춰도 만든 글·영상·이미지는 내 PC에 남습니다.</span></div>
+    <div class="hub-paths" aria-label="어떤 일을 줄이고 싶으세요?">
+      <a class="hub-path hub-path--video" href="#card-cut" data-product-id="cutdaejang"><span class="hub-path-kicker">영상 제작</span><h2>쇼츠·상품 영상을 만들고 싶어요 <span aria-hidden="true">↗</span></h2><p>주제·촬영본·사진으로 자막과 목소리가 담긴 MP4 제작</p><span class="hub-path-bottom"><b>컷대장</b><span>1개월 59,000원</span></span></a>
+      <a class="hub-path hub-path--blog" href="#card-blog" data-product-id="blog"><span class="hub-path-kicker">블로그 운영</span><h2>글 작성과 발행을 줄이고 싶어요 <span aria-hidden="true">↗</span></h2><p>AI 글·이미지 작성부터 네이버 즉시·예약 발행까지</p><span class="hub-path-bottom"><b>블로그대리</b><span>1개월 49,000원</span></span></a>
+      <a class="hub-path" href="#other-programs" data-product-id="catalog"><span class="hub-path-kicker">다른 업무 자동화</span><h2>내게 필요한 도구를 찾고 싶어요 <span aria-hidden="true">↗</span></h2><p>상세페이지 · 카페 · 티스토리 · 스레드 · 움짤 · 서이추</p><span class="hub-path-bottom"><b>나머지 6종 비교</b><span>단품 월 9,900원부터</span></span></a>
     </div>
+    <p class="hub-path-note">VAT 포함 · 기본 1인·1PC · AI 사용료 별도 · 월 구독 외 3·6·12개월도 선택 가능</p>
   </div>
 </header>
+
+<section class="sec" id="roster">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-eyebrow">사원 명부</div>
+      <h2 class="sec-title">지금 필요한 한 명만<br>뽑으시면 됩니다</h2>
+      <p class="sec-lede">다 필요하지는 않습니다. 손이 제일 많이 가는 일 하나를 고르세요. 한 명만 써보고, 필요해지면 그때 한 명 더 뽑으셔도 됩니다. 아래 금액은 전부 VAT 포함 최종가입니다.</p>
+    </div>
+    <div class="term-panel term-panel--compact rv" aria-label="단품 이용기간 선택">
+      <div class="term-head"><div><b>단품도 기간을 바꿔 비교하세요</b><span>선택한 기간이 아래 8개 단품 가격에 함께 적용됩니다.</span></div></div>
+      <div class="term-controls" role="group" aria-label="단품 요금 기간 선택">
+        <button class="term-option" type="button" data-term="1m" aria-pressed="true"><b>1개월</b><span>자동결제 · 카드만</span></button>
+        <button class="term-option" type="button" data-term="3m" aria-pressed="false"><b>3개월</b><span>1회 결제 · 간편결제</span></button>
+        <button class="term-option" type="button" data-term="6m" aria-pressed="false"><b>6개월</b><span>1회 결제 · 간편결제</span></button>
+        <button class="term-option" type="button" data-term="12m" aria-pressed="false"><b>12개월</b><span>1회 결제 · 간편결제</span></button>
+      </div>
+    </div>
+    <div class="lead-bar rv">
+      <div class="dept-name">주력 직원</div>
+      <div class="dept-desc">영상 제작과 블로그 발행부터 확인하세요</div>
+      <div class="dept-count">2 SEATS</div>
+    </div>
+    <div class="roster-lead rv">
+<article id="card-blog" class="card card-lead t-write" aria-labelledby="card-blog-title">
+          <div class="lead-flag">블로그 작성·발행</div>
+          <div class="card-top"><div class="badge">블</div><div><h3 class="card-name" id="card-blog-title">블로그대리</h3><div class="card-role">AI 블로그·제휴글 자동 발행</div></div></div>
+          <div class="card-media"><div class="vbox" data-yt="YbobCbsIceo" data-title="곰대리 블로그 영상"></div></div>
+          <p class="card-job">키워드 고르기부터 <b>글·이미지 작성과 네이버 발행</b>까지 대신합니다.</p>
+          <ul class="feat" aria-label="블로그대리 주요 기능"><li><b>일반 글</b> · 키워드·자료로 AI 제목·본문·태그·이미지 생성</li><li><b>내 콘텐츠</b> · 내 사진 폴더·영상·지도·관련글까지 스마트에디터에 입력</li><li><b>제휴 글</b> · 쿠팡파트너스·쇼핑커넥트 링크를 활용해 상품 글과 고지문 준비</li><li><b>발행 관리</b> · 즉시·예약·저장 발행과 간격·시간대·일일 한도 설정</li><li><b>성과 확인</b> · 무료 키워드 관제탑 추천과 검색 순위·색인 상태 연동</li></ul>
+          <div class="price-box" data-offer-prices="blog" aria-live="polite">
+            <div class="offer-row is-active" data-term="1m" data-amount="49000"><span class="pr-label">1개월</span><span class="offer-value"><b>49,000원</b><span class="offer-note">매월 자동결제</span></span></div>
+            <div class="offer-row" data-term="3m" data-amount="137000"><span class="pr-label">3개월</span><span class="offer-value"><b>137,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
+            <div class="offer-row" data-term="6m" data-amount="259000"><span class="pr-label">6개월</span><span class="offer-value"><b>259,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
+            <div class="offer-row" data-term="12m" data-amount="490000"><span class="pr-label">12개월</span><span class="offer-value"><b>490,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          </div>
+          <div class="offer-actions">
+            <a class="product-trial" data-trial-download="mindhub-server" data-product-id="blog" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
+            <a class="checkout-cta" data-checkout="blog" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/ZR1lK" target="_blank" rel="noopener">1개월 49,000원 · 결제하기</a>
+            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">블로그대리 선택 상담하기</a>
+            <p class="checkout-help">1개월은 카드 정기결제, 3·6·12개월은 한 번 결제하는 기간권입니다.</p>
+          </div>
+        </article>
+
+<article id="card-cut" class="card card-lead t-make" aria-labelledby="card-cut-title">
+          <div class="lead-flag">쇼츠·롱폼·상품 영상</div>
+          <div class="card-top"><div class="badge">컷</div><div><h3 class="card-name" id="card-cut-title">컷대장</h3><div class="card-role">쇼츠·롱폼·상품 영상 자동 제작</div></div></div>
+          <div class="card-media"><div class="vbox" data-yt="rmsIz1PWV0Y" data-title="컷대장 작동 영상"></div></div>
+          <p class="card-job">주제·촬영본·사진·상품 링크를 <b>업로드할 MP4 영상</b>으로 만듭니다.</p>
+          <ul class="feat" aria-label="컷대장 주요 기능"><li><b>AI 영상</b> · 주제나 내 대본으로 목소리·배경·자막까지 자동 조립</li><li><b>내 영상 편집</b> · 무음 구간 컷, STT 자동자막, AI 내레이션</li><li><b>사진·상품 영상</b> · 사진 슬라이드와 상품 링크 기반 홍보 영상 제작</li><li><b>링크로 만들기</b> · 공개 블로그·뉴스·카페·유튜브 자료를 영상으로 전환</li><li><b>출력·검토</b> · 쇼츠 9:16·롱폼 16:9, 길이 조절·외부 음성 싱크·품질검사</li></ul>
+          <div class="price-box" data-offer-prices="cutdaejang" aria-live="polite">
+            <div class="offer-row is-active" data-term="1m" data-amount="59000"><span class="pr-label">1개월</span><span class="offer-value"><b>59,000원</b><span class="offer-note">매월 자동결제</span></span></div>
+            <div class="offer-row" data-term="3m" data-amount="165000"><span class="pr-label">3개월</span><span class="offer-value"><b>165,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
+            <div class="offer-row" data-term="6m" data-amount="312000"><span class="pr-label">6개월</span><span class="offer-value"><b>312,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
+            <div class="offer-row" data-term="12m" data-amount="590000"><span class="pr-label">12개월</span><span class="offer-value"><b>590,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          </div>
+          <div class="offer-actions">
+            <a class="product-trial" data-trial-download="mindhub-server" data-product-id="cutdaejang" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
+            <a class="checkout-cta" data-checkout="cutdaejang" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/w3Se9" target="_blank" rel="noopener">1개월 59,000원 · 결제하기</a>
+            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">컷대장 선택 상담하기</a>
+            <p class="checkout-help">1개월은 카드 정기결제, 3·6·12개월은 한 번 결제하는 기간권입니다.</p>
+          </div>
+        </article>
+    </div>
+
+    <div class="lead-bar rv" id="other-programs" style="margin-top:44px">
+      <div class="dept-name">그 밖의 직원</div>
+      <div class="dept-desc">필요한 한 명만 골라 쓰세요</div>
+      <div class="dept-count">6 SEATS</div>
+    </div>
+    <div class="roster rv">
+<article id="card-detail" class="card t-make" aria-labelledby="card-detail-title">
+          <div class="card-top"><div class="badge">상</div><div><h3 class="card-name" id="card-detail-title">상세대리</h3><div class="card-role">ChatGPT 상세페이지 8컷 제작</div></div></div>
+          <div class="card-media"><div class="vbox" data-yt="iI0Xvi6ONZ4" data-title="곰대리 상세페이지 영상"></div></div>
+          <p class="card-job">상품 링크와 원본 사진으로 <b>기획·카피·상세 8컷</b>을 준비합니다.</p>
+          <ul class="feat" aria-label="상세대리 주요 기능"><li><b>상품정보 수집</b> · 지원 링크에서 상품명·가격·스펙 자동 채우기</li><li><b>8컷 자동 제작</b> · 원본 사진 1~3장으로 제품 진단→카피 기획→섹션 생성</li><li><b>콘셉트 선택</b> · 판매 각도 기획안과 참고 상세페이지의 디자인 분위기 적용</li><li><b>부분 복구</b> · 실패한 컷만 다시 만들고 이미 완성한 컷은 유지</li><li><b>결과 저장</b> · 대표이미지·세로 한 장 JPG·PDF·낱장 이미지로 내려받기</li></ul>
+          <div class="price-box" data-offer-prices="gomdaeri" aria-live="polite">
+            <div class="offer-row is-active" data-term="1m" data-amount="19000"><span class="pr-label">1개월</span><span class="offer-value"><b>19,000원</b><span class="offer-note">매월 자동결제</span></span></div>
+            <div class="offer-row" data-term="3m" data-amount="53000"><span class="pr-label">3개월</span><span class="offer-value"><b>53,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
+            <div class="offer-row" data-term="6m" data-amount="100000"><span class="pr-label">6개월</span><span class="offer-value"><b>100,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
+            <div class="offer-row" data-term="12m" data-amount="190000"><span class="pr-label">12개월</span><span class="offer-value"><b>190,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          </div>
+          <div class="offer-actions">
+            <a class="product-trial" data-trial-download="mindhub-server" data-product-id="gomdaeri" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
+            <a class="checkout-cta" data-checkout="gomdaeri" data-checkout-fallback="kakao" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">구매 가능 여부 · 카카오톡 문의하기</a>
+            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">상세대리 상담하기</a>
+            <p class="checkout-help">상세대리 구독 만료 인증과 웹훅 검증 후 직접 결제가 열립니다.</p>
+          </div>
+        </article>
+
+<article id="card-cafe" class="card t-run" aria-labelledby="card-cafe-title">
+          <div class="card-top"><div class="badge">카</div><div><h3 class="card-name" id="card-cafe-title">카페대리</h3><div class="card-role">카페 글·댓글·좋아요 자동화</div></div></div>
+          <div class="card-media"><div class="vbox" data-yt="sp9AVvSseRQ" data-title="카페대리 작동 영상"></div></div>
+          <p class="card-job">카페에 <b>글을 올리고 다른 글에 반응하던 일</b>을 함께 처리합니다.</p>
+          <ul class="feat" aria-label="카페대리 주요 기능"><li><b>AI 글 작성</b> · 키워드·카페·게시판 맥락에 맞춰 제목과 본문 생성</li><li><b>댓글·좋아요</b> · 글을 읽은 AI 댓글, 함께 실행, 내 글·이미 반응한 글 구분</li><li><b>여러 곳 발행</b> · 등록한 카페·게시판에 다중 발행하고 계정별 창을 분리 운영</li><li><b>자동 운영</b> · 키워드 풀과 게시판을 정해 간격 스케줄러로 발행</li><li><b>이미지 첨부</b> · 내 사진·AI 이미지·썸네일 카드·이미지 폴더 사용</li></ul>
+          <div class="price-box" data-offer-prices="cafe" aria-live="polite">
+            <div class="offer-row is-active" data-term="1m" data-amount="39000"><span class="pr-label">1개월</span><span class="offer-value"><b>39,000원</b><span class="offer-note">매월 자동결제</span></span></div>
+            <div class="offer-row" data-term="3m" data-amount="109000"><span class="pr-label">3개월</span><span class="offer-value"><b>109,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
+            <div class="offer-row" data-term="6m" data-amount="206000"><span class="pr-label">6개월</span><span class="offer-value"><b>206,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
+            <div class="offer-row" data-term="12m" data-amount="390000"><span class="pr-label">12개월</span><span class="offer-value"><b>390,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          </div>
+          <div class="offer-actions">
+            <a class="product-trial" data-trial-download="mindhub-server" data-product-id="cafe" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
+            <a class="checkout-cta" data-checkout="cafe" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/u7Ckb" target="_blank" rel="noopener">1개월 39,000원 · 결제하기</a>
+            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">카페대리 선택 상담하기</a>
+            <p class="checkout-help">1개월은 카드 정기결제, 3·6·12개월은 한 번 결제하는 기간권입니다.</p>
+          </div>
+        </article>
+
+<article id="card-tistory" class="card t-write" aria-labelledby="card-tistory-title">
+          <div class="card-top"><div class="badge">티</div><div><h3 class="card-name" id="card-tistory-title">티스토리대리</h3><div class="card-role">SEO·제휴글 자동 발행</div></div></div>
+          <div class="card-media"><div class="vbox" data-yt="qzWs-xWqKuk" data-title="티스토리대리 작동 영상"></div></div>
+          <p class="card-job">여러 키워드의 <b>글·이미지 작성과 티스토리 발행</b>을 이어서 처리합니다.</p>
+          <ul class="feat" aria-label="티스토리대리 주요 기능"><li><b>AI 배치 작성</b> · 여러 키워드의 제목·본문·태그를 만들고 순차 발행</li><li><b>SEO 구조</b> · 실제 H2·목록·이미지 alt·관련글 내부링크 적용</li><li><b>발행 방식</b> · 즉시·예약·저장 발행과 공개·보호·비공개·임시저장</li><li><b>제휴 글</b> · 쿠팡·네이버쇼핑 상품 정보와 고지문을 넣어 발행</li><li><b>운영 준비</b> · 소개·개인정보처리방침·문의 페이지 작성 지원</li></ul>
+          <div class="price-box" data-offer-prices="tistory" aria-live="polite">
+            <div class="offer-row is-active" data-term="1m" data-amount="29000"><span class="pr-label">1개월</span><span class="offer-value"><b>29,000원</b><span class="offer-note">매월 자동결제</span></span></div>
+            <div class="offer-row" data-term="3m" data-amount="81000"><span class="pr-label">3개월</span><span class="offer-value"><b>81,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
+            <div class="offer-row" data-term="6m" data-amount="153000"><span class="pr-label">6개월</span><span class="offer-value"><b>153,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
+            <div class="offer-row" data-term="12m" data-amount="290000"><span class="pr-label">12개월</span><span class="offer-value"><b>290,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          </div>
+          <div class="offer-actions">
+            <a class="product-trial" data-trial-download="mindhub-server" data-product-id="tistory" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
+            <a class="checkout-cta" data-checkout="tistory" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/s-DI6" target="_blank" rel="noopener">1개월 29,000원 · 결제하기</a>
+            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">티스토리대리 선택 상담하기</a>
+            <p class="checkout-help">1개월은 카드 정기결제, 3·6·12개월은 한 번 결제하는 기간권입니다.</p>
+          </div>
+        </article>
+
+<article id="card-thread" class="card t-write" aria-labelledby="card-thread-title">
+          <div class="card-top"><div class="badge">스</div><div><h3 class="card-name" id="card-thread-title">스레드대리</h3><div class="card-role">Threads 글·반응·수익화 자동화</div></div></div>
+          <div class="card-media"><div class="vbox" data-yt="B9d0tKDQJu4" data-title="스레드대리 작동 영상"></div></div>
+          <p class="card-job">글 발행부터 <b>댓글·좋아요·팔로우와 답방</b>까지 이어갑니다.</p>
+          <ul class="feat" aria-label="스레드대리 주요 기능"><li><b>AI 글쓰기</b> · 주제 한 줄로 짧은 글을 만들고 수정·이미지 첨부·즉시 발행</li><li><b>관심 고객 찾기</b> · 키워드 대상의 글에 좋아요·AI 댓글·팔로우 활동</li><li><b>반응 이어가기</b> · 나에게 반응한 사람 답방·팔로우백과 내 글 댓글 답글</li><li><b>예약·캠페인</b> · 일반 글 예약·반복 발행과 업종·키워드 기반 자동 운영</li><li><b>수익형 콘텐츠</b> · 쿠팡·뉴스픽 글, 이미지·링크 댓글·예약 큐와 수익 소재 재활용</li></ul>
+          <div class="price-box" data-offer-prices="thread" aria-live="polite">
+            <div class="offer-row is-active" data-term="1m" data-amount="39000"><span class="pr-label">1개월</span><span class="offer-value"><b>39,000원</b><span class="offer-note">매월 자동결제</span></span></div>
+            <div class="offer-row" data-term="3m" data-amount="109000"><span class="pr-label">3개월</span><span class="offer-value"><b>109,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
+            <div class="offer-row" data-term="6m" data-amount="206000"><span class="pr-label">6개월</span><span class="offer-value"><b>206,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
+            <div class="offer-row" data-term="12m" data-amount="390000"><span class="pr-label">12개월</span><span class="offer-value"><b>390,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          </div>
+          <div class="offer-actions">
+            <a class="product-trial" data-trial-download="mindhub-server" data-product-id="thread" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
+            <a class="checkout-cta" data-checkout="thread" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/sAZ3Z" target="_blank" rel="noopener">1개월 39,000원 · 결제하기</a>
+            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">스레드대리 선택 상담하기</a>
+            <p class="checkout-help">1개월은 카드 정기결제, 3·6·12개월은 한 번 결제하는 기간권입니다.</p>
+          </div>
+        </article>
+
+<article id="card-gif" class="card t-make" aria-labelledby="card-gif-title">
+          <div class="card-top"><div class="badge">움</div><div><h3 class="card-name" id="card-gif-title">움짤대리</h3><div class="card-role">GIF·WEBP·APNG 변환·편집</div></div></div>
+          <div class="card-media"><div class="vbox" data-yt="kHlsOh6BLuA" data-title="움짤대리 작동 영상"></div></div>
+          <p class="card-job">사진·영상·화면 녹화를 <b>올릴 곳에 맞는 움짤</b>로 만듭니다.</p>
+          <ul class="feat" aria-label="움짤대리 주요 기능"><li><b>사진 합치기</b> · 순서·프레임별 시간·타임라인을 정해 GIF·WEBP·APNG 제작</li><li><b>영상 변환</b> · 구간·속도·크기·반복·부메랑을 조절해 움짤로 저장</li><li><b>화면 녹화</b> · 전체 화면이나 선택 영역을 녹화하고 일시정지·시간 설정</li><li><b>기존 파일 편집</b> · 크롭·회전·반전·역재생·필터·텍스트·워터마크</li><li><b>업로드 최적화</b> · 네이버·티스토리·카카오·스마트스토어 규격 맞춤 · 영상·녹화는 FFmpeg 필요</li></ul>
+          <div class="price-box" data-offer-prices="gif" aria-live="polite">
+            <div class="offer-row is-active" data-term="1m" data-amount="9900"><span class="pr-label">1개월</span><span class="offer-value"><b>9,900원</b><span class="offer-note">매월 자동결제</span></span></div>
+            <div class="offer-row" data-term="3m" data-amount="28000"><span class="pr-label">3개월</span><span class="offer-value"><b>28,000원</b><span class="offer-note is-fixed">1회 결제 · 약 6% 절감</span></span></div>
+            <div class="offer-row" data-term="6m" data-amount="52000"><span class="pr-label">6개월</span><span class="offer-value"><b>52,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
+            <div class="offer-row" data-term="12m" data-amount="99000"><span class="pr-label">12개월</span><span class="offer-value"><b>99,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          </div>
+          <div class="offer-actions">
+            <a class="product-trial" data-trial-download="mindhub-server" data-product-id="gif" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
+            <a class="checkout-cta" data-checkout="gif" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/KowIW" target="_blank" rel="noopener">1개월 9,900원 · 결제하기</a>
+            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">움짤대리 선택 상담하기</a>
+            <p class="checkout-help">1개월은 카드 정기결제, 3·6·12개월은 한 번 결제하는 기간권입니다.</p>
+          </div>
+        </article>
+
+<article id="card-seoichu" class="card t-write" aria-labelledby="card-seoichu-title">
+          <div class="card-top"><div class="badge">서</div><div><h3 class="card-name" id="card-seoichu-title">서이추대리</h3><div class="card-role">서이추·댓글·답글 자동화</div></div></div>
+          <div class="card-media"><div class="vbox" data-yt="oZ69ZV2Na0w" data-title="곰대리 서이추 영상" data-embed-blocked="1"></div></div>
+          <p class="card-job">새 이웃을 찾고 <b>이웃 글 댓글과 내 글 답글</b>까지 이어갑니다.</p>
+          <ul class="feat" aria-label="서이추대리 주요 기능"><li><b>신규 서이추</b> · 키워드로 활동 블로그를 찾아 서로이웃 자동 신청</li><li><b>이웃 글 댓글</b> · 서로이웃 또는 전체 이웃의 최신 글을 골라 댓글 작성</li><li><b>내 글 답글</b> · 최근 글에서 아직 답하지 않은 댓글만 찾아 자동 답글</li><li><b>대상 선별</b> · 포스팅·최근 활동·이웃 수·블랙리스트·기신청 이력 필터</li><li><b>올인원 실행</b> · 내 글 답글→이웃 글 댓글→신규 서이추를 순서대로 진행</li></ul>
+          <div class="price-box" data-offer-prices="sooichu" aria-live="polite">
+            <div class="offer-row is-active" data-term="1m" data-amount="14900"><span class="pr-label">1개월</span><span class="offer-value"><b>14,900원</b><span class="offer-note">매월 자동결제</span></span></div>
+            <div class="offer-row" data-term="3m" data-amount="42000"><span class="pr-label">3개월</span><span class="offer-value"><b>42,000원</b><span class="offer-note is-fixed">1회 결제 · 약 6% 절감</span></span></div>
+            <div class="offer-row" data-term="6m" data-amount="79000"><span class="pr-label">6개월</span><span class="offer-value"><b>79,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
+            <div class="offer-row" data-term="12m" data-amount="99000"><span class="pr-label">12개월</span><span class="offer-value"><b>99,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          </div>
+          <div class="offer-actions">
+            <a class="product-trial" data-trial-download="mindhub-server" data-product-id="sooichu" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
+            <a class="checkout-cta" data-checkout="sooichu" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/3_SKS" target="_blank" rel="noopener">1개월 14,900원 · 결제하기</a>
+            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">서이추대리 선택 상담하기</a>
+            <p class="checkout-help">1개월은 카드 정기결제, 3·6·12개월은 한 번 결제하는 기간권입니다.</p>
+          </div>
+        </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec trial-guide" id="trial-guide">
+  <div class="wrap">
+    <div class="sec-head"><div class="sec-eyebrow">카드 등록 없는 7일 체험</div><h2 class="sec-title">내 업무 하나로,<br>먼저 직접 확인하세요</h2><p class="sec-lede">곰대리의 설치·실행 프로그램 이름은 <b>마인드허브(MindHub)</b>입니다. 휴대폰에서는 사용법을 확인하고, 실제 실행은 Windows PC에서 진행하세요.</p></div>
+    <ol class="trial-steps"><li><span>01</span><div><h3>마인드허브 설치</h3><p>Windows PC에서 설치 안내를 확인하고 프로그램을 받습니다.</p></div></li><li><span>02</span><div><h3>필요한 프로그램 선택</h3><p>컷대장, 블로그대리 등 체험할 도구를 선택하고 사용 설정을 확인합니다.</p></div></li><li><span>03</span><div><h3>내 자료로 결과 확인</h3><p>영상·글·이미지를 직접 만들어 보고 맞는 프로그램과 기간을 고릅니다.</p></div></li></ol>
+    <div class="trial-guide-actions"><a class="cta-main" data-trial-download="mindhub-server" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">무료 7일 체험판 받기</a><a class="cta-ghost" data-cta-intent="설치·첫 사용 도움" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">설치·첫 사용 문의하기</a></div>
+    <p class="install-note">체험은 1인 1회 · 자동 유료전환 없음 · AI 기능에 필요한 본인 API 설정과 AI 사용료는 별도입니다.</p>
+  </div>
+</section>
 
 <section class="sec" id="package">
   <div class="wrap">
@@ -907,7 +1111,9 @@ dialog.lb::backdrop{background:transparent}
       <p class="term-status" id="term-status" aria-live="polite"><b>1개월</b> 가격을 보고 있습니다. 래피드 정기구독은 카드 결제만 지원합니다.</p>
     </div>
 
-    <section class="price-overview rv" id="all-prices" aria-labelledby="all-prices-title">
+    <details class="catalog-fold price-fold" id="all-prices">
+      <summary><span><b>전체 가격표 한눈에 비교</b><small>단품 8종 · 패키지 4종 · 교육 4종 / 모든 기간의 가격과 할인</small></span><span class="fold-label" aria-hidden="true">펼쳐보기 +</span></summary>
+      <section class="price-overview" aria-labelledby="all-prices-title">
       <div class="price-overview-head">
         <div>
           <div class="price-overview-kicker">ALL PRICES AT A GLANCE</div>
@@ -1037,7 +1243,8 @@ dialog.lb::backdrop{background:transparent}
       </div>
 
       <a class="free-price-strip" href="#free-tools"><span><b>구독 없이 쓰는 무료 도구 3종</b> · 키워드 관제탑+이미지 누끼+이미지공작소</span><strong>모두 0원</strong></a>
-    </section>
+      </section>
+    </details>
 
     <div class="pk-grid rv">
       <div class="pk" id="pack-blog">
@@ -1060,7 +1267,7 @@ dialog.lb::backdrop{background:transparent}
           <div class="offer-actions">
             <a class="checkout-cta" data-checkout="pack_blog" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/532GR" target="_blank" rel="noopener">1개월 55,000원 · 결제하기</a>
              <a class="pk-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">성장팩 선택 상담하기 →</a>
-            <p class="checkout-help">래피드 상품·웹훅 검증이 끝난 기간만 직접 결제가 열립니다.</p>
+            <p class="checkout-help">1개월은 카드 정기결제, 3·6·12개월은 한 번 결제하는 기간권입니다.</p>
           </div>
         </div>
       </div>
@@ -1085,7 +1292,7 @@ dialog.lb::backdrop{background:transparent}
           <div class="offer-actions">
             <a class="checkout-cta" data-checkout="pack_blog_video" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/nbZ2j" target="_blank" rel="noopener">1개월 99,000원 · 결제하기</a>
              <a class="pk-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">콘텐츠팩 선택 상담하기 →</a>
-            <p class="checkout-help">래피드 상품·웹훅 검증이 끝난 기간만 직접 결제가 열립니다.</p>
+            <p class="checkout-help">1개월은 카드 정기결제, 3·6·12개월은 한 번 결제하는 기간권입니다.</p>
           </div>
         </div>
       </div>
@@ -1119,7 +1326,7 @@ dialog.lb::backdrop{background:transparent}
           <div class="offer-actions">
             <a class="checkout-cta" data-checkout="pack_multichannel" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/rRfJ1" target="_blank" rel="noopener">1개월 119,000원 · 결제하기</a>
              <a class="pk-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">멀티채널팩 선택 상담하기 →</a>
-            <p class="checkout-help">래피드 상품·웹훅 검증이 끝난 기간만 직접 결제가 열립니다.</p>
+            <p class="checkout-help">1개월은 카드 정기결제, 3·6·12개월은 한 번 결제하는 기간권입니다.</p>
           </div>
         </div>
       </div>
@@ -1202,184 +1409,6 @@ dialog.lb::backdrop{background:transparent}
       <div class="purchase-note"><b>Windows PC 전용</b> · 기본 이용 조건은 1인·1PC입니다.</div>
       <div class="purchase-note"><b>AI 사용료 별도</b> · 본인 명의 API 키를 사용하며 제공사 사용료가 발생할 수 있습니다.</div>
       <div class="purchase-note"><b>설치 안내</b> · 기본 가이드와 오픈채팅을 제공하고 화면 공유 교육은 선택 과정입니다.</div>
-    </div>
-  </div>
-</section>
-
-<section class="sec" id="roster">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <div class="sec-eyebrow">사원 명부</div>
-      <h2 class="sec-title">지금 필요한 한 명만<br>뽑으시면 됩니다</h2>
-      <p class="sec-lede">다 필요하지는 않습니다. 손이 제일 많이 가는 일 하나를 고르세요. 한 명만 써보고, 필요해지면 그때 한 명 더 뽑으셔도 됩니다. 아래 금액은 전부 VAT 포함 최종가입니다.</p>
-    </div>
-    <div class="term-panel term-panel--compact rv" aria-label="단품 이용기간 선택">
-      <div class="term-head"><div><b>단품도 기간을 바꿔 비교하세요</b><span>선택한 기간이 아래 8개 단품 가격에 함께 적용됩니다.</span></div></div>
-      <div class="term-controls" role="group" aria-label="단품 요금 기간 선택">
-        <button class="term-option" type="button" data-term="1m" aria-pressed="true"><b>1개월</b><span>자동결제 · 카드만</span></button>
-        <button class="term-option" type="button" data-term="3m" aria-pressed="false"><b>3개월</b><span>1회 결제 · 간편결제</span></button>
-        <button class="term-option" type="button" data-term="6m" aria-pressed="false"><b>6개월</b><span>1회 결제 · 간편결제</span></button>
-        <button class="term-option" type="button" data-term="12m" aria-pressed="false"><b>12개월</b><span>1회 결제 · 간편결제</span></button>
-      </div>
-    </div>
-    <div class="lead-bar rv">
-      <div class="dept-name">주력 직원</div>
-      <div class="dept-desc">가장 많이 찾는 두 명</div>
-      <div class="dept-count">2 SEATS</div>
-    </div>
-    <div class="roster-lead rv">
-<article id="card-blog" class="card card-lead t-write" aria-labelledby="card-blog-title">
-          <div class="lead-flag">가장 많이 찾는 직원</div>
-          <div class="card-top"><div class="badge">블</div><div><h3 class="card-name" id="card-blog-title">블로그대리</h3><div class="card-role">AI 블로그·제휴글 자동 발행</div></div></div>
-          <div class="card-media"><div class="vbox" data-yt="YbobCbsIceo" data-title="곰대리 블로그 영상"></div></div>
-          <p class="card-job">키워드 고르기부터 <b>글·이미지 작성과 네이버 발행</b>까지 대신합니다.</p>
-          <ul class="feat" aria-label="블로그대리 주요 기능"><li><b>일반 글</b> · 키워드·자료로 AI 제목·본문·태그·이미지 생성</li><li><b>내 콘텐츠</b> · 내 사진 폴더·영상·지도·관련글까지 스마트에디터에 입력</li><li><b>제휴 글</b> · 쿠팡파트너스·쇼핑커넥트 링크를 활용해 상품 글과 고지문 준비</li><li><b>발행 관리</b> · 즉시·예약·저장 발행과 간격·시간대·일일 한도 설정</li><li><b>성과 확인</b> · 무료 키워드 관제탑 추천과 검색 순위·색인 상태 연동</li></ul>
-          <div class="price-box" data-offer-prices="blog" aria-live="polite">
-            <div class="offer-row is-active" data-term="1m" data-amount="49000"><span class="pr-label">1개월</span><span class="offer-value"><b>49,000원</b><span class="offer-note">매월 자동결제</span></span></div>
-            <div class="offer-row" data-term="3m" data-amount="137000"><span class="pr-label">3개월</span><span class="offer-value"><b>137,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
-            <div class="offer-row" data-term="6m" data-amount="259000"><span class="pr-label">6개월</span><span class="offer-value"><b>259,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
-            <div class="offer-row" data-term="12m" data-amount="490000"><span class="pr-label">12개월</span><span class="offer-value"><b>490,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
-          </div>
-          <div class="offer-actions">
-            <a class="checkout-cta" data-checkout="blog" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/ZR1lK" target="_blank" rel="noopener">1개월 49,000원 · 결제하기</a>
-            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">블로그대리 선택 상담하기</a>
-            <p class="checkout-help">래피드 상품·웹훅 검증이 끝난 기간만 직접 결제가 열립니다.</p>
-          </div>
-        </article>
-
-<article id="card-cut" class="card card-lead t-make" aria-labelledby="card-cut-title">
-          <div class="lead-flag">새로 입사한 직원</div>
-          <div class="card-top"><div class="badge">컷</div><div><h3 class="card-name" id="card-cut-title">컷대장</h3><div class="card-role">쇼츠·롱폼·상품 영상 자동 제작</div></div></div>
-          <div class="card-media"><div class="vbox" data-yt="rmsIz1PWV0Y" data-title="컷대장 작동 영상"></div></div>
-          <p class="card-job">주제·촬영본·사진·상품 링크를 <b>업로드할 MP4 영상</b>으로 만듭니다.</p>
-          <ul class="feat" aria-label="컷대장 주요 기능"><li><b>AI 영상</b> · 주제나 내 대본으로 목소리·배경·자막까지 자동 조립</li><li><b>내 영상 편집</b> · 무음 구간 컷, STT 자동자막, AI 내레이션</li><li><b>사진·상품 영상</b> · 사진 슬라이드와 상품 링크 기반 홍보 영상 제작</li><li><b>링크로 만들기</b> · 공개 블로그·뉴스·카페·유튜브 자료를 영상으로 전환</li><li><b>출력·검토</b> · 쇼츠 9:16·롱폼 16:9, 길이 조절·외부 음성 싱크·품질검사</li></ul>
-          <div class="price-box" data-offer-prices="cutdaejang" aria-live="polite">
-            <div class="offer-row is-active" data-term="1m" data-amount="59000"><span class="pr-label">1개월</span><span class="offer-value"><b>59,000원</b><span class="offer-note">매월 자동결제</span></span></div>
-            <div class="offer-row" data-term="3m" data-amount="165000"><span class="pr-label">3개월</span><span class="offer-value"><b>165,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
-            <div class="offer-row" data-term="6m" data-amount="312000"><span class="pr-label">6개월</span><span class="offer-value"><b>312,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
-            <div class="offer-row" data-term="12m" data-amount="590000"><span class="pr-label">12개월</span><span class="offer-value"><b>590,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
-          </div>
-          <div class="offer-actions">
-            <a class="checkout-cta" data-checkout="cutdaejang" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/w3Se9" target="_blank" rel="noopener">1개월 59,000원 · 결제하기</a>
-            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">컷대장 선택 상담하기</a>
-            <p class="checkout-help">래피드 상품·웹훅 검증이 끝난 기간만 직접 결제가 열립니다.</p>
-          </div>
-        </article>
-    </div>
-
-    <div class="lead-bar rv" style="margin-top:44px">
-      <div class="dept-name">그 밖의 직원</div>
-      <div class="dept-desc">필요한 한 명만 골라 쓰세요</div>
-      <div class="dept-count">6 SEATS</div>
-    </div>
-    <div class="roster rv">
-<article id="card-detail" class="card t-make" aria-labelledby="card-detail-title">
-          <div class="card-top"><div class="badge">상</div><div><h3 class="card-name" id="card-detail-title">상세대리</h3><div class="card-role">ChatGPT 상세페이지 8컷 제작</div></div></div>
-          <div class="card-media"><div class="vbox" data-yt="iI0Xvi6ONZ4" data-title="곰대리 상세페이지 영상"></div></div>
-          <p class="card-job">상품 링크와 원본 사진으로 <b>기획·카피·상세 8컷</b>을 준비합니다.</p>
-          <ul class="feat" aria-label="상세대리 주요 기능"><li><b>상품정보 수집</b> · 지원 링크에서 상품명·가격·스펙 자동 채우기</li><li><b>8컷 자동 제작</b> · 원본 사진 1~3장으로 제품 진단→카피 기획→섹션 생성</li><li><b>콘셉트 선택</b> · 판매 각도 기획안과 참고 상세페이지의 디자인 분위기 적용</li><li><b>부분 복구</b> · 실패한 컷만 다시 만들고 이미 완성한 컷은 유지</li><li><b>결과 저장</b> · 대표이미지·세로 한 장 JPG·PDF·낱장 이미지로 내려받기</li></ul>
-          <div class="price-box" data-offer-prices="gomdaeri" aria-live="polite">
-            <div class="offer-row is-active" data-term="1m" data-amount="19000"><span class="pr-label">1개월</span><span class="offer-value"><b>19,000원</b><span class="offer-note">매월 자동결제</span></span></div>
-            <div class="offer-row" data-term="3m" data-amount="53000"><span class="pr-label">3개월</span><span class="offer-value"><b>53,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
-            <div class="offer-row" data-term="6m" data-amount="100000"><span class="pr-label">6개월</span><span class="offer-value"><b>100,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
-            <div class="offer-row" data-term="12m" data-amount="190000"><span class="pr-label">12개월</span><span class="offer-value"><b>190,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
-          </div>
-          <div class="offer-actions">
-            <a class="checkout-cta" data-checkout="gomdaeri" data-checkout-fallback="kakao" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">구매 가능 여부 · 카카오톡 문의하기</a>
-            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">상세대리 상담하기</a>
-            <p class="checkout-help">상세대리 구독 만료 인증과 웹훅 검증 후 직접 결제가 열립니다.</p>
-          </div>
-        </article>
-
-<article id="card-cafe" class="card t-run" aria-labelledby="card-cafe-title">
-          <div class="card-top"><div class="badge">카</div><div><h3 class="card-name" id="card-cafe-title">카페대리</h3><div class="card-role">카페 글·댓글·좋아요 자동화</div></div></div>
-          <div class="card-media"><div class="vbox" data-yt="sp9AVvSseRQ" data-title="카페대리 작동 영상"></div></div>
-          <p class="card-job">카페에 <b>글을 올리고 다른 글에 반응하던 일</b>을 함께 처리합니다.</p>
-          <ul class="feat" aria-label="카페대리 주요 기능"><li><b>AI 글 작성</b> · 키워드·카페·게시판 맥락에 맞춰 제목과 본문 생성</li><li><b>댓글·좋아요</b> · 글을 읽은 AI 댓글, 함께 실행, 내 글·이미 반응한 글 구분</li><li><b>여러 곳 발행</b> · 등록한 카페·게시판에 다중 발행하고 계정별 창을 분리 운영</li><li><b>자동 운영</b> · 키워드 풀과 게시판을 정해 간격 스케줄러로 발행</li><li><b>이미지 첨부</b> · 내 사진·AI 이미지·썸네일 카드·이미지 폴더 사용</li></ul>
-          <div class="price-box" data-offer-prices="cafe" aria-live="polite">
-            <div class="offer-row is-active" data-term="1m" data-amount="39000"><span class="pr-label">1개월</span><span class="offer-value"><b>39,000원</b><span class="offer-note">매월 자동결제</span></span></div>
-            <div class="offer-row" data-term="3m" data-amount="109000"><span class="pr-label">3개월</span><span class="offer-value"><b>109,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
-            <div class="offer-row" data-term="6m" data-amount="206000"><span class="pr-label">6개월</span><span class="offer-value"><b>206,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
-            <div class="offer-row" data-term="12m" data-amount="390000"><span class="pr-label">12개월</span><span class="offer-value"><b>390,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
-          </div>
-          <div class="offer-actions">
-            <a class="checkout-cta" data-checkout="cafe" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/u7Ckb" target="_blank" rel="noopener">1개월 39,000원 · 결제하기</a>
-            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">카페대리 선택 상담하기</a>
-            <p class="checkout-help">래피드 상품·웹훅 검증이 끝난 기간만 직접 결제가 열립니다.</p>
-          </div>
-        </article>
-
-<article id="card-tistory" class="card t-write" aria-labelledby="card-tistory-title">
-          <div class="card-top"><div class="badge">티</div><div><h3 class="card-name" id="card-tistory-title">티스토리대리</h3><div class="card-role">SEO·제휴글 자동 발행</div></div></div>
-          <div class="card-media"><div class="vbox" data-yt="qzWs-xWqKuk" data-title="티스토리대리 작동 영상"></div></div>
-          <p class="card-job">여러 키워드의 <b>글·이미지 작성과 티스토리 발행</b>을 이어서 처리합니다.</p>
-          <ul class="feat" aria-label="티스토리대리 주요 기능"><li><b>AI 배치 작성</b> · 여러 키워드의 제목·본문·태그를 만들고 순차 발행</li><li><b>SEO 구조</b> · 실제 H2·목록·이미지 alt·관련글 내부링크 적용</li><li><b>발행 방식</b> · 즉시·예약·저장 발행과 공개·보호·비공개·임시저장</li><li><b>제휴 글</b> · 쿠팡·네이버쇼핑 상품 정보와 고지문을 넣어 발행</li><li><b>운영 준비</b> · 소개·개인정보처리방침·문의 페이지 작성 지원</li></ul>
-          <div class="price-box" data-offer-prices="tistory" aria-live="polite">
-            <div class="offer-row is-active" data-term="1m" data-amount="29000"><span class="pr-label">1개월</span><span class="offer-value"><b>29,000원</b><span class="offer-note">매월 자동결제</span></span></div>
-            <div class="offer-row" data-term="3m" data-amount="81000"><span class="pr-label">3개월</span><span class="offer-value"><b>81,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
-            <div class="offer-row" data-term="6m" data-amount="153000"><span class="pr-label">6개월</span><span class="offer-value"><b>153,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
-            <div class="offer-row" data-term="12m" data-amount="290000"><span class="pr-label">12개월</span><span class="offer-value"><b>290,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
-          </div>
-          <div class="offer-actions">
-            <a class="checkout-cta" data-checkout="tistory" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/s-DI6" target="_blank" rel="noopener">1개월 29,000원 · 결제하기</a>
-            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">티스토리대리 선택 상담하기</a>
-            <p class="checkout-help">래피드 상품·웹훅 검증이 끝난 기간만 직접 결제가 열립니다.</p>
-          </div>
-        </article>
-
-<article id="card-thread" class="card t-write" aria-labelledby="card-thread-title">
-          <div class="card-top"><div class="badge">스</div><div><h3 class="card-name" id="card-thread-title">스레드대리</h3><div class="card-role">Threads 글·반응·수익화 자동화</div></div></div>
-          <div class="card-media"><div class="vbox" data-yt="B9d0tKDQJu4" data-title="스레드대리 작동 영상"></div></div>
-          <p class="card-job">글 발행부터 <b>댓글·좋아요·팔로우와 답방</b>까지 이어갑니다.</p>
-          <ul class="feat" aria-label="스레드대리 주요 기능"><li><b>AI 글쓰기</b> · 주제 한 줄로 짧은 글을 만들고 수정·이미지 첨부·즉시 발행</li><li><b>관심 고객 찾기</b> · 키워드 대상의 글에 좋아요·AI 댓글·팔로우 활동</li><li><b>반응 이어가기</b> · 나에게 반응한 사람 답방·팔로우백과 내 글 댓글 답글</li><li><b>예약·캠페인</b> · 일반 글 예약·반복 발행과 업종·키워드 기반 자동 운영</li><li><b>수익형 콘텐츠</b> · 쿠팡·뉴스픽 글, 이미지·링크 댓글·예약 큐와 수익 소재 재활용</li></ul>
-          <div class="price-box" data-offer-prices="thread" aria-live="polite">
-            <div class="offer-row is-active" data-term="1m" data-amount="39000"><span class="pr-label">1개월</span><span class="offer-value"><b>39,000원</b><span class="offer-note">매월 자동결제</span></span></div>
-            <div class="offer-row" data-term="3m" data-amount="109000"><span class="pr-label">3개월</span><span class="offer-value"><b>109,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
-            <div class="offer-row" data-term="6m" data-amount="206000"><span class="pr-label">6개월</span><span class="offer-value"><b>206,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
-            <div class="offer-row" data-term="12m" data-amount="390000"><span class="pr-label">12개월</span><span class="offer-value"><b>390,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
-          </div>
-          <div class="offer-actions">
-            <a class="checkout-cta" data-checkout="thread" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/sAZ3Z" target="_blank" rel="noopener">1개월 39,000원 · 결제하기</a>
-            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">스레드대리 선택 상담하기</a>
-            <p class="checkout-help">래피드 상품·웹훅 검증이 끝난 기간만 직접 결제가 열립니다.</p>
-          </div>
-        </article>
-
-<article id="card-gif" class="card t-make" aria-labelledby="card-gif-title">
-          <div class="card-top"><div class="badge">움</div><div><h3 class="card-name" id="card-gif-title">움짤대리</h3><div class="card-role">GIF·WEBP·APNG 변환·편집</div></div></div>
-          <div class="card-media"><div class="vbox" data-yt="kHlsOh6BLuA" data-title="움짤대리 작동 영상"></div></div>
-          <p class="card-job">사진·영상·화면 녹화를 <b>올릴 곳에 맞는 움짤</b>로 만듭니다.</p>
-          <ul class="feat" aria-label="움짤대리 주요 기능"><li><b>사진 합치기</b> · 순서·프레임별 시간·타임라인을 정해 GIF·WEBP·APNG 제작</li><li><b>영상 변환</b> · 구간·속도·크기·반복·부메랑을 조절해 움짤로 저장</li><li><b>화면 녹화</b> · 전체 화면이나 선택 영역을 녹화하고 일시정지·시간 설정</li><li><b>기존 파일 편집</b> · 크롭·회전·반전·역재생·필터·텍스트·워터마크</li><li><b>업로드 최적화</b> · 네이버·티스토리·카카오·스마트스토어 규격 맞춤 · 영상·녹화는 FFmpeg 필요</li></ul>
-          <div class="price-box" data-offer-prices="gif" aria-live="polite">
-            <div class="offer-row is-active" data-term="1m" data-amount="9900"><span class="pr-label">1개월</span><span class="offer-value"><b>9,900원</b><span class="offer-note">매월 자동결제</span></span></div>
-            <div class="offer-row" data-term="3m" data-amount="28000"><span class="pr-label">3개월</span><span class="offer-value"><b>28,000원</b><span class="offer-note is-fixed">1회 결제 · 약 6% 절감</span></span></div>
-            <div class="offer-row" data-term="6m" data-amount="52000"><span class="pr-label">6개월</span><span class="offer-value"><b>52,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
-            <div class="offer-row" data-term="12m" data-amount="99000"><span class="pr-label">12개월</span><span class="offer-value"><b>99,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
-          </div>
-          <div class="offer-actions">
-            <a class="checkout-cta" data-checkout="gif" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/KowIW" target="_blank" rel="noopener">1개월 9,900원 · 결제하기</a>
-            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">움짤대리 선택 상담하기</a>
-            <p class="checkout-help">래피드 상품·웹훅 검증이 끝난 기간만 직접 결제가 열립니다.</p>
-          </div>
-        </article>
-
-<article id="card-seoichu" class="card t-write" aria-labelledby="card-seoichu-title">
-          <div class="card-top"><div class="badge">서</div><div><h3 class="card-name" id="card-seoichu-title">서이추대리</h3><div class="card-role">서이추·댓글·답글 자동화</div></div></div>
-          <div class="card-media"><div class="vbox" data-yt="oZ69ZV2Na0w" data-title="곰대리 서이추 영상" data-embed-blocked="1"></div></div>
-          <p class="card-job">새 이웃을 찾고 <b>이웃 글 댓글과 내 글 답글</b>까지 이어갑니다.</p>
-          <ul class="feat" aria-label="서이추대리 주요 기능"><li><b>신규 서이추</b> · 키워드로 활동 블로그를 찾아 서로이웃 자동 신청</li><li><b>이웃 글 댓글</b> · 서로이웃 또는 전체 이웃의 최신 글을 골라 댓글 작성</li><li><b>내 글 답글</b> · 최근 글에서 아직 답하지 않은 댓글만 찾아 자동 답글</li><li><b>대상 선별</b> · 포스팅·최근 활동·이웃 수·블랙리스트·기신청 이력 필터</li><li><b>올인원 실행</b> · 내 글 답글→이웃 글 댓글→신규 서이추를 순서대로 진행</li></ul>
-          <div class="price-box" data-offer-prices="sooichu" aria-live="polite">
-            <div class="offer-row is-active" data-term="1m" data-amount="14900"><span class="pr-label">1개월</span><span class="offer-value"><b>14,900원</b><span class="offer-note">매월 자동결제</span></span></div>
-            <div class="offer-row" data-term="3m" data-amount="42000"><span class="pr-label">3개월</span><span class="offer-value"><b>42,000원</b><span class="offer-note is-fixed">1회 결제 · 약 6% 절감</span></span></div>
-            <div class="offer-row" data-term="6m" data-amount="79000"><span class="pr-label">6개월</span><span class="offer-value"><b>79,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
-            <div class="offer-row" data-term="12m" data-amount="99000"><span class="pr-label">12개월</span><span class="offer-value"><b>99,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
-          </div>
-          <div class="offer-actions">
-            <a class="checkout-cta" data-checkout="sooichu" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/3_SKS" target="_blank" rel="noopener">1개월 14,900원 · 결제하기</a>
-            <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">서이추대리 선택 상담하기</a>
-            <p class="checkout-help">래피드 상품·웹훅 검증이 끝난 기간만 직접 결제가 열립니다.</p>
-          </div>
-        </article>
     </div>
   </div>
 </section>
@@ -1638,22 +1667,38 @@ dialog.lb::backdrop{background:transparent}
 <a class="kakao-float" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener" aria-label="카카오톡으로 상품과 교육 문의하기">
   <span class="kakao-float-icon" aria-hidden="true">톡</span><span class="kakao-float-copy"><b>카카오톡<br>문의하기</b><small>상품·교육 빠른 상담</small></span>
 </a>
-<div class="dock"><a data-trial-download="mindhub-server" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">무료 7일 체험판 받기 →</a></div>
+<div class="dock" aria-label="빠른 체험·문의"><a class="dock-trial" data-trial-download="mindhub-server" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">무료 7일 체험</a><a class="dock-contact" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">카카오톡 문의</a></div>
+<dialog class="trial-dialog" id="trial-dialog" aria-labelledby="trial-dialog-title" aria-describedby="trial-dialog-desc">
+  <button class="trial-dialog-close" type="button" aria-label="체험 안내 닫기">×</button>
+  <div class="sec-eyebrow">곰대리 × 마인드허브</div>
+  <h2 id="trial-dialog-title">실행은 Windows PC에서,<br>지금은 체험 준비부터</h2>
+  <p id="trial-dialog-desc">곰대리 프로그램은 마인드허브에서 설치·실행합니다. 휴대폰에서는 설치 링크를 복사해 나와의 채팅이나 메모에 보관한 뒤 PC에서 열어 주세요.</p>
+  <p class="trial-dialog-product" id="trial-dialog-product"></p>
+  <label for="trial-pc-url">PC에서 열 설치 안내 주소</label>
+  <input id="trial-pc-url" readonly type="url" value="https://license.gomdaeri.kr/download/mindhub?from=home">
+  <button class="trial-copy cta-main" type="button">PC용 설치 링크 복사</button>
+  <p class="trial-copy-status" role="status" aria-live="polite"></p>
+  <a class="cta-ghost trial-help" data-cta-intent="모바일에서 설치·체험 도움" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">설치·체험 카카오톡 문의</a>
+  <a class="trial-direct" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">설치 안내 페이지 직접 열기 →</a>
+  <p class="install-note">7일 체험 · 1인 1회 · 카드 등록 없음 · AI 사용료 별도<br>무료 도구 3종은 유료 구독 없이 이용할 수 있습니다.</p>
+</dialog>
 
 <div class="copy-toast" id="copy-toast" role="status" aria-live="polite"></div>
 <dialog class="lb" id="lb" aria-label="이미지 크게 보기"><button class="lb-x" id="lbx" type="button" aria-label="닫기">✕</button><img id="lbimg" alt=""></dialog>
 
 <script src="latpeed_checkout_config.js?v=20260828-v8"></script>
+<script src="conversion-events.js?v=20260905-2"></script>
+<script src="conversion-ui.js?v=20260905-2" defer></script>
 <script>
 (function(){
-  // 전환 측정 준비 — 분석 도구가 연결되면 dataLayer 이벤트를 그대로 사용할 수 있습니다.
+  // 기존 측정 ID를 유지하고 실제 GA4 event 명령으로 전송합니다.
   window.dataLayer = window.dataLayer || [];
   var attribution = {};
   function pushEvent(name, data){
-    var payload = data || {};
+    var payload = Object.assign({}, data || {});
     Object.keys(attribution).forEach(function(key){ payload[key] = attribution[key]; });
     payload.event = name;
-    window.dataLayer.push(payload);
+    if (window.GomdaeriAnalytics) window.GomdaeriAnalytics.track(name, payload);
     try { document.dispatchEvent(new CustomEvent('gomdaeri:conversion-event', {detail:payload})); } catch (err) {}
   }
   try {
@@ -1839,7 +1884,7 @@ dialog.lb::backdrop{background:transparent}
   function ctaContext(link){
     var text = (link.textContent || '').replace(/\s+/g,' ').trim();
     var quoted = text.match(/[“\"]([^”\"]+)[”\"]/);
-    var intent = quoted ? quoted[1] : '';
+    var intent = link.getAttribute('data-cta-intent') || (quoted ? quoted[1] : '');
     var card = link.closest('.card');
     var pack = link.closest('.pk');
     var education = link.closest('.edu');
@@ -1852,15 +1897,15 @@ dialog.lb::backdrop{background:transparent}
     if (section === 'free_tools') message = '무료 도구 3종을 받고 싶습니다.';
     else if (section === 'education') message = (intent || '교육 과정') + ' 일정과 결제 방법을 문의드립니다.';
     else if (section === 'product' || section === 'package') message = (intent || '곰대리') + ' ' + termMeta[selectedTerm].label + ' 요금제와 7일 체험을 문의드립니다.';
-    else message = '곰대리 7일 체험과 요금제를 문의드립니다. 줄이고 싶은 업무: ';
+    else message = (intent || '곰대리 7일 체험과 요금제') + ' 문의드립니다. 줄이고 싶은 업무: ';
     return {label:text, intent:intent, section:section, message:message};
   }
-  document.querySelectorAll('a[href*="pf.kakao.com"]').forEach(function(link){
-    link.addEventListener('click', function(){
+  document.addEventListener('click', function(event){
+      var link = event.target.closest('a');
+      if (!link || link.origin !== 'https://pf.kakao.com') return;
       var info = ctaContext(link);
-      pushEvent('gomdaeri_cta_click', {cta_label:info.label, cta_section:info.section, cta_intent:info.intent, destination:'kakao_chat'});
+      pushEvent('gomdaeri_cta_click', {cta_label:info.label, cta_section:info.section, cta_intent:info.intent, product_id:window.GomdaeriAnalytics.product(link), destination:'kakao_chat'});
       copyText(info.message);
-    });
   });
   document.querySelectorAll('.decision-card').forEach(function(link){
     link.addEventListener('click', function(){ pushEvent('gomdaeri_plan_path_click', {path_label:(link.textContent || '').replace(/\s+/g,' ').trim(), destination:link.getAttribute('href')}); });
@@ -2007,7 +2052,7 @@ dialog.lb::backdrop{background:transparent}
     btn.appendChild(tri);
     box.appendChild(btn);
     btn.addEventListener('click', function(){
-      pushEvent('gomdaeri_video_play', {video_id:id, video_title:title});
+      pushEvent('gomdaeri_video_play', {video_id:id, video_title:title, product_id:window.GomdaeriAnalytics.product(box)});
       if (box.hasAttribute('data-embed-blocked')) {
         window.open('https://www.youtube.com/watch?v=' + id, '_blank', 'noopener,noreferrer');
         return;
