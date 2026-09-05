@@ -3,7 +3,7 @@
   var analytics = window.GomdaeriAnalytics;
   var track = function (name, data) { if (analytics) analytics.track(name, data); };
   var product = function (element) { return analytics ? analytics.product(element) : 'general'; };
-  var names = {blog:'블로그대리',cutdaejang:'컷대장',gomdaeri:'상세대리',cafe:'카페대리',tistory:'티스토리대리',thread:'스레드대리',gif:'움짤대리',sooichu:'서이추대리',free_tools:'무료 도구 3종'};
+  var names = {blog:'블로그대리',cutdaejang:'컷대장',gomdaeri:'상세대리',cafe:'카페대리',tistory:'티스토리대리',thread:'스레드대리',gif:'움짤대리',sooichu:'서이추대리',free_tools:'무료 도구 6종'};
   function placement(element) {
     var area = element.closest('.card,.pk,.free-suite,.dock,nav,section,header');
     return area ? area.id || (area.classList.contains('dock') ? 'mobile_dock' : 'general') : 'general';
@@ -64,7 +64,11 @@
       direct.href = link.href;
       help.setAttribute('data-product-id', productId);
       help.setAttribute('data-cta-intent',(names[productId] || '곰대리') + ' 설치·체험 도움');
-      dialog.querySelector('#trial-dialog-product').textContent = freeTools ? '무료 도구 3종 · 유료 구독 없이 이용' : (names[productId] || '곰대리 프로그램') + ' · 무료 7일 체험';
+      dialog.querySelector('#trial-dialog-product').textContent = freeTools ? '무료 도구 6종 · 유료 구독 없이 이용' : (names[productId] || '곰대리 프로그램') + ' · 무료 7일 체험';
+      dialog.querySelector('#trial-dialog-title').innerHTML = freeTools ? '무료 도구 6종,<br>Windows PC에서 시작하세요' : '실행은 Windows PC에서,<br>지금은 체험 준비부터';
+      dialog.querySelector('.install-note').textContent = freeTools ? '무료 도구는 7일 체험과 별개로 유료 구독 없이 이용합니다. 일부 기능의 API 연결 및 AI·외부 서비스 이용료는 별도입니다.' : '7일 체험 · 1인 1회 · 카드 등록 없음 · AI 사용료 별도. 무료 도구 6종은 유료 구독 없이 이용할 수 있습니다.';
+      dialog.querySelector('.trial-dialog-close').setAttribute('aria-label',freeTools ? '설치 안내 닫기' : '체험 안내 닫기');
+      help.textContent = freeTools ? '설치 도움 카카오톡 문의' : '설치·체험 카카오톡 문의';
       status.textContent = '';
       previousOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';

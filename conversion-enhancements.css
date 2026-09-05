@@ -8,6 +8,15 @@
 .hub-shortcuts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
 .hub-shortcuts a{font-size:14px;padding:9px 13px;border:1px solid var(--line2);border-radius:8px;color:var(--ink2)}
 .hub-shortcuts a:hover{color:var(--ink);border-color:var(--accent2)}
+.free-hub-banner{display:flex;align-items:center;gap:12px;padding:15px;margin-top:16px;border:1px solid #79e1b64d;border-radius:12px;background:#79e1b60a}
+.free-hub-banner:hover{border-color:#79e1b6}
+.free-hub-badge{flex:none;padding:8px;border-radius:8px;background:#79e1b621;color:#a9f0d0;font-size:14px;font-weight:900}
+.free-hub-banner b{display:block;font-size:14px;line-height:1.5;color:#d2f7e6}
+.free-hub-banner small{display:block;margin-top:3px;color:var(--ink2);font-size:13px;line-height:1.6}
+.free-hub-arrow{margin-left:auto;color:#a9f0d0}
+.free-suite-head p,.free-item p{font-size:15px}
+.free-suite-foot p{font-size:13px}
+.free-item-name{font-size:13px}
 .hero .trust{margin-top:20px}
 .hero .hr-label{font-size:13px}
 .hero .hr-chip{min-height:36px;display:inline-flex;align-items:center;font-size:14px}

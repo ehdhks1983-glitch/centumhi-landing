@@ -390,12 +390,12 @@ h1 em,.hero-sub em{font-style:normal; color:var(--accent2)}
 .pk-who-callout b{flex:none; color:#A9F0D0; font-size:10.5px; font-weight:900; letter-spacing:.03em}
 @media(min-width:760px){ .pk-grid{grid-template-columns:repeat(2,1fr); gap:16px} }
 
-/* ===== 구독 없이 무료 · 실무 도구 3종 ===== */
+/* ===== 구독 없이 무료 · 실무 도구 6종 ===== */
 .free-suite{position:relative; overflow:hidden; scroll-margin-top:calc(var(--nav-h) + 16px); margin:24px 0 0; padding:clamp(22px,4vw,34px);
   border:1px solid rgba(121,225,182,.42); border-radius:22px;
   background:radial-gradient(circle at 88% 0,rgba(121,225,182,.13),transparent 34%),linear-gradient(135deg,rgba(121,225,182,.08),rgba(178,116,247,.06) 55%,var(--surface));
   box-shadow:0 18px 46px rgba(0,0,0,.22)}
-.free-suite::after{content:"FREE 03"; position:absolute; right:-8px; top:-24px; color:rgba(121,225,182,.045);
+.free-suite::after{content:"FREE 06"; position:absolute; right:-8px; top:-24px; color:rgba(121,225,182,.045);
   font:900 clamp(64px,11vw,120px)/1 var(--mono); letter-spacing:-.08em; pointer-events:none}
 .free-suite-head{position:relative; z-index:1; display:flex; align-items:flex-start; justify-content:space-between; gap:24px; margin-bottom:20px}
 .free-suite-eyebrow{margin-bottom:8px; color:#96EBC7; font:850 11px/1.3 var(--mono); letter-spacing:.11em}
@@ -403,7 +403,7 @@ h1 em,.hero-sub em{font-style:normal; color:var(--accent2)}
 .free-suite-head p{margin:9px 0 0; color:var(--ink2); font-size:13.5px; line-height:1.65}
 .free-suite-badge{flex:none; padding:9px 13px; border:1px solid rgba(121,225,182,.34); border-radius:100px;
   background:rgba(121,225,182,.13); color:#A9F0D0; font-size:12px; font-weight:950; white-space:nowrap}
-.free-suite-grid{position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,1.35fr) repeat(2,minmax(0,1fr)); gap:11px}
+.free-suite-grid{position:relative; z-index:1; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:11px}
 .free-item{display:flex; flex-direction:column; min-width:0; min-height:236px; padding:18px; border:1px solid rgba(121,225,182,.17);
   border-radius:15px; background:rgba(10,7,15,.5)}
 .free-item--featured{border-color:rgba(121,225,182,.4); background:linear-gradient(145deg,rgba(121,225,182,.12),rgba(10,7,15,.58))}
@@ -422,7 +422,7 @@ h1 em,.hero-sub em{font-style:normal; color:var(--accent2)}
 .free-suite-cta{display:inline-flex; align-items:center; justify-content:center; flex:none; min-height:46px; padding:12px 17px; border-radius:11px;
   background:#8BE6BE; color:#09251A; font-size:13.5px; font-weight:950; box-shadow:0 10px 26px rgba(121,225,182,.14); transition:transform .18s,filter .18s}
 .free-suite-cta:hover{transform:translateY(-2px); filter:brightness(1.04)}
-@media(max-width:859px){.free-suite-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.free-item--featured{grid-column:1/-1; min-height:0}}
+@media(max-width:859px){.free-suite-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.free-item--featured{grid-column:auto; min-height:0}}
 @media(max-width:600px){.free-suite-head,.free-suite-foot{align-items:stretch; flex-direction:column}.free-suite-badge{align-self:flex-start}
   .free-suite-grid{grid-template-columns:1fr}.free-item--featured{grid-column:auto}.free-item{min-height:0}.free-suite-cta{width:100%}}
 @media(max-width:380px){.pk-products{grid-template-columns:1fr}}
@@ -813,7 +813,7 @@ dialog.lb::backdrop{background:transparent}
   .card:hover,.hr-chip:hover,.guide-item:hover,.decision-card:hover,.cta-main:hover,.pp-cta:hover,.btn-kakao:hover,.free-suite-cta:hover{transform:none}
 }
 </style>
-<link rel="stylesheet" href="conversion-enhancements.css?v=20260905-2">
+<link rel="stylesheet" href="conversion-enhancements.css?v=20260905-3">
 </head>
 <body>
 <a class="skip-link" href="#main">본문 바로가기</a>
@@ -822,14 +822,14 @@ dialog.lb::backdrop{background:transparent}
   <div class="nav-in">
     <a class="logo" href="#top"><div class="logo-mark">곰</div><div class="logo-txt"><b>곰대리</b><span>BY 센텀하이</span></div></a>
     <div class="nav-menu">
-      <a href="#all-prices">전체 가격표</a><a href="#free-tools">무료 도구 3종</a><a href="#roster">직원 소개</a><a href="#proof">실제 결과</a>
+      <a href="#all-prices">전체 가격표</a><a href="#free-tools">무료 도구 6종</a><a href="#roster">직원 소개</a><a href="#proof">실제 결과</a>
       <a href="#safe">안심 보장</a><a href="#edu">설치·교육</a><a href="#faq">FAQ</a>
     </div>
     <button class="hamb" id="hamb" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="drawer"><i></i></button>
     <a class="btn-kakao" data-trial-download="mindhub-server" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">무료 7일 체험판 받기</a>
   </div>
   <div class="drawer" id="drawer" hidden>
-    <a href="#all-prices">전체 가격표</a><a href="#free-tools">무료 도구 3종</a><a href="#roster">직원 소개</a><a href="#proof">실제 결과</a>
+    <a href="#all-prices">전체 가격표</a><a href="#free-tools">무료 도구 6종</a><a href="#roster">직원 소개</a><a href="#proof">실제 결과</a>
     <a href="#safe">안심 안내</a><a href="#edu">설치·교육</a><a href="#faq">자주 묻는 질문</a>
   </div>
 </nav>
@@ -849,10 +849,15 @@ dialog.lb::backdrop{background:transparent}
         </div>
         <div class="reassure"><i>7일 무료 체험 · 1인 1회</i><b>카드 등록 없음 · 자동 유료전환 없음</b></div>
         <p class="install-note">Windows PC 전용 · 곰대리 프로그램은 <b>마인드허브</b>에서 설치·실행합니다. <a href="#trial-guide">체험 시작 방법 →</a></p>
-        <div class="hub-shortcuts" aria-label="상품 유형 바로가기"><a href="#package">패키지 비교</a><a href="#free-tools">무료 도구 3종</a><a href="#edu">1:1 교육</a></div>
+        <div class="hub-shortcuts" aria-label="상품 유형 바로가기"><a href="#package">패키지 비교</a><a href="#edu">1:1 교육</a></div>
+        <a class="free-hub-banner" href="#free-tools">
+          <span class="free-hub-badge">무료 6종</span>
+          <span><b>유료 구독 없이도, 실무 도구는 무료로</b><small>키워드·이미지·숙박·쿠팡 업무를 마인드허브 한곳에서</small></span>
+          <span class="free-hub-arrow" aria-hidden="true">→</span>
+        </a>
         <div class="trust">
           <a href="https://cafe.naver.com/mp3downs1" target="_blank" rel="noopener"><b>네이버 카페</b>&nbsp;이용 후기 확인</a><span>✓ Windows PC 전용</span>
-          <span><b>무료</b> 실무 도구 3종</span><span>✓ VAT 포함 · 1인 1PC · AI 사용료 별도</span>
+          <span><b>무료</b> 실무 도구 6종</span><span>✓ VAT 포함 · 1인 1PC · AI 사용료 별도</span>
         </div>
       </div>
       <div>
@@ -1242,7 +1247,7 @@ dialog.lb::backdrop{background:transparent}
         </div>
       </div>
 
-      <a class="free-price-strip" href="#free-tools"><span><b>구독 없이 쓰는 무료 도구 3종</b> · 키워드 관제탑+이미지 누끼+이미지공작소</span><strong>모두 0원</strong></a>
+      <a class="free-price-strip" href="#free-tools"><span><b>구독 없이 쓰는 무료 도구 6종</b> · 키워드·이미지·숙박·쿠팡 실무까지</span><strong>이용료 0원</strong></a>
       </section>
     </details>
 
@@ -1367,10 +1372,10 @@ dialog.lb::backdrop{background:transparent}
       <header class="free-suite-head">
         <div>
           <div class="free-suite-eyebrow">GOMDAERI FREE TOOLS</div>
-          <h3 id="free-tools-title">구독 없이 쓰는 무료 도구 3종</h3>
-          <p>곰대리 유료 프로그램을 이용하지 않아도, 세 가지 모두 무료로 제공합니다.</p>
+          <h3 id="free-tools-title">구독 없이 쓰는 무료 도구 6종</h3>
+          <p>키워드 찾기부터 사진 정리, 숙박 업무와 쿠팡 손익 관리까지.<br>마인드허브에서 필요한 도구를 무료로 설치하고 사용하세요.</p>
         </div>
-        <strong class="free-suite-badge">3종 모두 0원</strong>
+        <strong class="free-suite-badge">6종 이용료 0원</strong>
       </header>
       <div class="free-suite-grid">
         <article class="free-item free-item--featured">
@@ -1390,14 +1395,36 @@ dialog.lb::backdrop{background:transparent}
         <article class="free-item">
           <div class="free-item-top"><span class="free-item-no" aria-hidden="true">03</span><span class="free-item-pill">워터마크</span></div>
           <h4>이미지공작소</h4>
-          <span class="free-item-name">곰대리 이미지공작소</span>
+          <span class="free-item-name">곰대리 워터마크 공작소</span>
           <p>여러 사진에 워터마크를 한 번에 넣고, 판매처 규격에 맞춰 흰 여백·크기·파일 형식을 정리합니다.</p>
           <ul class="free-mini-list"><li>텍스트·로고·타일</li><li>판매처 규격·흰 여백</li><li>원본 입증 로그</li></ul>
         </article>
+
+        <article class="free-item">
+          <div class="free-item-top"><span class="free-item-no" aria-hidden="true">04</span><span class="free-item-pill">숙박 정산</span></div>
+          <h4>숙박 인보이스</h4>
+          <span class="free-item-name">날짜와 1박 요금으로 견적·정산 준비</span>
+          <p>입실·퇴실일과 1박 요금을 입력하면 부가세를 계산하고, 숙박 인보이스를 PDF로 저장합니다.</p>
+          <ul class="free-mini-list"><li>부가세 자동 계산</li><li>PDF 저장</li><li>사업자 정보 기억</li></ul>
+        </article>
+        <article class="free-item">
+          <div class="free-item-top"><span class="free-item-no" aria-hidden="true">05</span><span class="free-item-pill">숙박 고객 관리</span></div>
+          <h4>숙박리뷰실장</h4>
+          <span class="free-item-name">쌓이는 후기, 답글까지 한곳에서</span>
+          <p>야놀자·여기어때 후기를 모으고 AI로 맞춤 답글을 작성합니다. 내용을 확인하고 승인한 뒤 등록합니다.</p>
+          <ul class="free-mini-list"><li>후기 통합 수집</li><li>AI 맞춤 답글</li><li>승인 후 등록</li></ul>
+        </article>
+        <article class="free-item">
+          <div class="free-item-top"><span class="free-item-no" aria-hidden="true">06</span><span class="free-item-pill">쿠팡 판매 분석</span></div>
+          <h4>쿠팡 광고 참모</h4>
+          <span class="free-item-name">매출보다 중요한, 실제 남는 돈 확인</span>
+          <p>매출에서 수수료와 광고비를 제외한 수익을 계산하고, 광고 ROAS를 분석해 운영 판단을 돕습니다.</p>
+          <ul class="free-mini-list"><li>실제 순수익 계산</li><li>광고 ROAS 분석</li><li>엑셀 자동 반영</li></ul>
+        </article>
       </div>
       <footer class="free-suite-foot">
-        <p><b>유료 패키지와 별도입니다.</b> 세 도구는 패키지의 포함 제품 수(2·3·6·8종)에 넣지 않으며, 구독 여부와 관계없이 무료로 제공합니다. 키워드 관제탑의 검색량·발행량 등 일부 분석은 네이버 API 연결이 필요합니다.</p>
-        <a class="free-suite-cta" data-free-tools-download="mindhub-server" href="https://license.gomdaeri.kr/download/mindhub?from=home_tools" target="_blank" rel="noopener">무료 도구 3종 다운로드 →</a>
+        <p><b>유료 8종과 별개로, 무료 도구 6종.</b> 유료 구독이나 인증 코드 없이 이용하며, 패키지의 포함 제품 수(2·3·6·8종)에 더해 세지 않습니다. 마인드허브의 <b>무료 도구 탭에서 5종</b>, 별도 메뉴에서 <b>키워드 관제탑</b>을 찾으세요. 프로그램 이용료는 무료이며, 일부 기능은 네이버 API 연결이 필요하거나 AI·외부 서비스 이용료가 별도로 발생할 수 있습니다.</p>
+        <a class="free-suite-cta" data-free-tools-download="mindhub-server" href="https://license.gomdaeri.kr/download/mindhub?from=home_tools" target="_blank" rel="noopener">무료 도구 6종 다운로드 →</a>
       </footer>
     </aside>
 
@@ -1622,7 +1649,7 @@ dialog.lb::backdrop{background:transparent}
       <details><summary>구독료에 원격설치가 포함되나요?</summary><p>기본 제공 범위는 카카오톡 상담과 설치·사용 가이드이며, 고객이 직접 설치하는 방식입니다. 화면 공유 설치·사용법 과정, 출장 교육, 4주 과정은 프로그램 구독료와 별도인 유료 서비스입니다.</p></details>
       <details><summary>설치·교육은 어떤 방식으로 받을 수 있나요?</summary><p>원격 3시간 과정(100,000원), 대면 출장 3시간 과정(200,000원), 1:1 원격 4주 과정(400,000원), 인천 교육장 4주 과정(500,000원) 중에서 선택할 수 있습니다. 교육비는 VAT 포함 1회 결제 금액입니다. 결제 후 2영업일 이내에 일정과 출장 가능 지역을 협의하며, 합의하지 못하면 교육 시작 전 결제금액을 전액 환불합니다.</p></details>
       <details><summary>프로그램 오류도 유료 교육을 결제해야 하나요?</summary><p>아니요. 프로그램 자체 결함으로 확인된 문제는 설치 환경 설정이나 사용 교육을 위한 유료 서비스와 분리해서 처리합니다.</p></details>
-      <details><summary>무료 도구 3종도 구독해야 하나요?</summary><p>아니요. 키워드 관제탑, 이미지 누끼, 이미지공작소는 곰대리 구독 여부와 관계없이 무료로 제공하는 별도 도구입니다. 유료 패키지의 포함 제품 수(2·3·6·8종)에도 넣지 않습니다. 키워드 관제탑의 검색량·발행량 같은 일부 분석은 네이버 API 연결이 필요합니다.</p></details>
+      <details><summary>무료 도구 6종도 구독해야 하나요?</summary><p>아니요. 키워드 관제탑, 이미지 누끼, 이미지공작소, 숙박 인보이스, 숙박리뷰실장, 쿠팡 광고 참모는 유료 구독 없이 이용합니다. 무료 도구 탭에는 5종이 있고, 키워드 관제탑은 별도 메뉴에서 실행합니다. 7일 체험 기간과는 별개이며 유료 패키지 포함 제품 수에도 넣지 않습니다. 프로그램 이용료는 무료지만, 일부 기능에 필요한 API 연결과 AI·외부 서비스 비용은 별도입니다.</p></details>
       <details><summary>앞으로 나오는 프로그램도 포함되나요?</summary><p>구독하신 제품의 기능 개선과 호환성 업데이트는 이용기간 내내 제공됩니다. 다만 완전히 새로 나오는 유료 독립 제품은 별도 상품이거나 구독자 전용 조건으로 안내드립니다. 무료로 배포하는 도구는 유료 패키지의 포함 제품 수와 별도로 안내합니다.</p></details>
       <details><summary>컴퓨터 두 대에서 쓸 수 있나요?</summary><p>기본은 1인·1PC입니다. 매장과 집처럼 두 곳에서 쓰셔야 하면 카카오톡으로 말씀해 주세요. 추가 라이선스로 안내드립니다.</p></details>
       <details><summary>윈도우가 아니어도 되나요?</summary><p>윈도우 PC에서만 작동합니다. 맥에서는 쓰실 수 없습니다. 지금 쓰시는 컴퓨터가 괜찮을지 모르겠으면 시작 전에 사양을 보내주세요. 확인해 드립니다.</p></details>
@@ -1680,7 +1707,7 @@ dialog.lb::backdrop{background:transparent}
   <p class="trial-copy-status" role="status" aria-live="polite"></p>
   <a class="cta-ghost trial-help" data-cta-intent="모바일에서 설치·체험 도움" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">설치·체험 카카오톡 문의</a>
   <a class="trial-direct" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">설치 안내 페이지 직접 열기 →</a>
-  <p class="install-note">7일 체험 · 1인 1회 · 카드 등록 없음 · AI 사용료 별도<br>무료 도구 3종은 유료 구독 없이 이용할 수 있습니다.</p>
+  <p class="install-note">7일 체험 · 1인 1회 · 카드 등록 없음 · AI 사용료 별도<br>무료 도구 6종은 유료 구독 없이 이용할 수 있습니다.</p>
 </dialog>
 
 <div class="copy-toast" id="copy-toast" role="status" aria-live="polite"></div>
@@ -1688,7 +1715,7 @@ dialog.lb::backdrop{background:transparent}
 
 <script src="latpeed_checkout_config.js?v=20260828-v8"></script>
 <script src="conversion-events.js?v=20260905-2"></script>
-<script src="conversion-ui.js?v=20260905-2" defer></script>
+<script src="conversion-ui.js?v=20260905-3" defer></script>
 <script>
 (function(){
   // 기존 측정 ID를 유지하고 실제 GA4 event 명령으로 전송합니다.
@@ -1891,10 +1918,10 @@ dialog.lb::backdrop{background:transparent}
     if (!intent && card) intent = (card.querySelector('.card-name') || {}).textContent || '';
     if (!intent && pack) intent = (pack.querySelector('.pk-name') || {}).textContent || '';
     if (!intent && education) intent = (education.querySelector('h3') || {}).textContent || '';
-    if (link.closest('.free-suite')) intent = '무료 도구 3종';
+    if (link.closest('.free-suite')) intent = '무료 도구 6종';
     var section = card ? 'product' : pack ? 'package' : education ? 'education' : link.closest('.free-suite') ? 'free_tools' : link.closest('.final') ? 'final' : link.closest('.dock') ? 'mobile_dock' : link.closest('nav') ? 'navigation' : 'general';
     var message;
-    if (section === 'free_tools') message = '무료 도구 3종을 받고 싶습니다.';
+    if (section === 'free_tools') message = '무료 도구 6종을 받고 싶습니다.';
     else if (section === 'education') message = (intent || '교육 과정') + ' 일정과 결제 방법을 문의드립니다.';
     else if (section === 'product' || section === 'package') message = (intent || '곰대리') + ' ' + termMeta[selectedTerm].label + ' 요금제와 7일 체험을 문의드립니다.';
     else message = (intent || '곰대리 7일 체험과 요금제') + ' 문의드립니다. 줄이고 싶은 업무: ';
