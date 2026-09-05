@@ -5,7 +5,7 @@
  * 공개 결제 버튼은 게시와 웹훅 연결이 확인된 상품만 개별 허용합니다.
  */
 window.GOMDAERI_CHECKOUT_CONFIG = {
-  "version": "2026-08-28-v8",
+  "version": "2026-09-05-v10",
   "checkout_enabled": true,
   "enabled_offers": [
     "pack_blog-1m", "pack_blog-3m", "pack_blog-6m", "pack_blog-12m",
@@ -39,6 +39,7 @@ window.GOMDAERI_CHECKOUT_CONFIG = {
     "pack_all-3m": "",
     "pack_all-6m": "",
     "pack_all-12m": "",
+    "pack_all-lifetime": "",
     "blog-1m": "https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/ZR1lK",
     "blog-3m": "https://www.latpeed.com/products/qZ8gD",
     "blog-6m": "https://www.latpeed.com/products/u9GkP",
@@ -77,8 +78,12 @@ window.GOMDAERI_CHECKOUT_CONFIG = {
     "service_incheon_4w": "https://www.latpeed.com/products/ph9Ca"
   },
   "blocked_reasons": {
-    "gomdaeri": "상세대리 기간형 라이선스 인증과 래피드 연결 준비 전",
-    "pack_all": "상세대리 기간형 라이선스 인증과 래피드 연결 준비 전"
+    "gomdaeri": "온라인 결제 미연결: 카카오톡으로 별도 결제 안내",
+    "pack_all": "온라인 결제 미연결: 카카오톡으로 별도 결제 안내"
   },
-  "consultation_required": []
+  "consultation_required": [
+    "gomdaeri-1m", "gomdaeri-3m", "gomdaeri-6m", "gomdaeri-12m",
+    "pack_all-lifetime",
+    "pack_blog_video-12m", "pack_multichannel-12m"
+  ]
 };

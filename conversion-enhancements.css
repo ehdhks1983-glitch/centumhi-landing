@@ -33,6 +33,57 @@
 .hub-path-bottom b{font-size:14px}
 .hub-path-bottom>span{font-size:13px;color:var(--ink2)}
 .hub-path-note{margin:12px 0 0;color:var(--ink3);font-size:12px;line-height:1.7;text-align:right}
+.hero-offer-chip{display:inline-flex;align-items:center;gap:12px;max-width:100%;margin-top:16px;padding:10px 13px;border:1px solid var(--gold-line);border-radius:8px;color:var(--gold);background:var(--gold-soft);font-size:14px;font-weight:850;line-height:1.6}
+.hero-offer-chip:hover{border-color:var(--gold)}
+.lifetime-banner{display:grid;grid-template-columns:1.15fr 1fr;gap:36px;margin-top:34px;padding:clamp(24px,4vw,42px);border:1px solid #edc5789c;border-top:4px solid #edc578;border-radius:20px;background:linear-gradient(125deg,#30251a,#211927 60%,#19121f);box-shadow:0 16px 50px #0003;scroll-margin-top:calc(var(--nav-h) + 20px)}
+.lifetime-kicker{display:inline-block;padding:6px 10px;border-radius:6px;background:#edc578;color:#281c0a;font-size:14px;font-weight:900}
+.lifetime-banner::before{content:none}
+.lifetime-story h2,.lifetime-price strong{font-weight:950}
+.lifetime-story h2{font-size:clamp(30px,3.5vw,45px);letter-spacing:-.05em;line-height:1.25;margin:18px 0}
+.lifetime-story h2 em{font-style:normal;color:#ffe09f}
+.lifetime-story>p{font-size:16px;line-height:1.8;color:var(--ink2);margin:0}
+.lifetime-benefits{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.lifetime-benefits>span{display:block;padding:13px 15px;border:1px solid #edc57840;border-radius:10px;background:#edc5780a}
+.lifetime-benefits small{display:block;color:var(--ink2);font-size:13px;margin-bottom:6px}
+.lifetime-benefits b{font-size:20px;line-height:1.4;color:#ffe09f}
+.lifetime-purchase{padding:24px;border:1px solid #edc5784a;border-radius:14px;background:#0e0b1280;align-self:center}
+.lifetime-old{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;color:var(--ink2);font-size:14px;line-height:1.7}
+.lifetime-old s{font-size:19px;text-decoration-thickness:2px;color:#baacbc}
+.lifetime-price{margin-top:17px}
+.lifetime-price>span{display:block;color:#ffe09f;font-size:14px;font-weight:800}
+.lifetime-price>strong{display:block;font-size:clamp(38px,4.4vw,56px);font-weight:950;line-height:1.3;color:#ffe09f;letter-spacing:-.055em;font-variant-numeric:tabular-nums}
+.lifetime-price>strong small{font-size:.46em;margin-left:5px;color:inherit}
+.lifetime-billing{font-size:14px;line-height:1.7;font-weight:800;color:var(--ink);margin:12px 0 20px}
+.lifetime-cta{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;padding:14px 12px;border-radius:10px;background:#f5d398!important;color:#281c0a!important;font-size:15px;font-weight:900;line-height:1.5;text-align:center}
+.lifetime-cta:hover{background:#ffe5ad!important}
+.lifetime-fineprint{font-size:12px;line-height:1.8;color:var(--ink2);margin:14px 0 0}
+.pk-lifetime{border-color:#edc57880}
+.pk-lifetime::before{background:#edc578}
+.pk-lifetime .pk-badge{color:#ffe09f;border-color:#edc57866;background:#edc57818}
+.lifetime-pack-pay{border-color:#edc57840;background:#140f18}
+.lifetime-pack-heading{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid #edc57830}
+.lifetime-pack-heading>span{display:block;font-size:14px;color:var(--ink2);margin-bottom:5px}
+.lifetime-pack-heading>strong{display:block;font-size:30px;line-height:1.3;color:#ffe09f;font-weight:950}
+.lifetime-scope{font-size:13px;line-height:1.8;color:var(--ink2);margin:0 0 18px}
+.lifetime-table-row .lifetime-table-offer{text-align:left;background:#edc5780a}
+.lifetime-table-badge{display:inline-block;font-size:15px;font-weight:900;color:#ffe09f;margin-bottom:9px}
+.lifetime-table-price{display:flex;align-items:center;flex-wrap:wrap;gap:8px 20px}
+.full-price-table .lifetime-table-price>strong{font-size:25px;color:#ffe09f}
+.lifetime-table-offer>a{display:inline-block;margin-top:10px;color:#ffe09f;font-size:13px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:979px){.lifetime-banner{grid-template-columns:1fr;gap:24px}.lifetime-purchase{max-width:100%}}
+@media(max-width:760px){.hero .lifetime-banner{order:1;margin-top:24px;padding:22px 18px}.hero .hub-paths{order:2}.hero .hub-path-note{order:3}.hero .hero-grid>div:last-child{order:4}.lifetime-story>p{font-size:15px}.lifetime-purchase{padding:18px 14px}.lifetime-benefits{gap:8px}.lifetime-benefits>span{padding:11px}.lifetime-benefits b{font-size:17px}.lifetime-pack-heading>strong{font-size:27px}.lifetime-table-row td[colspan]{grid-column:1/-1}}
+.integrated-deal{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:24px;padding:24px;border:1px solid var(--gold-line);border-radius:16px;background:var(--gold-soft)}
+.integrated-deal:hover{border-color:var(--gold)}
+.integrated-deal-label{display:block;color:var(--gold);font-size:13px;font-weight:800;margin-bottom:7px}
+.integrated-deal-copy>b{display:block;font-size:20px;line-height:1.5}
+.integrated-deal small{display:block;font-size:13px;line-height:1.7;color:var(--ink2)}
+.integrated-deal-price{flex:none}
+.integrated-deal-price>span{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;margin-block:6px}
+.integrated-deal-price s{color:var(--ink3);font-size:15px}
+.integrated-deal-price strong{font-size:27px;color:var(--gold);letter-spacing:-.04em}
+.integrated-deal-action{flex:none;font-size:14px;font-weight:900}
+@media(max-width:979px){.integrated-deal{flex-wrap:wrap;gap:18px}.integrated-deal-action{margin-left:auto}}
+@media(max-width:760px){.hero .integrated-deal{order:4;margin-top:22px;padding:20px}.integrated-deal-copy>b{font-size:19px}.integrated-deal-price{flex:auto}.integrated-deal-price strong{font-size:25px}}
 #other-programs{scroll-margin-top:calc(var(--nav-h) + 20px)}
 #roster .sec-head{margin-bottom:24px}
 #roster .card-role,#roster .feat li{font-size:14px}
@@ -40,6 +91,27 @@
 #roster .lead-flag{font-size:12px}
 .product-trial{display:block;padding:13px 12px;border:1px solid var(--tone,var(--accent2));border-radius:10px;color:var(--ink);font-size:14px;font-weight:800;text-align:center;background:var(--tone-soft,var(--accent-soft))}
 .product-trial:hover{filter:brightness(1.2)}
+.annual-benefit{display:block;width:100%;margin-top:14px;padding:15px;text-align:left;border:1px solid var(--gold-line);border-radius:12px;background:var(--gold-soft);color:var(--ink);font-family:inherit;cursor:pointer}
+.annual-benefit:hover{border-color:var(--gold);background:rgba(242,207,129,.13)}
+.annual-benefit-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.annual-benefit-top b{font-size:13px;color:var(--ink2)}
+.annual-benefit-top strong{padding:4px 8px;background:var(--gold);color:#261b0a;border-radius:6px;font-size:14px;font-weight:900}
+.annual-benefit-saving{display:block;margin-top:10px;font-size:18px;font-weight:900;line-height:1.45;color:var(--gold)}
+.annual-benefit-detail{display:block;margin-top:5px;font-size:12px;color:var(--ink2);line-height:1.7}
+.annual-benefit-compare{display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 8px;margin-top:10px;font-size:13px;line-height:1.6}
+.annual-benefit-compare small{flex-basis:100%;font-size:12px;color:var(--ink2)}
+.annual-benefit-compare s{color:var(--ink3)}
+.annual-benefit-compare b{font-size:18px;color:var(--ink)}
+.annual-benefit-action{display:block;margin-top:10px;font-size:13px;font-weight:800;color:var(--ink)}
+.offer-note.is-fixed{display:flex;flex-direction:column;align-items:flex-end;gap:7px;margin-top:8px}
+.offer-note .offer-save{padding:7px 10px;border-radius:8px;font-size:14px;font-weight:900;line-height:1.5}
+.offer-basis,.offer-equivalent,.offer-billing{font-size:12px;line-height:1.6}
+.offer-basis,.offer-billing{color:var(--ink2)}
+.offer-equivalent{color:var(--gold);font-weight:800}
+.full-price-table td .price-save{display:inline-block;margin-top:7px;padding:5px 7px;background:#79e1b614;border:1px solid #79e1b629;border-radius:6px;font-size:12px}
+.checkout-cta:focus-visible,.annual-benefit:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
+.checkout-cta[data-checkout-fallback="kakao"] ~ .checkout-help{display:block;font-size:12px;line-height:1.65;color:var(--ink2)}
+@media(max-width:600px){.offer-note.is-fixed{align-items:flex-start}.annual-benefit{padding:13px}.annual-benefit-saving{font-size:17px}}
 .catalog-fold{margin-bottom:26px;border:1px solid var(--gold-line);border-radius:16px;background:var(--gold-soft);scroll-margin-top:calc(var(--nav-h) + 16px)}
 .catalog-fold>summary{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:23px;cursor:pointer;list-style:none}
 .catalog-fold>summary::-webkit-details-marker{display:none}

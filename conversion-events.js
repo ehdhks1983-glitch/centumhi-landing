@@ -35,7 +35,7 @@
     paramKeys.forEach(function (key) {
       if (typeof merged[key] === 'string' || typeof merged[key] === 'number') params[key] = String(merged[key]).slice(0,100);
     });
-    if (params.offer_code && !params.product_id) params.product_id = params.offer_code.replace(/-(1|3|6|12)m$/,'');
+    if (params.offer_code && !params.product_id) params.product_id = params.offer_code.replace(/-(?:(1|3|6|12)m|lifetime)$/,'');
     if (cardProducts[params.product_id]) params.product_id = cardProducts[params.product_id];
     params.send_to = measurementId;
     params.transport_type = 'beacon';

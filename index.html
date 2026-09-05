@@ -813,7 +813,7 @@ dialog.lb::backdrop{background:transparent}
   .card:hover,.hr-chip:hover,.guide-item:hover,.decision-card:hover,.cta-main:hover,.pp-cta:hover,.btn-kakao:hover,.free-suite-cta:hover{transform:none}
 }
 </style>
-<link rel="stylesheet" href="conversion-enhancements.css?v=20260905-3">
+<link rel="stylesheet" href="conversion-enhancements.css?v=20260905-5">
 </head>
 <body>
 <a class="skip-link" href="#main">본문 바로가기</a>
@@ -842,6 +842,7 @@ dialog.lb::backdrop{background:transparent}
         <div class="eyebrow">곰대리 · Windows 업무 자동화</div>
         <h1>매일 반복하는 일,<br><em>곰대리에게 맡기세요.</em></h1>
         <p class="hero-sub">블로그·영상·SNS 반복 업무를 대신하는 <em>8개의 자동화 직원</em>입니다.</p>
+        <a class="hero-offer-chip" href="#unlimited-offer">통합 8종 특별 혜택 · 할인된 요금으로 기간 무제한 <span aria-hidden="true">→</span></a>
         <p class="hero-lede">영상 제작부터 블로그 발행, 이웃 관리와 상품 이미지까지.<br>필요한 프로그램 하나만 쓰거나, 함께 쓸 도구를 패키지로 고르세요.</p>
         <div class="hero-cta">
           <a class="cta-main" data-trial-download="mindhub-server" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">무료 7일 체험판 받기</a>
@@ -878,12 +879,28 @@ dialog.lb::backdrop{background:transparent}
         </div>
       </div>
     </div>
+    <section class="lifetime-banner" id="unlimited-offer" aria-labelledby="lifetime-title" data-product-id="pack_all">
+      <div class="lifetime-story">
+        <span class="lifetime-kicker">통합 8종팩 · 기간 한정 특별 혜택</span>
+        <h2 id="lifetime-title">12개월 할인가로,<br><em>사용기간은 무제한.</em></h2>
+        <p>영상·블로그·SNS·상세페이지까지 곰대리 8종 전체.<br>119만원 한 번 결제하고, 이용기간 제한 없이 사용하세요.</p>
+        <div class="lifetime-benefits"><span><small>요금 혜택</small><b>30만원 할인</b></span><span><small>이용기간 혜택</small><b>12개월 → 무제한</b></span></div>
+      </div>
+      <div class="lifetime-purchase">
+        <div class="lifetime-old"><span>기존 12개월 안내가</span><s>1,490,000원</s></div>
+        <div class="lifetime-price"><span>기간 무제한 혜택가</span><strong>1,190,000<small>원</small></strong></div>
+        <p class="lifetime-billing">1회 결제 · 이용기간 제한 없음 · 갱신요금 없음</p>
+        <a class="lifetime-cta" href="#pack-all">통합 8종 무제한 혜택 · 결제 문의 →</a>
+        <p class="lifetime-fineprint">VAT 포함 · 1인·1PC · AI·외부 API 사용료 별도<br>프로모션 적용 대상·마감일은 결제 전 문의로 확인해 주세요.</p>
+      </div>
+    </section>
     <div class="hub-paths" aria-label="어떤 일을 줄이고 싶으세요?">
       <a class="hub-path hub-path--video" href="#card-cut" data-product-id="cutdaejang"><span class="hub-path-kicker">영상 제작</span><h2>쇼츠·상품 영상을 만들고 싶어요 <span aria-hidden="true">↗</span></h2><p>주제·촬영본·사진으로 자막과 목소리가 담긴 MP4 제작</p><span class="hub-path-bottom"><b>컷대장</b><span>1개월 59,000원</span></span></a>
       <a class="hub-path hub-path--blog" href="#card-blog" data-product-id="blog"><span class="hub-path-kicker">블로그 운영</span><h2>글 작성과 발행을 줄이고 싶어요 <span aria-hidden="true">↗</span></h2><p>AI 글·이미지 작성부터 네이버 즉시·예약 발행까지</p><span class="hub-path-bottom"><b>블로그대리</b><span>1개월 49,000원</span></span></a>
       <a class="hub-path" href="#other-programs" data-product-id="catalog"><span class="hub-path-kicker">다른 업무 자동화</span><h2>내게 필요한 도구를 찾고 싶어요 <span aria-hidden="true">↗</span></h2><p>상세페이지 · 카페 · 티스토리 · 스레드 · 움짤 · 서이추</p><span class="hub-path-bottom"><b>나머지 6종 비교</b><span>단품 월 9,900원부터</span></span></a>
     </div>
     <p class="hub-path-note">VAT 포함 · 기본 1인·1PC · AI 사용료 별도 · 월 구독 외 3·6·12개월도 선택 가능</p>
+
   </div>
 </header>
 
@@ -897,10 +914,10 @@ dialog.lb::backdrop{background:transparent}
     <div class="term-panel term-panel--compact rv" aria-label="단품 이용기간 선택">
       <div class="term-head"><div><b>단품도 기간을 바꿔 비교하세요</b><span>선택한 기간이 아래 8개 단품 가격에 함께 적용됩니다.</span></div></div>
       <div class="term-controls" role="group" aria-label="단품 요금 기간 선택">
-        <button class="term-option" type="button" data-term="1m" aria-pressed="true"><b>1개월</b><span>자동결제 · 카드만</span></button>
-        <button class="term-option" type="button" data-term="3m" aria-pressed="false"><b>3개월</b><span>1회 결제 · 간편결제</span></button>
-        <button class="term-option" type="button" data-term="6m" aria-pressed="false"><b>6개월</b><span>1회 결제 · 간편결제</span></button>
-        <button class="term-option" type="button" data-term="12m" aria-pressed="false"><b>12개월</b><span>1회 결제 · 간편결제</span></button>
+        <button class="term-option" type="button" data-term="1m" aria-pressed="true"><b>1개월</b><span>월요금 확인</span></button>
+        <button class="term-option" type="button" data-term="3m" aria-pressed="false"><b>3개월</b><span>기간권 할인</span></button>
+        <button class="term-option" type="button" data-term="6m" aria-pressed="false"><b>6개월</b><span>기간권 할인</span></button>
+        <button class="term-option" type="button" data-term="12m" aria-pressed="false"><b>12개월</b><span>연간 할인 혜택</span></button>
       </div>
     </div>
     <div class="lead-bar rv">
@@ -920,6 +937,7 @@ dialog.lb::backdrop{background:transparent}
             <div class="offer-row" data-term="3m" data-amount="137000"><span class="pr-label">3개월</span><span class="offer-value"><b>137,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
             <div class="offer-row" data-term="6m" data-amount="259000"><span class="pr-label">6개월</span><span class="offer-value"><b>259,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
             <div class="offer-row" data-term="12m" data-amount="490000"><span class="pr-label">12개월</span><span class="offer-value"><b>490,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          <button class="annual-benefit" type="button" data-select-term="12m" data-only-term="1m" aria-label="12개월 가격과 할인 보기"><span class="annual-benefit-top"><b>12개월 선택 시</b><strong>약 17% 절감</strong></span><span class="annual-benefit-saving">98,000원 아끼는 기간권</span><span class="annual-benefit-compare"><small>월요금 × 12회</small><s>588,000원</s><span aria-hidden="true">→</span><b>490,000원</b></span><span class="annual-benefit-detail">12개월 이용료 · 1회 결제</span><span class="annual-benefit-action">12개월 혜택 보기 →</span></button>
           </div>
           <div class="offer-actions">
             <a class="product-trial" data-trial-download="mindhub-server" data-product-id="blog" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
@@ -940,6 +958,7 @@ dialog.lb::backdrop{background:transparent}
             <div class="offer-row" data-term="3m" data-amount="165000"><span class="pr-label">3개월</span><span class="offer-value"><b>165,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
             <div class="offer-row" data-term="6m" data-amount="312000"><span class="pr-label">6개월</span><span class="offer-value"><b>312,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
             <div class="offer-row" data-term="12m" data-amount="590000"><span class="pr-label">12개월</span><span class="offer-value"><b>590,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          <button class="annual-benefit" type="button" data-select-term="12m" data-only-term="1m" aria-label="12개월 가격과 할인 보기"><span class="annual-benefit-top"><b>12개월 선택 시</b><strong>약 17% 절감</strong></span><span class="annual-benefit-saving">118,000원 아끼는 기간권</span><span class="annual-benefit-compare"><small>월요금 × 12회</small><s>708,000원</s><span aria-hidden="true">→</span><b>590,000원</b></span><span class="annual-benefit-detail">12개월 이용료 · 1회 결제</span><span class="annual-benefit-action">12개월 혜택 보기 →</span></button>
           </div>
           <div class="offer-actions">
             <a class="product-trial" data-trial-download="mindhub-server" data-product-id="cutdaejang" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
@@ -966,10 +985,11 @@ dialog.lb::backdrop{background:transparent}
             <div class="offer-row" data-term="3m" data-amount="53000"><span class="pr-label">3개월</span><span class="offer-value"><b>53,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
             <div class="offer-row" data-term="6m" data-amount="100000"><span class="pr-label">6개월</span><span class="offer-value"><b>100,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
             <div class="offer-row" data-term="12m" data-amount="190000"><span class="pr-label">12개월</span><span class="offer-value"><b>190,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          <button class="annual-benefit" type="button" data-select-term="12m" data-only-term="1m" aria-label="12개월 가격과 할인 보기"><span class="annual-benefit-top"><b>12개월 선택 시</b><strong>약 17% 절감</strong></span><span class="annual-benefit-saving">38,000원 아끼는 기간권</span><span class="annual-benefit-compare"><small>월요금 × 12회</small><s>228,000원</s><span aria-hidden="true">→</span><b>190,000원</b></span><span class="annual-benefit-detail">12개월 이용료 · 1회 결제</span><span class="annual-benefit-action">12개월 혜택 보기 →</span></button>
           </div>
           <div class="offer-actions">
             <a class="product-trial" data-trial-download="mindhub-server" data-product-id="gomdaeri" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
-            <a class="checkout-cta" data-checkout="gomdaeri" data-checkout-fallback="kakao" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">구매 가능 여부 · 카카오톡 문의하기</a>
+            <a class="checkout-cta" data-checkout="gomdaeri" data-checkout-fallback="kakao" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">1개월 결제 문의하기</a>
             <a class="card-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">상세대리 상담하기</a>
             <p class="checkout-help">상세대리 구독 만료 인증과 웹훅 검증 후 직접 결제가 열립니다.</p>
           </div>
@@ -985,6 +1005,7 @@ dialog.lb::backdrop{background:transparent}
             <div class="offer-row" data-term="3m" data-amount="109000"><span class="pr-label">3개월</span><span class="offer-value"><b>109,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
             <div class="offer-row" data-term="6m" data-amount="206000"><span class="pr-label">6개월</span><span class="offer-value"><b>206,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
             <div class="offer-row" data-term="12m" data-amount="390000"><span class="pr-label">12개월</span><span class="offer-value"><b>390,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          <button class="annual-benefit" type="button" data-select-term="12m" data-only-term="1m" aria-label="12개월 가격과 할인 보기"><span class="annual-benefit-top"><b>12개월 선택 시</b><strong>약 17% 절감</strong></span><span class="annual-benefit-saving">78,000원 아끼는 기간권</span><span class="annual-benefit-compare"><small>월요금 × 12회</small><s>468,000원</s><span aria-hidden="true">→</span><b>390,000원</b></span><span class="annual-benefit-detail">12개월 이용료 · 1회 결제</span><span class="annual-benefit-action">12개월 혜택 보기 →</span></button>
           </div>
           <div class="offer-actions">
             <a class="product-trial" data-trial-download="mindhub-server" data-product-id="cafe" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
@@ -1004,6 +1025,7 @@ dialog.lb::backdrop{background:transparent}
             <div class="offer-row" data-term="3m" data-amount="81000"><span class="pr-label">3개월</span><span class="offer-value"><b>81,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
             <div class="offer-row" data-term="6m" data-amount="153000"><span class="pr-label">6개월</span><span class="offer-value"><b>153,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
             <div class="offer-row" data-term="12m" data-amount="290000"><span class="pr-label">12개월</span><span class="offer-value"><b>290,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          <button class="annual-benefit" type="button" data-select-term="12m" data-only-term="1m" aria-label="12개월 가격과 할인 보기"><span class="annual-benefit-top"><b>12개월 선택 시</b><strong>약 17% 절감</strong></span><span class="annual-benefit-saving">58,000원 아끼는 기간권</span><span class="annual-benefit-compare"><small>월요금 × 12회</small><s>348,000원</s><span aria-hidden="true">→</span><b>290,000원</b></span><span class="annual-benefit-detail">12개월 이용료 · 1회 결제</span><span class="annual-benefit-action">12개월 혜택 보기 →</span></button>
           </div>
           <div class="offer-actions">
             <a class="product-trial" data-trial-download="mindhub-server" data-product-id="tistory" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
@@ -1023,6 +1045,7 @@ dialog.lb::backdrop{background:transparent}
             <div class="offer-row" data-term="3m" data-amount="109000"><span class="pr-label">3개월</span><span class="offer-value"><b>109,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
             <div class="offer-row" data-term="6m" data-amount="206000"><span class="pr-label">6개월</span><span class="offer-value"><b>206,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
             <div class="offer-row" data-term="12m" data-amount="390000"><span class="pr-label">12개월</span><span class="offer-value"><b>390,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          <button class="annual-benefit" type="button" data-select-term="12m" data-only-term="1m" aria-label="12개월 가격과 할인 보기"><span class="annual-benefit-top"><b>12개월 선택 시</b><strong>약 17% 절감</strong></span><span class="annual-benefit-saving">78,000원 아끼는 기간권</span><span class="annual-benefit-compare"><small>월요금 × 12회</small><s>468,000원</s><span aria-hidden="true">→</span><b>390,000원</b></span><span class="annual-benefit-detail">12개월 이용료 · 1회 결제</span><span class="annual-benefit-action">12개월 혜택 보기 →</span></button>
           </div>
           <div class="offer-actions">
             <a class="product-trial" data-trial-download="mindhub-server" data-product-id="thread" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
@@ -1042,6 +1065,7 @@ dialog.lb::backdrop{background:transparent}
             <div class="offer-row" data-term="3m" data-amount="28000"><span class="pr-label">3개월</span><span class="offer-value"><b>28,000원</b><span class="offer-note is-fixed">1회 결제 · 약 6% 절감</span></span></div>
             <div class="offer-row" data-term="6m" data-amount="52000"><span class="pr-label">6개월</span><span class="offer-value"><b>52,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
             <div class="offer-row" data-term="12m" data-amount="99000"><span class="pr-label">12개월</span><span class="offer-value"><b>99,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          <button class="annual-benefit" type="button" data-select-term="12m" data-only-term="1m" aria-label="12개월 가격과 할인 보기"><span class="annual-benefit-top"><b>12개월 선택 시</b><strong>약 17% 절감</strong></span><span class="annual-benefit-saving">19,800원 아끼는 기간권</span><span class="annual-benefit-compare"><small>월요금 × 12회</small><s>118,800원</s><span aria-hidden="true">→</span><b>99,000원</b></span><span class="annual-benefit-detail">12개월 이용료 · 1회 결제</span><span class="annual-benefit-action">12개월 혜택 보기 →</span></button>
           </div>
           <div class="offer-actions">
             <a class="product-trial" data-trial-download="mindhub-server" data-product-id="gif" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
@@ -1061,6 +1085,7 @@ dialog.lb::backdrop{background:transparent}
             <div class="offer-row" data-term="3m" data-amount="42000"><span class="pr-label">3개월</span><span class="offer-value"><b>42,000원</b><span class="offer-note is-fixed">1회 결제 · 약 6% 절감</span></span></div>
             <div class="offer-row" data-term="6m" data-amount="79000"><span class="pr-label">6개월</span><span class="offer-value"><b>79,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
             <div class="offer-row" data-term="12m" data-amount="99000"><span class="pr-label">12개월</span><span class="offer-value"><b>99,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          <button class="annual-benefit" type="button" data-select-term="12m" data-only-term="1m" aria-label="12개월 가격과 할인 보기"><span class="annual-benefit-top"><b>12개월 선택 시</b><strong>약 45% 절감</strong></span><span class="annual-benefit-saving">79,800원 아끼는 기간권</span><span class="annual-benefit-compare"><small>월요금 × 12회</small><s>178,800원</s><span aria-hidden="true">→</span><b>99,000원</b></span><span class="annual-benefit-detail">12개월 이용료 · 1회 결제</span><span class="annual-benefit-action">12개월 혜택 보기 →</span></button>
           </div>
           <div class="offer-actions">
             <a class="product-trial" data-trial-download="mindhub-server" data-product-id="sooichu" href="https://license.gomdaeri.kr/download/mindhub?from=home" target="_blank" rel="noopener">내 PC에서 무료 7일 체험하기 →</a>
@@ -1107,10 +1132,10 @@ dialog.lb::backdrop{background:transparent}
     <div class="term-panel rv" aria-labelledby="term-title">
       <div class="term-head"><div><b id="term-title">사용할 기간에 맞춰 선택하세요</b><span>한 번 선택하면 아래 패키지와 단품 가격이 함께 바뀝니다.</span></div></div>
       <div class="term-controls" role="group" aria-label="요금 기간 선택">
-        <button class="term-option" type="button" data-term="1m" aria-pressed="true"><b>1개월</b><span>자동결제 · 카드만</span></button>
-        <button class="term-option" type="button" data-term="3m" aria-pressed="false"><b>3개월</b><span>1회 결제 · 간편결제</span></button>
-        <button class="term-option" type="button" data-term="6m" aria-pressed="false"><b>6개월</b><span>1회 결제 · 간편결제</span></button>
-        <button class="term-option" type="button" data-term="12m" aria-pressed="false"><b>12개월</b><span>1회 결제 · 간편결제</span></button>
+        <button class="term-option" type="button" data-term="1m" aria-pressed="true"><b>1개월</b><span>월요금 확인</span></button>
+        <button class="term-option" type="button" data-term="3m" aria-pressed="false"><b>3개월</b><span>기간권 할인</span></button>
+        <button class="term-option" type="button" data-term="6m" aria-pressed="false"><b>6개월</b><span>기간권 할인</span></button>
+        <button class="term-option" type="button" data-term="12m" aria-pressed="false"><b>12개월</b><span>연간 할인 혜택</span></button>
       </div>
       <div class="payment-method-guide" aria-label="기간별 결제수단"><span><b>1개월 정기구독</b> · 카드 등록·자동결제</span><span><b>3·6·12개월 기간권</b> · 네이버페이·카카오페이·앱카드·카드</span></div>
       <p class="term-status" id="term-status" aria-live="polite"><b>1개월</b> 가격을 보고 있습니다. 래피드 정기구독은 카드 결제만 지원합니다.</p>
@@ -1123,7 +1148,7 @@ dialog.lb::backdrop{background:transparent}
         <div>
           <div class="price-overview-kicker">ALL PRICES AT A GLANCE</div>
           <h3 id="all-prices-title">전체 가격표</h3>
-          <p>패키지·개별 프로그램·교육비를 한 번에 비교하세요. 기간권의 절감액은 1개월 요금을 같은 기간 동안 납부했을 때와 비교한 금액입니다.</p>
+          <p>패키지·개별 프로그램·교육비를 한 번에 비교하세요. 일반 기간권의 절감액은 월요금을 같은 기간 납부할 때와 비교합니다. 통합 8종팩은 기존 12개월 안내가 대비 할인에 이용기간 무제한 혜택을 더한 별도 프로모션입니다.</p>
         </div>
         <a class="price-overview-jump" href="#edu">교육 상세 내용 보기 →</a>
       </div>
@@ -1158,12 +1183,9 @@ dialog.lb::backdrop{background:transparent}
                 <td data-label="6개월"><strong>628,000원</strong><small class="price-save">86,000원 절감</small></td>
                 <td data-label="12개월" class="is-best-term"><strong>1,090,000원</strong><small class="price-save">338,000원 절감</small></td>
               </tr>
-              <tr>
-                <th scope="row"><a href="#pack-all">통합 8종팩</a><small>유료 프로그램 전체 · 8종</small><span class="price-status">직접 결제 준비 중</span></th>
-                <td data-label="1개월"><strong>159,000원</strong><small>매월 자동결제</small></td>
-                <td data-label="3개월"><strong>444,000원</strong><small class="price-save">33,000원 절감</small></td>
-                <td data-label="6개월"><strong>840,000원</strong><small class="price-save">114,000원 절감</small></td>
-                <td data-label="12개월" class="is-best-term"><strong>1,490,000원</strong><small class="price-save">418,000원 절감</small></td>
+              <tr class="lifetime-table-row">
+                <th scope="row"><a href="#pack-all">통합 8종팩</a><small>유료 프로그램 전체 · 8종</small><span class="price-status">무제한 이용권 · 결제 문의</span></th>
+                <td colspan="4" data-label="기간 무제한 프로모션" class="lifetime-table-offer"><span class="lifetime-table-badge">12개월 할인가로 기간 무제한</span><span class="lifetime-table-price"><small>기존 12개월 안내가 <s>1,490,000원</s></small><strong>1,190,000원</strong></span><small>30만원 할인 + 이용기간 제한 없음 · 1회 결제</small><a href="#pack-all">포함 제품·혜택·결제 문의 →</a></td>
               </tr>
             </tbody>
           </table>
@@ -1269,6 +1291,7 @@ dialog.lb::backdrop{background:transparent}
           <div class="offer-row" data-term="3m" data-amount="154000"><span class="pr-label">3개월</span><span class="offer-value"><b>154,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
           <div class="offer-row" data-term="6m" data-amount="290000"><span class="pr-label">6개월</span><span class="offer-value"><b>290,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
           <div class="offer-row" data-term="12m" data-amount="515000"><span class="pr-label">12개월</span><span class="offer-value"><b>515,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          <button class="annual-benefit" type="button" data-select-term="12m" data-only-term="1m" aria-label="12개월 가격과 할인 보기"><span class="annual-benefit-top"><b>12개월 선택 시</b><strong>약 22% 절감</strong></span><span class="annual-benefit-saving">145,000원 아끼는 기간권</span><span class="annual-benefit-compare"><small>월요금 × 12회</small><s>660,000원</s><span aria-hidden="true">→</span><b>515,000원</b></span><span class="annual-benefit-detail">12개월 이용료 · 1회 결제</span><span class="annual-benefit-action">12개월 혜택 보기 →</span></button>
           <div class="offer-actions">
             <a class="checkout-cta" data-checkout="pack_blog" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/532GR" target="_blank" rel="noopener">1개월 55,000원 · 결제하기</a>
              <a class="pk-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">성장팩 선택 상담하기 →</a>
@@ -1294,6 +1317,7 @@ dialog.lb::backdrop{background:transparent}
           <div class="offer-row" data-term="3m" data-amount="276000"><span class="pr-label">3개월</span><span class="offer-value"><b>276,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
           <div class="offer-row" data-term="6m" data-amount="522000"><span class="pr-label">6개월</span><span class="offer-value"><b>522,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
           <div class="offer-row" data-term="12m" data-amount="925000"><span class="pr-label">12개월</span><span class="offer-value"><b>925,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          <button class="annual-benefit" type="button" data-select-term="12m" data-only-term="1m" aria-label="12개월 가격과 할인 보기"><span class="annual-benefit-top"><b>12개월 선택 시</b><strong>약 22% 절감</strong></span><span class="annual-benefit-saving">263,000원 아끼는 기간권</span><span class="annual-benefit-compare"><small>월요금 × 12회</small><s>1,188,000원</s><span aria-hidden="true">→</span><b>925,000원</b></span><span class="annual-benefit-detail">12개월 이용료 · 1회 결제</span><span class="annual-benefit-action">12개월 혜택 보기 →</span></button>
           <div class="offer-actions">
             <a class="checkout-cta" data-checkout="pack_blog_video" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/nbZ2j" target="_blank" rel="noopener">1개월 99,000원 · 결제하기</a>
              <a class="pk-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">콘텐츠팩 선택 상담하기 →</a>
@@ -1328,6 +1352,7 @@ dialog.lb::backdrop{background:transparent}
           <div class="offer-row" data-term="3m" data-amount="332000"><span class="pr-label">3개월</span><span class="offer-value"><b>332,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
           <div class="offer-row" data-term="6m" data-amount="628000"><span class="pr-label">6개월</span><span class="offer-value"><b>628,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
           <div class="offer-row" data-term="12m" data-amount="1090000"><span class="pr-label">12개월</span><span class="offer-value"><b>1,090,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
+          <button class="annual-benefit" type="button" data-select-term="12m" data-only-term="1m" aria-label="12개월 가격과 할인 보기"><span class="annual-benefit-top"><b>12개월 선택 시</b><strong>약 24% 절감</strong></span><span class="annual-benefit-saving">338,000원 아끼는 기간권</span><span class="annual-benefit-compare"><small>월요금 × 12회</small><s>1,428,000원</s><span aria-hidden="true">→</span><b>1,090,000원</b></span><span class="annual-benefit-detail">12개월 이용료 · 1회 결제</span><span class="annual-benefit-action">12개월 혜택 보기 →</span></button>
           <div class="offer-actions">
             <a class="checkout-cta" data-checkout="pack_multichannel" href="https://www.latpeed.com/memberships/6a7c3c685dabffbb9308a54d/pay/rRfJ1" target="_blank" rel="noopener">1개월 119,000원 · 결제하기</a>
              <a class="pk-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">멀티채널팩 선택 상담하기 →</a>
@@ -1335,8 +1360,8 @@ dialog.lb::backdrop{background:transparent}
           </div>
         </div>
       </div>
-      <div class="pk" id="pack-all">
-        <div class="pk-badge">8종 전체</div>
+      <div class="pk pk-lifetime" id="pack-all">
+        <div class="pk-badge">통합 8종 · 기간 무제한 프로모션</div>
         <h3 class="pk-name">통합 8종팩</h3>
         <p class="pk-line">곰대리 8명 전부입니다. 영상·블로그·SNS·상세페이지까지 여러 업무를 한 번에 관리할 때 선택합니다.</p>
         <div class="pk-includes" aria-labelledby="pack-all-includes">
@@ -1353,16 +1378,15 @@ dialog.lb::backdrop{background:transparent}
           </ul>
         </div>
         <p class="pk-who">영상·블로그·SNS·상세페이지까지 전부 필요한 분</p>
-        <div class="pk-pay" data-offer-prices="pack_all" aria-live="polite">
-          <div class="offer-row is-active" data-term="1m" data-amount="159000"><span class="pr-label">1개월</span><span class="offer-value"><b>159,000원</b><span class="offer-note">매월 자동결제</span></span></div>
-          <div class="offer-row" data-term="3m" data-amount="444000"><span class="pr-label">3개월</span><span class="offer-value"><b>444,000원</b><span class="offer-note is-fixed">1회 결제 · 약 7% 절감</span></span></div>
-          <div class="offer-row" data-term="6m" data-amount="840000"><span class="pr-label">6개월</span><span class="offer-value"><b>840,000원</b><span class="offer-note is-fixed">1회 결제 · 약 12% 절감</span></span></div>
-          <div class="offer-row" data-term="12m" data-amount="1490000"><span class="pr-label">12개월</span><span class="offer-value"><b>1,490,000원</b><span class="offer-note">12개월 선결제 · 자동갱신 없음</span></span></div>
-          <div class="pk-promo" data-only-term="12m" data-promotion="pack_all_first_year_119" hidden><b>12개월 프로모션 1,190,000원</b><br>정상가는 1,490,000원이며, 별도 상품·대상·종료 조건이 확정된 경우에만 안내합니다.</div>
+        <div class="pk-pay lifetime-pack-pay" data-lifetime-offer="pack_all" data-amount="1190000">
+          <div class="lifetime-pack-heading"><span>12개월 할인가 그대로</span><strong>이용기간 무제한</strong></div>
+          <div class="lifetime-old"><span>기존 12개월 안내가</span><s>1,490,000원</s></div>
+          <div class="lifetime-price"><span>30만원 할인된 특별 혜택가</span><strong>1,190,000<small>원</small></strong></div>
+          <p class="lifetime-billing">1회 결제 · 갱신요금 없음</p>
+          <p class="lifetime-scope">무제한은 <b>이용기간에 제한이 없다</b>는 뜻입니다. 현재 포함된 유료 8종에 적용되며, 1인·1PC 기준입니다. AI·외부 API 사용료와 향후 별도 출시 제품은 포함되지 않습니다.</p>
           <div class="offer-actions">
-            <a class="checkout-cta" data-checkout="pack_all" data-checkout-fallback="kakao" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">구매 가능 여부 · 카카오톡 문의하기</a>
-             <a class="pk-cta" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">통합 8종팩 상담하기 →</a>
-            <p class="checkout-help">상세대리 구독 인증과 래피드 웹훅 검증 후 직접 결제가 열립니다.</p>
+            <a class="checkout-cta lifetime-cta" data-checkout="pack_all" data-checkout-kind="lifetime" data-amount="1190000" data-checkout-fallback="kakao" href="https://pf.kakao.com/_mnxoxlX/chat" target="_blank" rel="noopener">119만원 · 무제한 이용권 결제 문의</a>
+            <p class="checkout-help">카카오톡으로 기간 무제한 프로모션의 적용 대상·마감일과 별도 결제 방법을 안내받으세요.</p>
           </div>
         </div>
       </div>
@@ -1432,7 +1456,7 @@ dialog.lb::backdrop{background:transparent}
       <div class="purchase-note"><b>7일 체험</b> · 1인 1회, 카드 등록 없이 시작하고 자동 유료전환 없이 종료됩니다.</div>
       <div class="purchase-note"><b>1개월 월 구독</b> · 래피드 정기구독 정책상 카드로만 결제하며, 해지 전까지 매월 자동결제됩니다.</div>
       <div class="purchase-note"><b>3·6·12개월 기간권</b> · 네이버페이·카카오페이·앱카드·카드를 지원하는 1회 결제이며 자동갱신되지 않습니다.</div>
-      <div class="purchase-note"><b>12개월 이용권</b> · 한 번 결제하고 12개월 이용하며, 기간이 끝나도 자동결제되지 않습니다.</div>
+      <div class="purchase-note"><b>통합 8종 기간 무제한 혜택</b> · 119만원 1회 결제로 이용기간 제한 없이 사용합니다. 일반 12개월 기간권과 다르며, 프로모션 적용 대상·마감일은 결제 전에 문의해 주세요.</div>
       <div class="purchase-note"><b>Windows PC 전용</b> · 기본 이용 조건은 1인·1PC입니다.</div>
       <div class="purchase-note"><b>AI 사용료 별도</b> · 본인 명의 API 키를 사용하며 제공사 사용료가 발생할 수 있습니다.</div>
       <div class="purchase-note"><b>설치 안내</b> · 기본 가이드와 오픈채팅을 제공하고 화면 공유 교육은 선택 과정입니다.</div>
@@ -1640,7 +1664,8 @@ dialog.lb::backdrop{background:transparent}
     <div class="faq rv">
       <details open><summary>하나만 구독해도 되나요?</summary><p>네. 8종 전부 단품으로 쓰실 수 있습니다. 지금 손이 제일 많이 가는 일 하나부터 시작하시고, 필요해지면 그때 패키지로 올리시면 됩니다. 블로그대리와 서이추대리처럼 같이 쓸 때 효과가 커지는 조합만 묶어서 할인합니다.</p></details>
       <details><summary>시작 전에 써볼 수 있나요?</summary><p>네. 페이지의 ‘무료 7일 체험판 받기’ 버튼을 누르면 바로 받을 수 있습니다. 체험은 1인 1회·7일이며, 카드 등록 없이 시작하고 자동 유료전환 없이 만료됩니다. AI 기능을 사용하면 본인 명의 외부 API 사용료는 별도로 발생할 수 있습니다.</p></details>
-      <details><summary>3개월·6개월·12개월도 자동결제되나요?</summary><p>아니요. 3개월·6개월·12개월은 네이버페이·카카오페이·앱카드·카드를 지원하는 1회 결제 기간권입니다. 선택한 기간이 끝나면 자동으로 종료되며, 계속 이용하려면 직접 연장하면 됩니다.</p></details>
+      <details><summary>통합 8종팩은 12개월만 사용하나요?</summary><p>아니요. 이번 기간 무제한 프로모션은 12개월 할인가인 119만원을 한 번 결제하고, 현재 포함된 유료 8종을 이용기간 제한 없이 사용하는 상품입니다. 갱신요금은 없으며 1인·1PC 기준입니다. AI·외부 API 사용료, 추가 PC 라이선스와 향후 별도 출시 제품은 포함되지 않습니다. 프로모션 적용 대상·마감일, 제공 범위와 결제·환불 조건은 결제 전 카카오톡으로 확인해 주세요. 일반 기간권의 만료 조건과 구분하여 안내합니다.</p></details>
+      <details><summary>3개월·6개월·12개월도 자동결제되나요?</summary><p>아니요. 3개월·6개월·12개월은 네이버페이·카카오페이·앱카드·카드를 지원하는 1회 결제 기간권입니다. 선택한 기간이 끝나면 자동으로 종료되며, 계속 이용하려면 직접 연장하면 됩니다. 단, 통합 8종 기간 무제한 프로모션은 이 기간 만료 조건을 적용하지 않습니다.</p></details>
       <details><summary>1개월은 어떻게 결제되나요?</summary><p>1개월은 래피드 정기구독 정책상 카드로만 결제하며, 해지 전까지 매월 자동결제됩니다. 기간권을 이용하려면 다음 월결제를 먼저 해지한 뒤 3·6·12개월 중 원하는 기간을 결제해 주세요.</p></details>
       <details><summary>해지와 환불 기준은 어떻게 되나요?</summary><p>1개월 정기결제를 해지하면 다음 결제일부터 자동결제가 중단되고 이미 결제한 기간까지 이용할 수 있습니다. 3·6·12개월 기간권은 이용 시작 후 중도해지 시 결제금액에서 경과 일수의 일할 이용대금과 잔여기간 이용요금의 10%를 공제한 금액을 환불합니다. 교육은 시작 전 전액 환불하며, 원격·출장 1회 과정은 총 3시간, 4주 과정은 총 12시간을 기준으로 교육시간의 3분의 1 전에는 결제금액의 3분의 2, 2분의 1 전에는 2분의 1을 환불하고 절반 이상 진행된 뒤에는 환불하지 않습니다. 일정·출장 지역에 합의하지 못한 경우에는 전액 환불하며, 관련 법령이나 소비자분쟁해결기준이 더 유리하면 그 기준을 우선 적용합니다. 자세한 내용은 이용약관에서 확인해 주세요.</p></details>
       <details><summary>해지 후 언제까지 사용할 수 있나요?</summary><p>이미 결제한 이용기간 끝날 때까지 그대로 쓰실 수 있습니다. 기간이 끝나면 프로그램 실행만 멈추고, 그동안 만든 글·영상·이미지는 내 컴퓨터에 그대로 남습니다.</p></details>
@@ -1653,7 +1678,7 @@ dialog.lb::backdrop{background:transparent}
       <details><summary>앞으로 나오는 프로그램도 포함되나요?</summary><p>구독하신 제품의 기능 개선과 호환성 업데이트는 이용기간 내내 제공됩니다. 다만 완전히 새로 나오는 유료 독립 제품은 별도 상품이거나 구독자 전용 조건으로 안내드립니다. 무료로 배포하는 도구는 유료 패키지의 포함 제품 수와 별도로 안내합니다.</p></details>
       <details><summary>컴퓨터 두 대에서 쓸 수 있나요?</summary><p>기본은 1인·1PC입니다. 매장과 집처럼 두 곳에서 쓰셔야 하면 카카오톡으로 말씀해 주세요. 추가 라이선스로 안내드립니다.</p></details>
       <details><summary>윈도우가 아니어도 되나요?</summary><p>윈도우 PC에서만 작동합니다. 맥에서는 쓰실 수 없습니다. 지금 쓰시는 컴퓨터가 괜찮을지 모르겠으면 시작 전에 사양을 보내주세요. 확인해 드립니다.</p></details>
-      <details><summary>전에 구매한 평생 이용권은 어떻게 되나요?</summary><p>그대로 유지됩니다. 구매하실 때 포함되어 있던 제품은 계속 쓰십니다. 새 1·3·6·12개월 기간형 요금제는 앞으로 시작하시는 분들께만 적용됩니다.</p></details>
+      <details><summary>전에 구매한 평생 이용권은 어떻게 되나요?</summary><p>그대로 유지됩니다. 구매하실 때 포함되어 있던 제품은 계속 쓰십니다. 일반 기간형 요금제와 이번 통합 8종 기간 무제한 프로모션은 별도 상품이며, 기존 구매 권리를 변경하지 않습니다.</p></details>
       <details><summary>체험이나 결제는 어떻게 진행하나요?</summary><p>체험판은 ‘무료 7일 체험판 받기’ 버튼으로 바로 내려받을 수 있습니다. 결제는 원하는 제품과 기간을 선택한 뒤 ‘결제하기’를 누르면 진행됩니다. 어떤 제품이 맞을지 모르겠다면 카카오톡으로 현재 하는 일과 줄이고 싶은 업무를 적어주세요.</p></details>
     </div>
   </div>
@@ -1713,8 +1738,8 @@ dialog.lb::backdrop{background:transparent}
 <div class="copy-toast" id="copy-toast" role="status" aria-live="polite"></div>
 <dialog class="lb" id="lb" aria-label="이미지 크게 보기"><button class="lb-x" id="lbx" type="button" aria-label="닫기">✕</button><img id="lbimg" alt=""></dialog>
 
-<script src="latpeed_checkout_config.js?v=20260828-v8"></script>
-<script src="conversion-events.js?v=20260905-2"></script>
+<script src="latpeed_checkout_config.js?v=20260905-v10"></script>
+<script src="conversion-events.js?v=20260905-5"></script>
 <script src="conversion-ui.js?v=20260905-3" defer></script>
 <script>
 (function(){
@@ -1740,10 +1765,10 @@ dialog.lb::backdrop{background:transparent}
 
   // 기간 선택과 래피드 직접결제는 가격·링크·웹훅이 모두 검증된 상품만 엽니다.
   var termMeta = {
-    '1m': {label:'1개월', status:'1개월 가격을 보고 있습니다. 래피드 정기구독은 카드 결제만 지원하며 해지 전까지 매월 자동결제됩니다.'},
-    '3m': {label:'3개월', status:'3개월 가격을 보고 있습니다. 네이버페이·카카오페이·앱카드·카드로 한 번 결제하고 3개월 뒤 자동 종료됩니다.'},
-    '6m': {label:'6개월', status:'6개월 가격을 보고 있습니다. 네이버페이·카카오페이·앱카드·카드로 한 번 결제하고 6개월 뒤 자동 종료됩니다.'},
-    '12m': {label:'12개월', status:'12개월 가격을 보고 있습니다. 네이버페이·카카오페이·앱카드·카드로 한 번 결제하고 12개월 이용하며 자동갱신되지 않습니다.'}
+    '1m': {label:'1개월', status:'1개월 가격입니다. 래피드 연결 상품은 카드 정기결제이며, 결제 문의 상품은 카카오톡으로 별도 결제 방법을 안내합니다.'},
+    '3m': {label:'3개월', status:'3개월 기간권은 한 번 결제하고 자동갱신 없이 종료됩니다. 온라인 결제 가능 상품은 래피드로, 그 외 상품은 카카오톡 결제 문의로 안내합니다.'},
+    '6m': {label:'6개월', status:'6개월 기간권은 한 번 결제하고 자동갱신 없이 종료됩니다. 온라인 결제 가능 상품은 래피드로, 그 외 상품은 카카오톡 결제 문의로 안내합니다.'},
+    '12m': {label:'12개월', status:'12개월 기간권은 한 번 결제하고 자동갱신 없이 종료됩니다. 온라인 결제 가능 상품은 래피드로, 그 외 상품은 카카오톡 결제 문의로 안내합니다.'}
   };
   var selectedTerm = '1m';
   var checkoutConfig = window.GOMDAERI_CHECKOUT_CONFIG || {};
@@ -1791,8 +1816,10 @@ dialog.lb::backdrop{background:transparent}
         if (!note || !amount || saving <= 0) return;
         var rate = Math.round((saving / regular) * 100);
         note.classList.add('is-fixed');
-        note.innerHTML = '<s>' + won(regular) + '</s><span class="offer-save">' + won(saving) + ' 할인 · 약 ' + rate + '%</span>' +
-          (term === '12m' ? '<span>1회 결제 · 자동갱신 없음</span>' : '<span>1회 결제</span>');
+        note.innerHTML = '<span class="offer-save">약 ' + rate + '% 절감 · ' + won(saving) + ' 할인</span>' +
+          '<span class="offer-basis">월요금 × ' + months + '회 <s>' + won(regular) + '</s> 대비</span>' +
+          '<span class="offer-equivalent">월 환산 약 ' + won(Math.round(amount / months)) + '</span>' +
+          '<span class="offer-billing">실결제 ' + won(amount) + ' · 1회 결제 · 자동갱신 없음</span>';
         row.setAttribute('data-discount-amount', String(saving));
         row.setAttribute('data-discount-rate', String(rate));
       });
@@ -1800,10 +1827,32 @@ dialog.lb::backdrop{background:transparent}
   }
 
   applyDiscountDetails();
+  // The complete comparison table uses the same prices as product cards.
+  document.querySelectorAll('.full-price-table tbody tr').forEach(function(row){
+    var cells = row.querySelectorAll('td[data-label]');
+    if (cells.length !== 4) return;
+    var monthly = Number((cells[0].querySelector('strong').textContent || '').replace(/[^0-9]/g,''));
+    [3,6,12].forEach(function(months,index){
+      var cell = cells[index + 1];
+      var amount = Number((cell.querySelector('strong').textContent || '').replace(/[^0-9]/g,''));
+      var saving = monthly * months - amount;
+      var label = cell.querySelector('.price-save');
+      if (label && saving > 0) label.textContent = '약 ' + Math.round(saving / (monthly * months) * 100) + '% · ' + won(saving) + ' 절감';
+    });
+  });
 
   function updateCheckout(link){
     var baseCode = link.getAttribute('data-checkout') || '';
     var isService = link.getAttribute('data-checkout-kind') === 'service';
+    if (link.getAttribute('data-checkout-kind') === 'lifetime') {
+      link.setAttribute('data-offer-code',baseCode + '-lifetime');
+      link.setAttribute('data-checkout-fallback','kakao');
+      link.href = 'https://pf.kakao.com/_mnxoxlX/chat';
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = '119만원 · 무제한 이용권 결제 문의';
+      return;
+    }
     var offerCode = isService ? baseCode : baseCode + '-' + selectedTerm;
     var url = checkoutLinks[offerCode] || '';
     var secondaryCta = link.parentElement && link.parentElement.querySelector('.pk-cta, .card-cta');
@@ -1813,7 +1862,13 @@ dialog.lb::backdrop{background:transparent}
       !isBlocked && !needsConsultation && enabledOffers.indexOf(offerCode) !== -1 &&
       isAllowedCheckoutUrl(url, offerCode);
     link.setAttribute('data-offer-code', offerCode);
+    var help = link.parentElement && link.parentElement.querySelector('.checkout-help');
+    if (help && !help.hasAttribute('data-original-help')) help.setAttribute('data-original-help',help.textContent);
+    var priceBox = document.querySelector('[data-offer-prices="' + baseCode + '"]');
+    var monthlyNote = priceBox && priceBox.querySelector('.offer-row[data-term="1m"] .offer-note');
+    if (monthlyNote && selectedTerm === '1m') monthlyNote.textContent = canCheckout ? '매월 자동결제' : '1개월 이용 · 결제 방식 문의';
     if (canCheckout) {
+      if (help) help.textContent = isService ? help.getAttribute('data-original-help') : selectedTerm === '1m' ? '카드로 매월 자동결제됩니다. 해지 전까지 동일 기간으로 갱신됩니다.' : '표시된 금액을 한 번 결제합니다. 이용기간 종료 후 자동갱신되지 않습니다.';
       if (secondaryCta) secondaryCta.hidden = false;
       link.href = url;
       link.target = '_blank';
@@ -1834,11 +1889,9 @@ dialog.lb::backdrop{background:transparent}
     link.removeAttribute('aria-disabled');
     link.removeAttribute('tabindex');
     link.setAttribute('data-checkout-fallback','kakao');
-    link.textContent = isBlocked
-      ? '구매 가능 여부 · 카카오톡 문의하기'
-      : (needsConsultation
-        ? '일정 확인 · 카카오톡 문의하기'
-        : (isService ? '교육 일정 · 카카오톡 문의하기' : termMeta[selectedTerm].label + ' 판매 준비 중 · 카카오톡 문의하기'));
+    link.textContent = isService ? '교육 신청 · 결제 문의' : termMeta[selectedTerm].label + ' ' + selectedPriceText(baseCode) + ' · 결제 문의';
+    if (help) help.textContent = '카카오톡으로 선택한 상품·기간의 별도 결제 방법을 안내받으세요.';
+
   }
 
   var checkoutButtons = Array.prototype.slice.call(document.querySelectorAll('[data-checkout]'));
@@ -1847,7 +1900,7 @@ dialog.lb::backdrop{background:transparent}
       if (link.getAttribute('aria-disabled') === 'true') { e.preventDefault(); return; }
       pushEvent('gomdaeri_checkout_click', {
         offer_code:link.getAttribute('data-offer-code') || '',
-        term:link.getAttribute('data-checkout-kind') === 'service' ? 'one_time' : selectedTerm,
+        term:link.getAttribute('data-checkout-kind') === 'lifetime' ? 'lifetime' : link.getAttribute('data-checkout-kind') === 'service' ? 'one_time' : selectedTerm,
         destination:link.getAttribute('data-checkout-fallback') === 'kakao' ? 'kakao_chat' : 'latpeed'
       });
     });
@@ -1875,6 +1928,14 @@ dialog.lb::backdrop{background:transparent}
   }
   document.querySelectorAll('.term-option').forEach(function(button){
     button.addEventListener('click', function(){ setTerm(button.getAttribute('data-term'), true); });
+  });
+  document.querySelectorAll('[data-select-term]').forEach(function(button){
+    button.addEventListener('click',function(){
+      var card = button.closest('.card,.pk');
+      setTerm(button.getAttribute('data-select-term'),true);
+      var checkout = card && card.querySelector('[data-checkout]');
+      if (checkout) checkout.focus({preventScroll:true});
+    });
   });
   setTerm('1m', false);
 
@@ -1921,7 +1982,14 @@ dialog.lb::backdrop{background:transparent}
     if (link.closest('.free-suite')) intent = '무료 도구 6종';
     var section = card ? 'product' : pack ? 'package' : education ? 'education' : link.closest('.free-suite') ? 'free_tools' : link.closest('.final') ? 'final' : link.closest('.dock') ? 'mobile_dock' : link.closest('nav') ? 'navigation' : 'general';
     var message;
-    if (section === 'free_tools') message = '무료 도구 6종을 받고 싶습니다.';
+    if (link.getAttribute('data-checkout-kind') === 'lifetime') {
+      message = '통합 8종팩 기간 무제한 프로모션 1,190,000원(1회 결제) 구매를 문의드립니다. 프로모션 적용 대상·마감일, 제공 범위와 결제 방법을 안내해 주세요.';
+    }
+    else if (link.getAttribute('data-checkout-fallback') === 'kakao') {
+      var baseCode = link.getAttribute('data-checkout') || '';
+      message = (intent || '곰대리') + (link.getAttribute('data-checkout-kind') === 'service' ? '' : ' ' + (baseCode === 'pack_all' && selectedTerm === '12m' ? '첫 구매 ' : '') + termMeta[selectedTerm].label + ' ' + selectedPriceText(baseCode)) + ' 결제를 원합니다. 별도 결제 방법을 안내해 주세요.';
+    }
+    else if (section === 'free_tools') message = '무료 도구 6종을 받고 싶습니다.';
     else if (section === 'education') message = (intent || '교육 과정') + ' 일정과 결제 방법을 문의드립니다.';
     else if (section === 'product' || section === 'package') message = (intent || '곰대리') + ' ' + termMeta[selectedTerm].label + ' 요금제와 7일 체험을 문의드립니다.';
     else message = (intent || '곰대리 7일 체험과 요금제') + ' 문의드립니다. 줄이고 싶은 업무: ';
