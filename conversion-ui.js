@@ -8,6 +8,15 @@
     var area = element.closest('.card,.pk,.free-suite,.dock,nav,section,header');
     return area ? area.id || (area.classList.contains('dock') ? 'mobile_dock' : 'general') : 'general';
   }
+  // Reveal every enclosing fold so product / checkout bookmarks remain usable.
+  function revealDetails(target) {
+    var node = target, changed = false;
+    while (node) {
+      if (node.tagName === 'DETAILS' && !node.open) { node.open = true; changed = true; }
+      node = node.parentElement;
+    }
+    return changed;
+  }
   // Native details also works without JavaScript; direct hash links open it first.
   function openHashDetails() {
     var id;
@@ -15,8 +24,7 @@
     if (!id) return;
     var target = document.getElementById(id);
     if (!target) return;
-    var fold = target.closest('details');
-    if (fold && !fold.open) { fold.open = true; target.scrollIntoView({block:'start'}); }
+    if (revealDetails(target)) target.scrollIntoView({block:'start'});
   }
   var priceFold = document.getElementById('all-prices');
   if (priceFold) priceFold.addEventListener('toggle', function () {
@@ -27,13 +35,18 @@
   document.querySelectorAll('a[href^="#"]').forEach(function (link) {
     link.addEventListener('click', function () {
       var target = document.getElementById(link.getAttribute('href').slice(1));
-      var fold = target && target.closest('details');
-      if (fold) fold.open = true;
+      if (target) revealDetails(target);
       if (link.matches('.hub-path,.hr-chip,.hub-shortcuts a')) track('gomdaeri_product_path', {product_id:product(link),destination:link.getAttribute('href'),entry_point:placement(link)});
     });
   });
   window.addEventListener('hashchange',openHashDetails);
   openHashDetails();
+
+  document.querySelectorAll('.product-pricing,#other-programs,#proof').forEach(function (fold) {
+    fold.addEventListener('toggle', function () {
+      if (fold.open) track(fold.classList.contains('product-pricing') ? 'gomdaeri_prices_open' : 'gomdaeri_section_view', {section_id:fold.id,product_id:product(fold)});
+    });
+  });
 
   var dialog = document.getElementById('trial-dialog');
   var urlField = dialog.querySelector('#trial-pc-url');
@@ -51,7 +64,9 @@
   document.querySelectorAll('[data-trial-download],[data-free-tools-download]').forEach(function (link) {
     link.addEventListener('click',function (event) {
       if (event.defaultPrevented) return;
-      var mobile = window.matchMedia('(max-width:760px)').matches || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      // A narrow PC window still supports the installer; width alone is not a device check.
+      var mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+        (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
       var freeTools = link.hasAttribute('data-free-tools-download');
       var productId = freeTools ? 'free_tools' : product(link);
       var entry = placement(link);
