@@ -9,6 +9,7 @@ import os
 import secrets
 import threading
 import time
+from datetime import date
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
@@ -112,6 +113,10 @@ def state():
         "verify_real": db.get_setting("verify_real", "0") == "1",
         "alert_threshold": int(db.get_setting("alert_threshold", "10")),
         "has_telegram": bool(db.get_setting("telegram_token") and db.get_setting("telegram_chat_id")),
+        "last_run_at": db.get_setting("last_run_at", ""),
+        "last_run_ok": int(db.get_setting("last_run_ok", "0")),
+        "last_run_failed": int(db.get_setting("last_run_failed", "0")),
+        "today": date.today().isoformat(),
     }
 
 
@@ -174,6 +179,46 @@ def inspect(body: InspectIn):
 def remove_product(product_id: int):
     db.delete_product(product_id)
     add_log(f"상품 #{product_id} 삭제")
+    return {"ok": True}
+
+
+class KeywordIn(BaseModel):
+    keyword: str = Field(min_length=1)
+
+
+@app.post("/api/products/{product_id}/keywords")
+def add_keyword(product_id: int, body: KeywordIn):
+    """키워드만 추가 — 상품을 지웠다 다시 만들 필요 없이 (이력 보존)"""
+    kw = body.keyword.strip()
+    if not kw:
+        raise HTTPException(422, "키워드가 비어 있습니다")
+    db.add_keyword(product_id, kw)
+    add_log(f"키워드 추가: {kw}")
+    return {"ok": True}
+
+
+@app.delete("/api/keywords/{keyword_id}")
+def remove_keyword(keyword_id: int):
+    db.delete_keyword(keyword_id)
+    add_log(f"키워드 삭제 #{keyword_id}")
+    return {"ok": True}
+
+
+class ProductPatch(BaseModel):
+    name: str | None = None
+    mall: str | None = None
+    track_limit: int | None = None
+    link: str | None = None
+    reset_match: bool = False
+
+
+@app.patch("/api/products/{product_id}")
+def edit_product(product_id: int, body: ProductPatch):
+    """상품명·몰명·추적범위 수정. reset_match로 잘못 잡힌 매칭을 되돌린다 (이력 유지)."""
+    db.update_product(product_id, name=body.name, mall=body.mall,
+                      track_limit=body.track_limit, link=body.link,
+                      reset_match=body.reset_match)
+    add_log(f"상품 #{product_id} 수정" + (" — 매칭 초기화(다음 조회에서 다시 찾음)" if body.reset_match else ""))
     return {"ok": True}
 
 

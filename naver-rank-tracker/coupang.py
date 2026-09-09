@@ -73,7 +73,10 @@ NAME_PATTERNS = [
     re.compile(r'<(?:div|span)[^>]*class="[^"]*product[-_]?name[^"]*"[^>]*>(.*?)</(?:div|span)>', re.S | re.I),
     re.compile(r'<img[^>]*\balt="([^"]{4,})"', re.I),
 ]
-AD_MARKERS = ("ad-badge", "admark", "adbadge", "sdw-ad", 'data-is-ad="true"', "advertise")
+# 광고 표식 — 'advertiser' 같은 부분일치 오탐을 막으려 경계를 붙여 찾는다
+AD_MARKER_RE = re.compile(
+    r'(?:class="[^"]*(?:ad-badge|adbadge|admark|sdw-ad\b)|data-is-ad="true"|'
+    r'data-ad-?type=|adsclick)', re.I)
 WINDOW = 6000  # 한 항목 블록으로 볼 최대 길이
 
 
@@ -95,12 +98,17 @@ def _parse_by_markup(page_html):
     """1차 전략: data-product-id 앵커 기준 파싱"""
     anchors = [(m.start(), m.end(), m.group(0), m.group(1))
                for m in ITEM_ANCHOR_RE.finditer(page_html)]
-    items, seen = [], set()
+    items = []
+    prev_pid = None
 
     for idx, (a_start, a_end, tag, pid) in enumerate(anchors):
-        if pid in seen:      # 같은 상품의 중첩 태그(li 안의 a 등)는 한 번만
+        # 같은 productId가 '연달아' 나오면 중첩 태그(li 안의 a 등) — 한 번만 센다.
+        # 반대로 다른 상품을 사이에 두고 다시 나오면 별개 노출이다:
+        # 광고 슬롯과 일반 노출을 같은 상품이 동시에 차지하는 경우가 흔한데,
+        # 이걸 지워버리면 광고를 돌리는 셀러의 상품이 영영 안 잡힌다.
+        if pid == prev_pid:
             continue
-        seen.add(pid)
+        prev_pid = pid
         # 블록 끝 = 다른 상품 앵커가 시작되는 지점 (없으면 WINDOW까지)
         stop = a_end + WINDOW
         for nxt_start, _, _, nxt_pid in anchors[idx + 1:]:
@@ -108,13 +116,13 @@ def _parse_by_markup(page_html):
                 stop = min(stop, nxt_start)
                 break
         block = page_html[a_end:stop]
-        probe = (tag + block[:1500]).lower()
+        probe = tag + block   # 광고 표식이 블록 뒤쪽에 있을 수 있어 전체를 본다
         items.append({
             "productId": pid,
             "itemId": _find_id("itemId", tag, block),
             "vendorItemId": _find_id("vendorItemId", tag, block),
             "title": _find_title(block),
-            "is_ad": any(mk in probe for mk in AD_MARKERS),
+            "is_ad": bool(AD_MARKER_RE.search(probe)),
         })
     return items
 
@@ -156,10 +164,14 @@ def parse_items(page_html):
 
 
 def _id_match(item, ids):
-    # vendorItemId(판매자 단위) > itemId(옵션 단위) > productId(상품 단위) 순으로 엄격 매칭
+    """세 ID 중 하나라도 일치하면 같은 상품으로 본다.
+
+    옵션이 여러 개인 상품은 사용자가 복사한 URL의 vendorItemId(옵션 단위)와
+    검색결과의 대표 옵션이 다를 수 있다. 가장 안정적인 productId(상품 단위)까지
+    확인해야 '링크 붙여넣기 = 첫 조회부터 정밀 매칭' 약속이 실제로 지켜진다."""
     for key in ("vendorItemId", "itemId", "productId"):
-        if ids.get(key) and item.get(key):
-            return ids[key] == item[key]
+        if ids.get(key) and item.get(key) and ids[key] == item[key]:
+            return True
     return False
 
 
@@ -189,7 +201,14 @@ def fetch_page(session, keyword, page, log=None):
     한 번 차단되면 같은 조회에서는 이후 페이지도 바로 브라우저로 간다."""
     if not getattr(session, "_blocked", False):
         try:
-            return _fetch_requests(session, keyword, page)
+            page_html = _fetch_requests(session, keyword, page)
+            # 403이 아니어도 캡차·차단 안내 페이지가 200으로 오는 경우가 있다.
+            # 1페이지에서 상품이 하나도 안 잡히면 차단으로 보고 브라우저로 재시도한다.
+            if page > 1 or parse_items(page_html):
+                return page_html
+            session._blocked = True
+            if log:
+                log(f"쿠팡 응답에서 상품을 찾지 못했습니다 ({_diagnose(page_html)}) — 실브라우저로 재시도")
         except BlockedError:
             session._blocked = True
             if log:

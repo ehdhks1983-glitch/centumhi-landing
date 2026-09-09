@@ -5,7 +5,7 @@ import re
 import threading
 import time
 
-from datetime import date
+from datetime import date, datetime
 
 import alerts
 import browser
@@ -30,10 +30,11 @@ def normalize(text):
     return WS_RE.sub(" ", text).strip().lower()
 
 
-def check_rank(keyword, product, track_limit):
+def check_rank(keyword, product, track_limit, log=None):
     """반환: (rank | None, match_method, found | None)
     found = (rank, productId, mallName) — 이름 매칭 시에만. 호출부에서 nvmid 승격에 사용."""
     name_hit = None
+    mall_rejected = None
     target = normalize(product["product_name"])
     nvmid = product["nvmid"]
     mall_name = product["mall_name"]
@@ -51,8 +52,11 @@ def check_rank(keyword, product, track_limit):
 
             # 2순위: 이름(+몰명) 매칭 — 첫 히트만 기억
             if name_hit is None and normalize(item.get("title")) == target:
-                if not mall_name or item.get("mallName") == mall_name:
+                if not mall_name or normalize(item.get("mallName")) == normalize(mall_name):
                     name_hit = (rank, item.get("productId"), item.get("mallName"))
+                elif not mall_rejected:
+                    # 조용한 실패 방지: 제목은 맞는데 몰명 때문에 버린 사실을 알린다
+                    mall_rejected = (rank, item.get("mallName"))
 
         if len(items) < display:
             break  # 검색 결과 끝 — 더 넘겨봐야 빈 페이지
@@ -63,6 +67,10 @@ def check_rank(keyword, product, track_limit):
 
     if name_hit:
         return name_hit[0], "name", name_hit  # productId를 호출부에서 DB에 승격 저장
+    if mall_rejected and log:
+        log(f"[{keyword}] 제목이 같은 상품을 {mall_rejected[0]}위에서 찾았지만 "
+            f"몰명이 달라 제외했습니다 (검색결과='{mall_rejected[1]}' vs 등록='{mall_name}') "
+            f"— 몰명을 지우거나 검색결과와 똑같이 고치세요")
     return None, "not_found", None
 
 
@@ -84,6 +92,8 @@ def run_all_checks(log=print):
         threshold = int(db.get_setting("alert_threshold", "10"))
         today = date.today().isoformat()
         alert_msgs = []
+        failures = []
+        successes = 0
 
         for row in products:
             product = dict(row)  # 같은 실행 안에서 승격된 nvmid를 다음 키워드가 바로 쓰도록
@@ -96,7 +106,7 @@ def run_all_checks(log=print):
                     if product["channel"] == "coupang":
                         rank, method, found = coupang.check_rank(keyword, product, product["track_limit"], log=log)
                     else:
-                        rank, method, found = check_rank(keyword, product, product["track_limit"])
+                        rank, method, found = check_rank(keyword, product, product["track_limit"], log=log)
                     db.save_result(kw["id"], rank, method)
                     if not already_alerted_today:  # 같은 날 재조회는 재알림 안 함
                         msg = alerts.build_alert(f"{product['product_name']} · {keyword}",
@@ -118,6 +128,7 @@ def run_all_checks(log=print):
                         log(f"[{keyword}] {rank}위 ({method})")
                     else:
                         log(f"[{keyword}] {product['track_limit']}위 내 미발견")
+                    successes += 1
 
                     # 실측 검증 (네이버 하이브리드): API 순위와 실제 노출 순위 대조
                     if (verify_real and product["channel"] == "naver"
@@ -126,11 +137,40 @@ def run_all_checks(log=print):
                 except QuotaExceeded:
                     log("일일 한도 도달 — 중단, 내일 재개")
                     return  # 남은 큐 포기, 다음날 스케줄러가 처음부터 다시
+                except RuntimeError as e:
+                    # 인증 실패 등 설정 문제는 모든 키워드에서 똑같이 실패한다.
+                    # 같은 오류를 수십 번 반복해 로그를 덮지 않도록 즉시 멈춘다.
+                    if "인증 실패" in str(e) or "API 키 미설정" in str(e):
+                        db.set_setting("last_run_at", datetime.now().strftime("%Y-%m-%d %H:%M"))
+                        log(f"중단 — {e}")
+                        return
+                    db.save_result(kw["id"], None, "error")
+                    failures.append(f"{product['product_name']} · {keyword}: {e}")
+                    log(f"조회 실패 [{keyword}]: {e}")
+                    continue
                 except Exception as e:
+                    # 실패를 이력에 남긴다 — 안 남기면 화면에 어제 순위가 오늘 것처럼 계속 보인다
+                    try:
+                        db.save_result(kw["id"], None, "error")
+                    except Exception:
+                        pass
+                    failures.append(f"{product['product_name']} · {keyword}: {e}")
                     log(f"조회 실패 [{keyword}]: {e}")
                     continue  # 이 키워드만 건너뛰고 계속
 
-        log("조회 완료")
+        log(f"조회 완료 — 성공 {successes}건" + (f", 실패 {len(failures)}건" if failures else ""))
+        db.set_setting("last_run_at", datetime.now().strftime("%Y-%m-%d %H:%M"))
+        db.set_setting("last_run_ok", str(successes))
+        db.set_setting("last_run_failed", str(len(failures)))
+
+        # 실패가 있으면 급변이 없어도 알린다 — 조용한 고장을 막는다
+        if failures and alerts.configured():
+            try:
+                head = f"⚠️ 순위 조회 실패 {len(failures)}건 (성공 {successes}건)"
+                alerts.send(head + "\n" + "\n".join(failures[:10]))
+                log("텔레그램으로 실패 알림 전송")
+            except Exception as e:
+                log(f"실패 알림 전송 못함: {e}")
 
         if alert_msgs:
             try:

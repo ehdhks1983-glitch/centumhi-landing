@@ -24,7 +24,8 @@ ids = extract.ids_from_url("https://search.shopping.naver.com/catalog/12345678",
 check("네이버 카탈로그 링크 → nvmid 즉시 확보", ids["nvmid"] == "12345678", str(ids))
 
 ids = extract.ids_from_url("https://smartstore.naver.com/centumhi/products/99", "naver")
-check("스마트스토어 → 몰명 추출, nvmid는 나중에", ids["mall"] == "centumhi" and ids["nvmid"] is None, str(ids))
+# URL 슬러그(centumhi)는 검색 API의 mallName(센텀하이)과 달라, 몰명으로 쓰면 매칭이 영구 기각된다
+check("스마트스토어 → 몰명을 슬러그로 채우지 않음", ids["mall"] is None and ids["nvmid"] is None, str(ids))
 
 # ── 상품 페이지 파싱 ──
 og = ('<html><head><meta property="og:title" content="센텀하이 알티지 오메가3 90캡슐">'

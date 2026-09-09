@@ -30,8 +30,34 @@ def call_api(query, start=1, display=100):
         timeout=10,
     )
     db.increment_today_usage()
-    r.raise_for_status()
+
+    if r.status_code >= 400:
+        raise _explain(r)
     return r.json()["items"]
+
+
+def _explain(r):
+    """영문 HTTP 오류 대신 '무엇을 고쳐야 하는지'를 한국어로 알려준다."""
+    code = ""
+    try:
+        code = str(r.json().get("errorCode", ""))
+    except Exception:
+        pass
+
+    if r.status_code in (401, 403) or code in ("024", "028"):
+        return RuntimeError(
+            "네이버 API 인증 실패 — 다음을 확인하세요: "
+            "① Client ID/Secret 오타(앞뒤 공백 포함) "
+            "② developers.naver.com > 내 애플리케이션 > API 설정에서 '검색'이 체크되어 있는지 "
+            "(가장 흔한 원인입니다)"
+        )
+    if r.status_code == 429 or code in ("012", "019"):
+        return QuotaExceeded()
+    if r.status_code == 400:
+        return RuntimeError("네이버 API 요청 오류 — 키워드에 이상한 문자가 없는지 확인하세요")
+    if r.status_code >= 500:
+        return RuntimeError("네이버 서버 오류 — 잠시 후 다시 시도하세요")
+    return RuntimeError(f"네이버 API 오류 (HTTP {r.status_code})")
 
 
 if __name__ == "__main__":

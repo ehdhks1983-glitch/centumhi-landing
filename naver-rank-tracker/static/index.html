@@ -153,6 +153,26 @@
   .chip.name { background: var(--chip-name); color: var(--ink); border: 1px solid var(--line); }
   .chip.not_found { background: transparent; color: var(--sub); border: 1px dashed var(--line); }
   .chip.wait { background: transparent; color: var(--sub); border: 1px solid transparent; }
+  .chip.error { background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn); }
+  .when { font-size: .7rem; color: var(--sub); font-variant-numeric: tabular-nums; }
+  .when.stale { color: var(--warn); font-weight: 700; }
+  .runbar {
+    display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+    padding: .45rem .9rem; font-size: .8rem; color: var(--sub);
+    border-top: 1px solid var(--line);
+  }
+  .runbar b { color: var(--ink); }
+  .runbar .warn { color: var(--warn); font-weight: 700; }
+  .rowact {
+    font-size: .72rem; padding: .1rem .4rem; border-color: transparent;
+    background: transparent; color: var(--sub); border-radius: 4px;
+  }
+  .rowact:hover { border-color: var(--warn); color: var(--warn); }
+  .kwadd { display: flex; gap: .4rem; padding: .4rem .75rem; border-top: 1px solid var(--line); }
+  .kwadd input { flex: 1; min-width: 0; padding: .3rem .5rem; font-size: .82rem;
+                 border: 1px solid var(--line); border-radius: 5px;
+                 background: var(--ground); color: var(--ink); }
+  .kwadd button { font-size: .78rem; padding: .25rem .7rem; }
   .empty { padding: 1.6rem 1rem; text-align: center; color: var(--sub); font-size: .86rem; }
 
   .history-title { padding: .55rem .9rem .1rem; font-size: .85rem; color: var(--sub); }
@@ -242,6 +262,8 @@
     <button class="primary" id="openReg">+ 상품 등록</button>
     <button id="runCheck">지금 조회</button>
   </div>
+
+  <div class="card" style="padding:0"><div class="runbar" id="runbar"></div></div>
 
   <div class="main">
     <section class="card">
@@ -347,7 +369,33 @@ async function pullLogs() {
 }
 
 /* ── 상태 렌더링 ── */
-const CHIP_LABEL = { nvmid: "nvmid 정밀", id: "ID 정밀", name: "이름 매칭", not_found: "미발견" };
+function daysAgo(dateStr, today) {
+  const a = new Date(dateStr + "T00:00:00"), b = new Date(today + "T00:00:00");
+  return Math.max(0, Math.round((b - a) / 86400000));
+}
+
+function renderRunbar(s) {
+  const bar = $("runbar");
+  bar.textContent = "";
+  const add = (txt, cls) => {
+    const el = document.createElement("span");
+    if (cls) el.className = cls;
+    el.textContent = txt;
+    bar.appendChild(el);
+  };
+  if (!s.last_run_at) {
+    add("아직 조회한 적이 없습니다 — [지금 조회]를 눌러 시작하세요");
+  } else {
+    add("마지막 조회 ");
+    const b = document.createElement("b"); b.textContent = s.last_run_at; bar.appendChild(b);
+    add(` · 성공 ${s.last_run_ok}건`);
+    if (s.last_run_failed) add(` · 실패 ${s.last_run_failed}건`, "warn");
+  }
+  add(` · 다음 자동 조회 매일 ${String(s.check_hour).padStart(2, "0")}:00`);
+  add(" · 이 프로그램 창을 닫으면 자동 조회가 멈춥니다");
+}
+
+const CHIP_LABEL = { nvmid: "nvmid 정밀", id: "ID 정밀", name: "이름 매칭", not_found: "미발견", error: "조회 실패" };
 
 async function refresh() {
   const s = await api("/api/state");
@@ -361,6 +409,7 @@ async function refresh() {
   ks.className = "keystate " + (s.has_keys ? "ok" : "no");
   $("runCheck").disabled = s.checking;
   $("runCheck").textContent = s.checking ? "조회 중…" : "지금 조회";
+  renderRunbar(s);
 
   const list = $("productList");
   list.textContent = "";
@@ -400,15 +449,56 @@ async function refresh() {
       else { chip.className = "chip " + k.latest.method; chip.textContent = CHIP_LABEL[k.latest.method]; }
       row.appendChild(chip);
 
+      const when = document.createElement("span");
+      when.className = "when";
+      if (k.latest) {
+        const days = daysAgo(k.latest.date, s.today);
+        when.textContent = days === 0 ? "오늘" : `${days}일 전`;
+        if (days >= 2) when.classList.add("stale");
+      }
+      row.appendChild(when);
+
       const rk = document.createElement("span");
       if (k.latest && k.latest.rank) { rk.className = "rank"; rk.textContent = k.latest.rank + "위"; }
+      else if (k.latest && k.latest.method === "error") { rk.className = "rank none"; rk.textContent = "실패"; }
       else if (k.latest) { rk.className = "rank none"; rk.textContent = "범위 밖"; }
       else { rk.className = "rank none"; rk.textContent = "—"; }
       row.appendChild(rk);
 
       row.onclick = () => { selectedKw = { id: k.id, keyword: k.keyword, productName: p.name, productId: p.id }; refresh(); renderHistory(); };
       card.appendChild(row);
+
+      const delKw = document.createElement("button");
+      delKw.className = "rowact"; delKw.textContent = "✕"; delKw.title = "이 키워드만 삭제";
+      delKw.style.cssText = "position:relative; float:right; margin:-1.9rem .5rem 0 0";
+      delKw.onclick = async (ev) => {
+        ev.stopPropagation();
+        if (!confirm(`키워드 "${k.keyword}" 를 삭제할까요? (이 키워드의 이력도 함께 사라집니다)`)) return;
+        await api(`/api/keywords/${k.id}`, { method: "DELETE" });
+        if (selectedKw && selectedKw.id === k.id) selectedKw = null;
+        refresh(); renderHistory();
+      };
+      card.appendChild(delKw);
     }
+
+    const addRow = document.createElement("div"); addRow.className = "kwadd";
+    const inp = document.createElement("input");
+    inp.placeholder = "키워드 추가 (이력은 그대로 유지됩니다)";
+    const addBtn = document.createElement("button"); addBtn.textContent = "추가";
+    const doAdd = async () => {
+      const v = inp.value.trim();
+      if (!v) return;
+      await api(`/api/products/${p.id}/keywords`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keyword: v }),
+      });
+      inp.value = ""; await pullLogs(); refresh();
+    };
+    addBtn.onclick = doAdd;
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") doAdd(); });
+    addRow.append(inp, addBtn);
+    card.appendChild(addRow);
+
     list.appendChild(card);
   }
   return s;

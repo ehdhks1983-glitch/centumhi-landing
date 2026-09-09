@@ -44,7 +44,9 @@ def ids_from_url(url, channel):
             return {"ext_ids": None, "nvmid": m.group(1), "mall": None}
         m = SMARTSTORE_RE.search(url)             # 스마트스토어 상품번호 ≠ nvmid → 첫 조회 때 자동 승격
         if m:
-            return {"ext_ids": None, "nvmid": None, "mall": m.group(1)}
+            # 주의: URL 슬러그(예: centumhi)는 검색 API가 주는 mallName(예: 센텀하이)과
+            # 다른 값이다. 몰명으로 쓰면 이름 매칭이 영구히 기각되므로 쓰지 않는다.
+            return {"ext_ids": None, "nvmid": None, "mall": None}
     return {"ext_ids": None, "nvmid": None, "mall": None}
 
 

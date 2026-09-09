@@ -170,6 +170,39 @@ def promote_nvmid(product_id, nvmid, mall_name=None):
             )
 
 
+def add_keyword(product_id, keyword):
+    with get_conn() as conn:
+        conn.execute("INSERT OR IGNORE INTO keywords(product_id, keyword) VALUES(?, ?)",
+                     (product_id, keyword.strip()))
+
+
+def delete_keyword(keyword_id):
+    with get_conn() as conn:
+        conn.execute("DELETE FROM keywords WHERE id = ?", (keyword_id,))
+
+
+def update_product(product_id, name=None, mall=None, track_limit=None, link=None,
+                   reset_match=False):
+    """상품 정보 수정. reset_match=True면 잘못 잡힌 매칭을 지워 다시 찾게 한다
+    (이력은 그대로 유지)."""
+    sets, vals = [], []
+    if name is not None:
+        sets.append("product_name = ?"); vals.append(name.strip())
+    if mall is not None:
+        sets.append("mall_name = ?"); vals.append(mall.strip() or None)
+    if track_limit is not None:
+        sets.append("track_limit = ?"); vals.append(max(1, min(1000, int(track_limit))))
+    if link is not None:
+        sets.append("product_link = ?"); vals.append(link.strip() or None)
+    if reset_match:
+        sets.append("nvmid = NULL"); sets.append("ext_ids = NULL")
+    if not sets:
+        return
+    vals.append(product_id)
+    with get_conn() as conn:
+        conn.execute(f"UPDATE products SET {', '.join(sets)} WHERE id = ?", vals)
+
+
 def promote_ext_ids(product_id, ext_ids_json):
     """쿠팡: 이름 매칭 성공 시 상품 ID 묶음 자동 확보"""
     with get_conn() as conn:
